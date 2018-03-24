@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoTagger.Clarifai.Standar
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoTagger.TaggingProvider", "AutoTagger.TaggingProvider\AutoTagger.TaggingProvider.csproj", "{4B030353-EBB6-44DD-86A4-B0D180B50523}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoTagger.Database.Standard", "AutoTagger.Database.Standard\AutoTagger.Database.Standard.csproj", "{39467444-0434-4A88-B5DA-8CABAF46D445}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoTagger.Database.Standard", "AutoTagger.Database.Standard\AutoTagger.Database.Standard.csproj", "{39467444-0434-4A88-B5DA-8CABAF46D445}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoTagger.TestConsole.Core", "AutoTagger.TestConsole.Core\AutoTagger.TestConsole.Core.csproj", "{2143633E-4EB3-4A24-AB13-41990006F5DE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{39467444-0434-4A88-B5DA-8CABAF46D445}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{39467444-0434-4A88-B5DA-8CABAF46D445}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{39467444-0434-4A88-B5DA-8CABAF46D445}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2143633E-4EB3-4A24-AB13-41990006F5DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2143633E-4EB3-4A24-AB13-41990006F5DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2143633E-4EB3-4A24-AB13-41990006F5DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2143633E-4EB3-4A24-AB13-41990006F5DE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
