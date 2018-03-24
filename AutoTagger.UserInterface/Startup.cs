@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoTagger.Clarifai.Standard;
+using AutoTagger.Contract;
+using AutoTagger.Database.Standard;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -24,6 +27,9 @@ namespace AutoTagger.UserInterface
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+
+            services.AddTransient<IAutoTaggerDatabase, AutoTaggerDatabase>();
+            services.AddTransient<ITaggingProvider, ClarifaiImageTagger>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

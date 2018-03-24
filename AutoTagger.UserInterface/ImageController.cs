@@ -10,9 +10,17 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AutoTagger.UserInterface
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     public class ImageController : Controller
     {
+        private readonly IAutoTaggerDatabase _db;
+        private readonly ITaggingProvider _taggingProvider;
+
+        public ImageController(IAutoTaggerDatabase db, ITaggingProvider taggingProvider)
+        {
+            _db = db;
+            _taggingProvider = taggingProvider;
+        }
 
         // POST api/<controller>
         [HttpPost]
@@ -20,9 +28,6 @@ namespace AutoTagger.UserInterface
         {
             var content = new Dictionary<string, object>();
             content.Add("link", link);
-
-            var _taggingProvider = new ClarifaiImageTagger() as ITaggingProvider;
-            var _db = new AutoTaggerDatabase() as IAutoTaggerDatabase;
 
             var maschineTags = _taggingProvider.GetTagsForImage(link).ToList();
             content.Add("maschineTags", maschineTags);
