@@ -10,4 +10,10 @@
     <ProjectReference Include="..\AutoTagger.Database.Standard\AutoTagger.Database.Standard.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="instagramTags.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

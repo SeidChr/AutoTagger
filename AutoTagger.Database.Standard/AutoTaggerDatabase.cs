@@ -36,27 +36,27 @@ namespace AutoTagger.Database.Standard
             }
         }
 
-        private void CreateImage(string image)
+        private void CreateImage(string imageId)
         {
-            if (!this.HasNode(image))
+            if (!this.HasNode(imageId))
             {
-                this.database.Submit($"g.addV('image').property('id', '{image}')");
+                this.database.Submit($"g.addV('imageId').property('id', '{imageId}')");
             }
         }
 
-        private void ConnectTag(string image, string tag)
+        private void ConnectTag(string imageId, string tag)
         {
-            if (!this.IsTagged(image, tag))
+            if (!this.IsTagged(imageId, tag))
             {
-                this.database.Submit($"g.V('{image}').addE('knows').to(g.V('{tag}'))");
+                this.database.Submit($"g.V('{imageId}').addE('knows').to(g.V('{tag}'))");
             }
         }
 
-        private void ConnectInstagramTag(string image, string tag)
+        private void ConnectInstagramTag(string imageId, string tag)
         {
-            if (!this.IsInstagramTagged(image, tag))
+            if (!this.IsInstagramTagged(imageId, tag))
             {
-                this.database.Submit($"g.V('{image}').addE('itagged').to(g.V('{tag}'))");
+                this.database.Submit($"g.V('{imageId}').addE('itagged').to(g.V('{tag}'))");
             }
         }
 
@@ -68,21 +68,21 @@ namespace AutoTagger.Database.Standard
             }
         }
 
-        private bool IsInstagramTagged(string image, string tag)
+        private bool IsInstagramTagged(string imageId, string tag)
         {
-            var result = this.database.Submit($"g.V('{image}').outE('itagged').V('{tag}')");
+            var result = this.database.Submit($"g.V('{imageId}').outE('itagged').V('{tag}')");
             return result.Any();
         }
 
-        private bool IsTagged(string image, string tag)
+        private bool IsTagged(string imageId, string tag)
         {
-            var result = this.database.Submit($"g.V('{image}').outE('tagged').V('{tag}')");
+            var result = this.database.Submit($"g.V('{imageId}').outE('tagged').V('{tag}')");
             return result.Any();
         }
 
-        private bool HasNode(string image)
+        private bool HasNode(string imageId)
         {
-            var result = this.database.Submit($"g.V('{image}')");
+            var result = this.database.Submit($"g.V('{imageId}')");
             return result.Any();
         }
 
@@ -94,6 +94,11 @@ namespace AutoTagger.Database.Standard
         public IEnumerable<string> FindInstagramTags(IEnumerable<string> maschineTags)
         {
             throw new NotImplementedException();
+        }
+
+        public void Remove(string imageId)
+        {
+            this.database.Submit($"g.V('{imageId}').drop()");
         }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using AutoTagger.Database.Standard;
 using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using AutoTagger.Clarifai.Standard;
 using AutoTagger.Contract;
@@ -59,6 +61,9 @@ namespace AutoTagger.TestConsole.Core
             var humanoidTags = new[] {"c", "d"};
 
             db.IndertOrUpdate("CrawlerRoundTripTestImageId", maschineTags, humanoidTags);
+
+            // cleanup after test
+            db.Remove("CrawlerRoundTripTestImageId");
         }
 
         private static void DatabaseTest()
@@ -77,5 +82,13 @@ namespace AutoTagger.TestConsole.Core
             var tags = tagger.GetTagsForImage(imageLink);
             Console.WriteLine("Tags: " + string.Join(", ", tags));
         }
+
+        //static IEnumerable<string> GetRandomInstagramTags()
+        //{
+
+        //    var tags = File.ReadLines("./instagramTags").ToList();
+        //    var random = new Random();
+        //    while ()
+        //}
     }
 }

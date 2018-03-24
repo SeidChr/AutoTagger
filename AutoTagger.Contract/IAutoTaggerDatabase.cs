@@ -7,5 +7,7 @@ namespace AutoTagger.Contract
         void IndertOrUpdate(string imageId, IEnumerable<string> maschineTags, IEnumerable<string> humanoidTags);
 
         IEnumerable<string> FindInstagramTags(IEnumerable<string> maschineTags);
+
+        void Remove(string imageId);
     }
 }
