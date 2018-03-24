@@ -8,24 +8,32 @@ namespace AutoTagger.TestConsole.Core
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("D: Graph Database Test, C: Clarifai Tagger Test");
+            Console.WriteLine("D: Graph Database Test, C: Clarifai Tagger Test, L: Lifecycle Test");
             var key = Console.ReadKey();
             switch (key.KeyChar)
             {
                 case 'c':
                 case 'C':
-                    var imageLink =
-                        "https://images.pexels.com/photos/211707/pexels-photo-211707.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260";
-                    Console.WriteLine("Clarifai Test");
-                    var tagger = new ClarifaiImageTagger();
-                    var tags = tagger.GetTagsForImage(imageLink);
-                    Console.WriteLine("Tags: " + string.Join(", ", tags));
+                    ClarifaiTest();
                     break;
                 case 'd':
                 case 'D':
-                    Console.WriteLine("DB Test");
-                    var db = new GraphDatabase();
-                    var result = db.Submit("g.V()");
+                    DatabaseTest();
+                    break;
+                case 'l':
+                case 'L':
+                    LifecycleTest();
+                    break;
+                case 'g':
+                case 'G':
+                    var database = new AutoTaggerDatabase();
+                    database.Drop();
+
+                    database.Add("schiff1", new[] { "boot", "wasser" }, new[] { "urlaub", "entspannung" });
+                    database.Add("boot1", new[] { "boot", "wasser" }, new[] { "urlaub", "angeln" });
+
+                    Console.WriteLine("Graph reset and filled.s");
+
                     break;
                 default:
                     Console.WriteLine("No Test");
@@ -33,6 +41,39 @@ namespace AutoTagger.TestConsole.Core
             }
 
             Console.Read();
+        }
+
+        private static void LifecycleTest()
+        {
+            Console.WriteLine("Lifecycle Test");
+            var imageLink =
+                "https://images.pexels.com/photos/211707/pexels-photo-211707.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260";
+            var db = new GraphDatabase();
+            var tagger = new ClarifaiImageTagger();
+
+            var tags = tagger.GetTagsForImage(imageLink);
+            Console.WriteLine("Tags: " + string.Join(", ", tags));
+
+            
+
+            var result = db.Submit("g.V()");
+        }
+
+        private static void DatabaseTest()
+        {
+            Console.WriteLine("Database Test");
+            var db = new GraphDatabase();
+            var result = db.Submit("g.V()");
+        }
+
+        static void ClarifaiTest()
+        {
+            var imageLink =
+                "https://images.pexels.com/photos/211707/pexels-photo-211707.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260";
+            Console.WriteLine("Clarifai Test");
+            var tagger = new ClarifaiImageTagger();
+            var tags = tagger.GetTagsForImage(imageLink);
+            Console.WriteLine("Tags: " + string.Join(", ", tags));
         }
     }
 }
