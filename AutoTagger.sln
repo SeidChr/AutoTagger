@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoTagger", "AutoTagger\Au
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoTagger.Contract", "AutoTagger.Contract\AutoTagger.Contract.csproj", "{30CB818B-0CE3-4ED7-81E8-1D3747748AD8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoTagger.Clarifai", "AutoTagger.Clarifai\AutoTagger.Clarifai.csproj", "{14ACFA2E-1422-40AF-8EEF-BE906380B1BF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{30CB818B-0CE3-4ED7-81E8-1D3747748AD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{30CB818B-0CE3-4ED7-81E8-1D3747748AD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{30CB818B-0CE3-4ED7-81E8-1D3747748AD8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14ACFA2E-1422-40AF-8EEF-BE906380B1BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14ACFA2E-1422-40AF-8EEF-BE906380B1BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14ACFA2E-1422-40AF-8EEF-BE906380B1BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14ACFA2E-1422-40AF-8EEF-BE906380B1BF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
