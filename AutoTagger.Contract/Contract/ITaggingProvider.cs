@@ -6,5 +6,6 @@ namespace AutoTagger.Contract
 {
     public interface ITaggingProvider
     {
+        IEnumerable<string> GetTagsForImage(string imageUrl);
     }
 }

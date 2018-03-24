@@ -1,8 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Clarifai" Version="1.0.1" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\AutoTagger.Contract\AutoTagger.Contract.csproj" />
