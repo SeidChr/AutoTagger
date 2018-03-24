@@ -4,7 +4,7 @@ using System.Text;
 
 namespace AutoTagger.Contract
 {
-    interface ITaggingProvider
+    public interface ITaggingProvider
     {
     }
 }
