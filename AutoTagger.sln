@@ -1,15 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27130.2027
+VisualStudioVersion = 15.0.27130.2036
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoTagger", "AutoTagger\AutoTagger.csproj", "{59ECEF9C-2CD1-4100-8E61-EE46D68EDADB}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoTagger.Contract", "AutoTagger.Contract\AutoTagger.Contract.csproj", "{30CB818B-0CE3-4ED7-81E8-1D3747748AD8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoTagger.Clarifai.Standard", "AutoTagger.Clarifai.Standard\AutoTagger.Clarifai.Standard.csproj", "{B4A4A168-DB3C-4172-A2C9-3F8ECC36DDCE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoTagger.Clarifai.Standard", "AutoTagger.Clarifai.Standard\AutoTagger.Clarifai.Standard.csproj", "{B4A4A168-DB3C-4172-A2C9-3F8ECC36DDCE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoTagger.TaggingProvider", "AutoTagger.TaggingProvider\AutoTagger.TaggingProvider.csproj", "{4B030353-EBB6-44DD-86A4-B0D180B50523}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoTagger.Database.Standard", "AutoTagger.Database.Standard\AutoTagger.Database.Standard.csproj", "{39467444-0434-4A88-B5DA-8CABAF46D445}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,6 +27,18 @@ Global
 		{30CB818B-0CE3-4ED7-81E8-1D3747748AD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{30CB818B-0CE3-4ED7-81E8-1D3747748AD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{30CB818B-0CE3-4ED7-81E8-1D3747748AD8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B4A4A168-DB3C-4172-A2C9-3F8ECC36DDCE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4A4A168-DB3C-4172-A2C9-3F8ECC36DDCE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B4A4A168-DB3C-4172-A2C9-3F8ECC36DDCE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B4A4A168-DB3C-4172-A2C9-3F8ECC36DDCE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4B030353-EBB6-44DD-86A4-B0D180B50523}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4B030353-EBB6-44DD-86A4-B0D180B50523}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4B030353-EBB6-44DD-86A4-B0D180B50523}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4B030353-EBB6-44DD-86A4-B0D180B50523}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39467444-0434-4A88-B5DA-8CABAF46D445}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39467444-0434-4A88-B5DA-8CABAF46D445}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39467444-0434-4A88-B5DA-8CABAF46D445}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39467444-0434-4A88-B5DA-8CABAF46D445}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
