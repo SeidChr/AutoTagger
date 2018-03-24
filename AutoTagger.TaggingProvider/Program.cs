@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Nancy.Hosting.Self;
+using AutoTagger.Clarifai.Standard;
+using Newtonsoft.Json;
 
 namespace AutoTagger.TaggingProvider
 {
@@ -11,17 +8,19 @@ namespace AutoTagger.TaggingProvider
     {
         static void Main(string[] args)
         {
-            var hostConfigs = new HostConfiguration();
-            hostConfigs.UrlReservations.CreateAutomatically = true;
-            var url = "http://localhost:80";
-            var uri = new Uri(url);
-            using (var host = new NancyHost(hostConfigs, uri))
+            var imageTagger = new ClarifaiImageTagger();
+            Console.WriteLine("Insert a link:");
+
+            while (true)
             {
-                host.Start();
-                Console.WriteLine("Running AutoTaggingProvider on: " + url);
-                Console.ReadLine();
+                string link = Console.ReadLine();
+                Console.WriteLine("inserted: " + link);
+
+                var tags = imageTagger.GetTagsForImage(link);
+                var output = JsonConvert.SerializeObject(tags);
+                Console.WriteLine(output);
             }
-            Console.WriteLine("System shut down :'(");
+
 
         }
     }
