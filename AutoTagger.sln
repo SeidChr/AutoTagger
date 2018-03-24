@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoTagger.TestConsole.Core
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoTagger.TaggingProvider", "AutoTagger.TaggingProvider\AutoTagger.TaggingProvider.csproj", "{A6E2ED0F-39DD-4399-B1C9-82CD9B4A6635}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoTagger.UserInterface", "AutoTagger.UserInterface\AutoTagger.UserInterface.csproj", "{28966848-B3E9-478F-A59F-66210EE01FC8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{A6E2ED0F-39DD-4399-B1C9-82CD9B4A6635}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A6E2ED0F-39DD-4399-B1C9-82CD9B4A6635}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A6E2ED0F-39DD-4399-B1C9-82CD9B4A6635}.Release|Any CPU.Build.0 = Release|Any CPU
+		{28966848-B3E9-478F-A59F-66210EE01FC8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{28966848-B3E9-478F-A59F-66210EE01FC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{28966848-B3E9-478F-A59F-66210EE01FC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{28966848-B3E9-478F-A59F-66210EE01FC8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

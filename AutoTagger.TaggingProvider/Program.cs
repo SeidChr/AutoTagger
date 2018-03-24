@@ -13,7 +13,7 @@ namespace AutoTagger.TaggingProvider
 
             while (true)
             {
-                string link = Console.ReadLine();
+                var link = Console.ReadLine();
                 Console.WriteLine("inserted: " + link);
 
                 var tags = imageTagger.GetTagsForImage(link);
