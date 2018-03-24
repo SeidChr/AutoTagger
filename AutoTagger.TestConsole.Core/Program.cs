@@ -27,6 +27,17 @@ namespace AutoTagger.TestConsole.Core
                     var db = new GraphDatabase();
                     var result = db.Submit("g.V()");
                     break;
+                case 'g':
+                case 'G':
+                    var database = new AutoTaggerDatabase();
+                    database.Drop();
+
+                    database.Add("schiff1", new[] { "boot", "wasser" }, new[] { "urlaub", "entspannung" });
+                    database.Add("boot1", new[] { "boot", "wasser" }, new[] { "urlaub", "angeln" });
+
+                    Console.WriteLine("Graph reset and filled.s");
+
+                    break;
                 default:
                     Console.WriteLine("No Test");
                     break;

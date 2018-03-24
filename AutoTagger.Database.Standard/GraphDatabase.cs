@@ -13,7 +13,7 @@
 
     using Newtonsoft.Json;
 
-    public class GraphDatabase : IAutoTaggerDatabase
+    public class GraphDatabase
     {
         private static string hostname = "lab-image-tagging.gremlin.cosmosdb.azure.com";
         private static int port = 443;

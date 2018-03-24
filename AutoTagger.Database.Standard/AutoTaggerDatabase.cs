@@ -4,47 +4,65 @@
     using System.Linq;
 
     using Newtonsoft.Json.Linq;
+    using AutoTagger.Contract;
 
-    public class TaggedDatabase : ITaggedDatabase
+    public class AutoTaggerDatabase : IAutoTaggerDatabase
     {
         private readonly GraphDatabase database;
 
-        public TaggedDatabase()
+        public AutoTaggerDatabase()
         {
             this.database = new GraphDatabase();
         }
 
         public void Add(string image, string[] automaticTags, string[] instagramTags)
         {
-            if (!this.HasNode(image))
-            {
-                this.database.Submit($"g.addV('image').property('id', '{image}')");
-            }
+            this.CreateImage(image);
 
             foreach (var tag in automaticTags)
             {
-                if (!this.HasNode(tag))
-                {
-                    this.database.Submit($"g.addV('tag').property('id', '{tag}')");
-                }
+                this.CreateTag(tag);
 
-                if (!this.IsTagged(image, tag))
-                {
-                    this.database.Submit($"g.V('{image}').addE('knows').to(g.V('{tag}'))");
-                }
+                this.ConnectTag(image, tag);
             }
 
             foreach (var tag in instagramTags)
             {
-                if (!this.HasNode(tag))
-                {
-                    this.database.Submit($"g.addV('itag').property('id', '{tag}')");
-                }
+                this.CreateTag(tag);
 
-                if (!this.IsInstagramTagged(image, tag))
-                {
-                    this.database.Submit($"g.V('{image}').addE('itagged').to(g.V('{tag}'))");
-                }
+                this.ConnectInstagramTag(image, tag);
+            }
+        }
+
+        private void CreateImage(string image)
+        {
+            if (!this.HasNode(image))
+            {
+                this.database.Submit($"g.addV('image').property('id', '{image}')");
+            }
+        }
+
+        private void ConnectTag(string image, string tag)
+        {
+            if (!this.IsTagged(image, tag))
+            {
+                this.database.Submit($"g.V('{image}').addE('knows').to(g.V('{tag}'))");
+            }
+        }
+
+        private void ConnectInstagramTag(string image, string tag)
+        {
+            if (!this.IsInstagramTagged(image, tag))
+            {
+                this.database.Submit($"g.V('{image}').addE('itagged').to(g.V('{tag}'))");
+            }
+        }
+
+        private void CreateTag(string tag)
+        {
+            if (!this.HasNode(tag))
+            {
+                this.database.Submit($"g.addV('tag').property('id', '{tag}')");
             }
         }
 
