@@ -46,7 +46,7 @@
         {
             if (!this.IsTagged(image, tag))
             {
-                this.database.Submit($"g.V('{image}').addE('knows').to(g.V('{tag}'))");
+                this.database.Submit($"g.V('{image}').addE('tagged').to(g.V('{tag}'))");
             }
         }
 
