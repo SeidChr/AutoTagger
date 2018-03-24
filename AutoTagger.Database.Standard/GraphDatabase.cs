@@ -60,15 +60,18 @@
                     { "CountEdges", "g.E().count()" },
                     { "DropVertex", "g.V('thomas').drop()" },
                 };
+
         public GraphDatabase()
         {
             this.Client = this.CreateClient();
         }
+
         public async Task<IReadOnlyCollection<dynamic>> Submit(string script)
         {
             var result = await Client.SubmitAsync<dynamic>(script);
             return result;
         }
+
         private GremlinServer CreateServer()
         {
             var server = new GremlinServer(
@@ -79,6 +82,7 @@
                 authKey);
             return server;
         }
+
         private GremlinClient CreateClient()
         {
             var server = this.CreateServer();
