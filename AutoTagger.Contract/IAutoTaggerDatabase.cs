@@ -1,9 +1,11 @@
-﻿namespace AutoTagger.Contract
+﻿using System.Collections.Generic;
+
+namespace AutoTagger.Contract
 {
     public interface IAutoTaggerDatabase
     {
-        void Add(string image, string[] automaticTags, string[] instagramTags);
+        void IndertOrUpdate(string imageId, IEnumerable<string> maschineTags, IEnumerable<string> humanoidTags);
 
-        string[] FindInstagramTags(string[] automaticTags);
+        IEnumerable<string> FindInstagramTags(IEnumerable<string> maschineTags);
     }
 }

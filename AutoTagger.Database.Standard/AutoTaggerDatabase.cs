@@ -1,4 +1,6 @@
-﻿namespace AutoTagger.Database.Standard
+﻿using System.Collections.Generic;
+
+namespace AutoTagger.Database.Standard
 {
     using System;
     using System.Linq;
@@ -15,22 +17,22 @@
             this.database = new GraphDatabase();
         }
 
-        public void Add(string image, string[] automaticTags, string[] instagramTags)
+        public void IndertOrUpdate(string imageId, IEnumerable<string> maschineTags, IEnumerable<string> humanoidTags)
         {
-            this.CreateImage(image);
+            this.CreateImage(imageId);
 
-            foreach (var tag in automaticTags)
+            foreach (var tag in maschineTags)
             {
                 this.CreateTag(tag);
 
-                this.ConnectTag(image, tag);
+                this.ConnectTag(imageId, tag);
             }
 
-            foreach (var tag in instagramTags)
+            foreach (var tag in humanoidTags)
             {
                 this.CreateTag(tag);
 
-                this.ConnectInstagramTag(image, tag);
+                this.ConnectInstagramTag(imageId, tag);
             }
         }
 
@@ -89,7 +91,7 @@
             this.database.Submit($"g.V().drop()");
         }
 
-        public string[] FindInstagramTags(string[] automaticTags)
+        public IEnumerable<string> FindInstagramTags(IEnumerable<string> maschineTags)
         {
             throw new NotImplementedException();
         }

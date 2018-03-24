@@ -1,6 +1,8 @@
 ﻿using AutoTagger.Database.Standard;
 using System;
+using System.Linq;
 using AutoTagger.Clarifai.Standard;
+using AutoTagger.Contract;
 
 namespace AutoTagger.TestConsole.Core
 {
@@ -8,7 +10,7 @@ namespace AutoTagger.TestConsole.Core
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("D: Graph Database Test, C: Clarifai Tagger Test, L: Lifecycle Test");
+            Console.WriteLine("D/G: Graph Database Test, C: Clarifai Tagger Test, R: Crawler Roundtrip");
             var key = Console.ReadKey();
             switch (key.KeyChar)
             {
@@ -20,17 +22,17 @@ namespace AutoTagger.TestConsole.Core
                 case 'D':
                     DatabaseTest();
                     break;
-                case 'l':
-                case 'L':
-                    LifecycleTest();
+                case 'r':
+                case 'R':
+                    CrawlerRoudTripTest();
                     break;
                 case 'g':
                 case 'G':
                     var database = new AutoTaggerDatabase();
                     database.Drop();
 
-                    database.Add("schiff1", new[] { "boot", "wasser" }, new[] { "urlaub", "entspannung" });
-                    database.Add("boot1", new[] { "boot", "wasser" }, new[] { "urlaub", "angeln" });
+                    database.IndertOrUpdate("schiff1", new[] { "boot", "wasser" }, new[] { "urlaub", "entspannung" });
+                    database.IndertOrUpdate("boot1", new[] { "boot", "wasser" }, new[] { "urlaub", "angeln" });
 
                     Console.WriteLine("Graph reset and filled.s");
 
@@ -43,20 +45,20 @@ namespace AutoTagger.TestConsole.Core
             Console.Read();
         }
 
-        private static void LifecycleTest()
+        private static void CrawlerRoudTripTest()
         {
             Console.WriteLine("Lifecycle Test");
             var imageLink =
                 "https://images.pexels.com/photos/211707/pexels-photo-211707.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260";
-            var db = new GraphDatabase();
-            var tagger = new ClarifaiImageTagger();
+            var db = new AutoTaggerDatabase() as IAutoTaggerDatabase;
+            var tagger = new ClarifaiImageTagger() as ITaggingProvider;
 
-            var tags = tagger.GetTagsForImage(imageLink);
-            Console.WriteLine("Tags: " + string.Join(", ", tags));
+            var maschineTags = tagger.GetTagsForImage(imageLink).ToList();
+            Console.WriteLine("Tags: " + string.Join(", ", maschineTags));
 
-            
+            var humanoidTags = new[] {"c", "d"};
 
-            var result = db.Submit("g.V()");
+            db.IndertOrUpdate("CrawlerRoundTripTestImageId", maschineTags, humanoidTags);
         }
 
         private static void DatabaseTest()
