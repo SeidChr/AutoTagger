@@ -12,7 +12,7 @@ namespace AutoTagger.TestConsole.Core
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("D/G: Graph Database Test, C: Clarifai Tagger Test, R: Crawler Roundtrip");
+            Console.WriteLine("D/F: Graph Database Test, C: Clarifai Tagger Test, R: Crawler Roundtrip");
             var key = Console.ReadKey();
             switch (key.KeyChar)
             {
@@ -28,23 +28,16 @@ namespace AutoTagger.TestConsole.Core
                 case 'R':
                     CrawlerRoudTripTest();
                     break;
-                case 'g':
-                case 'G':
-                    var database = new AutoTaggerDatabase();
-                    database.Drop();
-
-                    database.IndertOrUpdate("schiff1", new[] { "boot", "wasser" }, new[] { "urlaub", "entspannung" });
-                    database.IndertOrUpdate("boot1", new[] { "boot", "fisch" }, new[] { "urlaub", "angeln" });
-
-                    Console.WriteLine("Graph reset and filled.s");
-
+                case 'f':
+                case 'F':
+                    DatabaseReadTest();
                     break;
                 default:
                     Console.WriteLine("No Test");
                     break;
             }
 
-            Console.Read();
+            Console.ReadLine();
         }
 
         private static void CrawlerRoudTripTest()
@@ -58,7 +51,7 @@ namespace AutoTagger.TestConsole.Core
             var maschineTags = tagger.GetTagsForImage(imageLink).ToList();
             Console.WriteLine("Tags: " + string.Join(", ", maschineTags));
 
-            var humanoidTags = new[] {"c", "d"};
+            var humanoidTags = new[] { "c", "d" };
 
             db.IndertOrUpdate("CrawlerRoundTripTestImageId", maschineTags, humanoidTags);
 
@@ -68,9 +61,28 @@ namespace AutoTagger.TestConsole.Core
 
         private static void DatabaseTest()
         {
-            Console.WriteLine("Database Test");
-            var db = new GraphDatabase();
-            var result = db.Submit("g.V()");
+            //Console.WriteLine("Database Test");
+            //var db = new GraphDatabase();
+            //var result = db.Submit("g.V()");
+
+            var database = new AutoTaggerDatabase();
+            database.Drop();
+
+            database.IndertOrUpdate("schiff1", new[] { "boot", "wasser" }, new[] { "urlaub", "entspannung" });
+            database.IndertOrUpdate("boot1", new[] { "boot", "fisch" }, new[] { "urlaub", "angeln" });
+
+            Console.WriteLine("Graph reset and filled.s");
+        }
+
+        private static void DatabaseReadTest()
+        {
+            var database = new AutoTaggerDatabase();
+            var instagramTags = database.FindInstagramTags(new[] { "boot", "fisch", "egal" });
+            Console.WriteLine("You should use the following instagram tags:");
+            foreach (var tag in instagramTags)
+            {
+                Console.WriteLine(tag);
+            }
         }
 
         static void ClarifaiTest()
