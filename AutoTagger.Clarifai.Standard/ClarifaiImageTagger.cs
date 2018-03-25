@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using AutoTagger.Contract;
 using Clarifai.API;
@@ -19,11 +20,21 @@ namespace AutoTagger.Clarifai.Standard
 
         public IEnumerable<string> GetTagsForImage(string imageUrl)
         {
-            //return null;
-            var clarifaiUrlImage = new ClarifaiURLImage(imageUrl);
-            var result = client.PublicModels.GeneralModel.Predict(clarifaiUrlImage).ExecuteAsync().Result;
-            return !result.IsSuccessful 
-                ? Enumerable.Empty<string>() 
+            var clarifaiInput = new ClarifaiURLImage(imageUrl);
+            return GetTagsForInput(clarifaiInput);
+        }
+
+        public IEnumerable<string> GetTagsForImage(byte[] imageBytes)
+        {
+            var clarifaiInput = new ClarifaiFileImage(imageBytes);
+            return GetTagsForInput(clarifaiInput);
+        }
+
+        private IEnumerable<string> GetTagsForInput(IClarifaiInput clarifaiInput)
+        {
+            var result = client.PublicModels.GeneralModel.Predict(clarifaiInput).ExecuteAsync().Result;
+            return !result.IsSuccessful
+                ? Enumerable.Empty<string>()
                 : result.Get().Data.Select(x => x.Name);
         }
     }
