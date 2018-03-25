@@ -1,0 +1,68 @@
+// Alle die mit fisch getagged sind
+g.V().out('tagged').has('id','fisch').in()
+
+// Alle die mit fisch oder wasser getagged sind
+g.V().out('tagged').or(__.has('id','fisch'), __.has('id','wasser')).in()
+
+// Alle die mit fisch oder todo getagged sind und deren itags
+g.V().out('tagged').or(__.has('id','fisch'), __.has('id','todo')).in().out('itagged')
+
+// Alle edges von knoten mit den tags fisch oder boot
+g.V().out('tagged').or(__.has('id','fisch'), __.has('id','boot')).count()
+
+// alle die mit boot getagged sind bekommen eine 1
+g.V().group().by(id).by(out('tagged').has('id','boot').count())
+
+// zähle übereinstimmende tags
+g.V().group().by(id).by(out('tagged').or(__.has('id','boot'),__.has('id','fisch')).count())
+
+// final by count
+g.V().hasLabel('image').order().by(out('tagged').has('id',within('tea')).count().as('count'), decr).out('itagged').dedup()
+
+// neue query mit limit wegen request to large exception
+g.V().hasLabel('image').order().by(out('tagged').has('id',within('tea','tasse')).count().as('count'), decr).limit(10).out('itagged').dedup().limit(10)
+
+
+// alle bilder mit den tags
+g.V().has('id',within('boot','fisch')).in()
+
+// anzahl tags für schiff1
+g.V('schiff1').local(out('tagged').count())
+
+// anzahl passender tags für schiff
+g.V('schiff1').local(out('tagged').has('id',within('boot','fisch','wasser')).count())
+
+// bild und passende tags mit namen
+g.V('schiff1').as('image').local(out('tagged').has('id',within('boot','fisch','wasser')).count()).as('count').select('image','count')
+
+// für alle bilder anzahl passender tags
+g.V().as('image').local(out('tagged').has('id',within('boot','fisch','wasser')).count()).as('count').select('image','count')
+
+// group by id for all images with tag count
+g.V().as('a').group().by('id').by(out('tagged').has('id',within('boot','fisch2','wasser')).count())
+
+// fitting images to top
+g.V().as('a').group().by('id').by(out('tagged').has('id',within('boot','fisch2','wasser')).count()).order(local).by(values,decr)
+
+// order by most fitting tags
+g.V().order().by(out('tagged').has('id',within('boot','fisch2','wasser')).count(), decr)
+
+
+// itags with most fitting tags
+g.V().order().by(out('tagged').has('id',within('boot1','fisch','wasser1')).count(), decr).out('itagged').dedup()
+
+// unique itags with most fitting tags
+g.V().hasLabel('imageId').order().by(out('tagged').has('id',within('boot1','fisch','wasser1')).count().as('count'), decr).out('itagged').dedup()
+g.V().hasLabel('imageId').order().by(out('tagged').has('id',within('boot1','fisch1','wasser')).count().as('count'), decr).out('itagged').dedup()
+
+
+// fitting tags count
+g.V().out('tagged').has('id',within('boot1','fisch','wasser1')).count()
+
+// not fitting tags count`?
+g.V().out('tagged').not(has('id',within('boot1','fisch','wasser1'))).dedup().count()
+
+// top Iimage
+g.V().hasLabel('imageId').order().by(1 - out('tagged').has('id',within('boot1','fisch1','wasser')).dedup().count() / out('tagged').count().dedup().count())
+g.V().hasLabel('imageId').order().by(1 - out('tagged').has('id',within('boot1','fisch1','wasser')).dedup().count() / out('tagged').count().dedup().count()).out('itagged').dedup() // schiff -
+g.V().hasLabel('imageId').order().by(1 - out('tagged').has('id',within('boot1','fisch','wasser1')).dedup().count() / out('tagged').count().dedup().count()).out('itagged').dedup() // boot
