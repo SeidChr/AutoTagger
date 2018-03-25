@@ -28,7 +28,7 @@ namespace AutoTagger.Crawler.Standard
                 processedHashTags.Add(currentHashTag);
 
                 var shortCodes = GetShortCodesFromHashTag(currentHashTag);
-                var imageData = shortCodes.Select(GetImageDataFromShortCode);
+                var imageData = shortCodes.Select(GetImageDataFromShortCode).Where(x=>x!=null);
                 foreach (var crawlerImage in imageData)
                 {
                     foreach (var tag in crawlerImage.HumanoidTags
@@ -43,31 +43,46 @@ namespace AutoTagger.Crawler.Standard
                     }
 
                     images[crawlerImage.ImageId] = crawlerImage;
+                    yield return crawlerImage;
                     if (images.Count >= amount)
                     {
-                        return images.Values;
+                        yield break;
                     }
                 }
             }
 
-
-            return images.Values;
+            yield break;
         }
 
         public ICrawlerImage GetImageDataFromShortCode(string shortCode)
         {
             Console.WriteLine("Processing ShortCode " + shortCode);
             HttpClient hc = new HttpClient();
-            HttpResponseMessage result = hc.GetAsync($"https://www.instagram.com/p/{shortCode}/").Result;
+            HttpResponseMessage result;
+            try
+            {
+                result = hc.GetAsync($"https://www.instagram.com/p/{shortCode}/").Result;
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Exception while fetching image data for shortcode " + shortCode);
+                return null;
+            }
+
             var document = new HtmlDocument();
             document.Load(result.Content.ReadAsStreamAsync().Result);
-            var imageUrl = document.DocumentNode.SelectNodes("//meta[@property='og:image']").FirstOrDefault().Attributes["content"].Value;
-            var hashTags = document.DocumentNode.SelectNodes("//meta[@property='instapp:hashtags']").Select(x => x.Attributes["content"].Value);
+            var imageUrl = document.DocumentNode.SelectNodes("//meta[@property='og:image']")?.FirstOrDefault()?.Attributes["content"]?.Value;
+            var hashTags = document.DocumentNode.SelectNodes("//meta[@property='instapp:hashtags']")?.Select(x => x?.Attributes["content"]?.Value);
             //Console.WriteLine("URL: " + imageUrl);
             //Console.WriteLine("Tags: " + string.Join(", ", hashTags));
+            if (hashTags == null)
+            {
+                return null;
+            }
+
             return new CrawlerImage
             {
-                HumanoidTags = hashTags,
+                HumanoidTags = hashTags.Where(x=>x!=null),
                 ImageId = shortCode,
                 ImageUrl = imageUrl,
             };
