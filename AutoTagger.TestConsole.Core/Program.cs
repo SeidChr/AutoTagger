@@ -81,14 +81,14 @@ namespace AutoTagger.TestConsole.Core
             var crawler = new Crawler.Standard.Crawler();
             //crawler.GetImageDataFromShortCode("Bgsth_jAPup");
             //crawler.GetShortCodesFromHashTag("ighamburg");
-            var images = crawler.GetImagesFromHashTag("ighamburg", 1000);
+            var images = crawler.GetImagesFromHashTag(1000, "world");
             //Console.WriteLine("images: " + string.Join(", ", images.Select(x=>x.ImageId)));
             var tagger = new ClarifaiImageTagger();
             var db = new AutoTaggerDatabase();
 
             foreach (var crawlerImage in images)
             {
-                Console.WriteLine("Adding image "+crawlerImage.ImageId + " to db");
+                Console.WriteLine("Adding image "+ crawlerImage.ImageId + " to db. Humaniod Tags: " + string.Join(", ", crawlerImage.HumanoidTags));
                 var tags = tagger.GetTagsForImageUrl(crawlerImage.ImageUrl).ToList();
                 Console.WriteLine("Tags: " + string.Join(", ", tags));
                 db.IndertOrUpdate(crawlerImage.ImageId, tags, crawlerImage.HumanoidTags);
