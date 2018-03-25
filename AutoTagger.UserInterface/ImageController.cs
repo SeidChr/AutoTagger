@@ -29,25 +29,14 @@ namespace AutoTagger.UserInterface
         [HttpPost]
         public JsonResult Post([FromForm]string link)
         {
-            return DoTagging(link);
-        }
-
-        private JsonResult DoTagging(string link)
-        {
             var content = new Dictionary<string, object>();
             content.Add("link", link);
 
             var machineTags = _taggingProvider.GetTagsForImage(link).ToList();
             content.Add("machineTags", machineTags);
 
-            try
-            {
-                var instagramTags = _db.FindInstagramTags(machineTags);
-                content.Add("instagramTags", instagramTags);
-            }
-            catch (NotImplementedException)
-            {
-            }
+            var instagramTags = _db.FindInstagramTags(machineTags);
+            content.Add("instagramTags", instagramTags);
 
             return Json(content);
         }
@@ -56,7 +45,6 @@ namespace AutoTagger.UserInterface
         [HttpPost("upload")]
         public async Task<IActionResult> Post(IFormFile file)
         {
-            var content = "";
 
             if (!Request.ContentType.Contains("multipart/form-data; boundary"))
             {
@@ -69,14 +57,15 @@ namespace AutoTagger.UserInterface
             }
 
 
-            var filePath = Path.GetTempFileName();
-
-            using (var stream = new FileStream(filePath, FileMode.Create))
+            using (var stream = new MemoryStream())
             {
                 await file.CopyToAsync(stream);
-            }
+                var bytes = stream.ToArray();
+                var machineTags = _taggingProvider.GetTagsForImage(bytes);
 
-            return Ok("Upload successful");
+                var instagramTags = _db.FindInstagramTags(machineTags);
+                return Json(new { machineTags = machineTags, instagramTags = instagramTags });
+            }
         }
 
     }
