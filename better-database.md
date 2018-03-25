@@ -17,18 +17,20 @@ Beispiel-Bild hat MTags *M3*, *M4*, *M5*. Wir wollen die erfolgreichsten ITags b
   * für jeden Eintrag folgendes berechnen:
     * [anz] Die Anzahl der übereinstimmenden MTags (z.B. bei ID=3 -> *M4*)
     * [fehlt] Die Anzahl der fehlenden Hashtags, die auf Input- oder Entry-Seite zu viel sind. (z.B. ID=3 hat *M5* bis *M10* zu viel, sowie *M3* auf Input-Seite)
-  * searchQuality =  [fehlt]/[anz]
-  * relQuality = searchQulity * popularity
-  * Nun haben wir eine x menge an Einträgen, die alle einen beziehungQuality Wert haben. Alle Einträge werden nun nach beziehungQuality absteigerd sortiert.
-Die ITags der Top10 Einträge bekommen bzw näher anschauen. Beispeil sind Fantasiewerte, keine Verbindung mit Beispiel oben:
+    * searchQuality =  [fehlt]/[anz]
+    * relQuality = searchQulity * popularity
+  * Nun hat jeder Eintrag die tempotäte Spalte relQuality. Sortiere alle Einträge nach relQuality absteigerd.
+  * Bekomme die ersten 10 Einträge
+BeispieL
 
 | relQuality | ITags |
 | --- | --- |
-| 7,0 | I3 |
-| 3,0 | I4 |
-| 1,0 | I4, I5 |
+| 7,0 | I5 |
+| 3,0 | I6 |
+| 1,0 | I6, I7, I8 |
+| 0,5 | I8 |
 
   * Fragestellung: Welches sind die erfolgreichen ITags?
   * Einträge gruppieren nach mehrfach-Vorkommen und nach relQuality absteigend
-    * Beispiel hier wäre: I4, I3, I5
+    * Beispiel hier wäre: I6, I8, I5, I7
 Diese Reihenfolge der ITags ist nun die finale Reihenfolge, wie erfolgreich die ITags sind
