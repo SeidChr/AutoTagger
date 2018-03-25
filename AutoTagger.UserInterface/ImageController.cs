@@ -27,13 +27,18 @@ namespace AutoTagger.UserInterface
 
         // POST api/<controller>
         [HttpPost]
-        public JsonResult Post([FromForm]string link)
+        public IActionResult Post([FromForm]string link)
         {
             var content = new Dictionary<string, object>();
             content.Add("link", link);
 
-            var machineTags = _taggingProvider.GetTagsForImage(link).ToList();
+            var machineTags = _taggingProvider.GetTagsForImageUrl(link).ToList();
             content.Add("machineTags", machineTags);
+
+            if (!machineTags.Any())
+            {
+                return BadRequest("No MachineTags found :'(");
+            }
 
             var instagramTags = _db.FindInstagramTags(machineTags);
             content.Add("instagramTags", instagramTags);
@@ -61,7 +66,12 @@ namespace AutoTagger.UserInterface
             {
                 await file.CopyToAsync(stream);
                 var bytes = stream.ToArray();
-                var machineTags = _taggingProvider.GetTagsForImage(bytes);
+                var machineTags = _taggingProvider.GetTagsForImageBytes(bytes);
+
+                if (!machineTags.Any())
+                {
+                    return BadRequest("No MachineTags found :'(");
+                }
 
                 var instagramTags = _db.FindInstagramTags(machineTags);
                 return Json(new { machineTags = machineTags, instagramTags = instagramTags });

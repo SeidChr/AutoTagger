@@ -18,13 +18,13 @@ namespace AutoTagger.Clarifai.Standard
             client = new ClarifaiClient(ClarifaiApiKey);
         }
 
-        public IEnumerable<string> GetTagsForImage(string imageUrl)
+        public IEnumerable<string> GetTagsForImageUrl(string imageUrl)
         {
             var clarifaiInput = new ClarifaiURLImage(imageUrl);
             return GetTagsForInput(clarifaiInput);
         }
 
-        public IEnumerable<string> GetTagsForImage(byte[] imageBytes)
+        public IEnumerable<string> GetTagsForImageBytes(byte[] imageBytes)
         {
             var clarifaiInput = new ClarifaiFileImage(imageBytes);
             return GetTagsForInput(clarifaiInput);
