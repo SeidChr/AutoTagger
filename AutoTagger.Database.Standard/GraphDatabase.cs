@@ -75,7 +75,7 @@
 
         public IReadOnlyCollection<dynamic> Submit(string script)
         {
-            var task = this.SubmitAsync(script);
+            var task = this.SubmitAsync(script);    
             task.Wait();
             return task.Result;
         }

@@ -13,7 +13,7 @@ namespace AutoTagger.TestConsole.Core
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("D/F: Graph Database Test, C: Clarifai Tagger Test, R: Crawler Roundtrip");
+            Console.WriteLine("D/F: Graph Database Test, C: Clarifai Tagger Test, R: Crawler Roundtrip, I: Import Testdata from File");
             var key = Console.ReadKey();
             switch (key.KeyChar)
             {
@@ -29,6 +29,12 @@ namespace AutoTagger.TestConsole.Core
                 case 'R':
                     CrawlerRoudTripTest();
                     break;
+
+                case 'i':
+                case 'I':
+                    ImportInstagramTags();
+                    break;
+
                 case 'f':
                 case 'F':
                     DatabaseReadTest();
@@ -49,13 +55,13 @@ namespace AutoTagger.TestConsole.Core
             var db = new AutoTaggerDatabase() as IAutoTaggerDatabase;
             var tagger = new ClarifaiImageTagger() as ITaggingProvider;
 
-            var maschineTags = tagger.GetTagsForImage(imageLink).ToList();
-            Console.WriteLine("Mashine Tags: " + string.Join(", ", maschineTags));
+            var machineTags = tagger.GetTagsForImage(imageLink).ToList();
+            Console.WriteLine("Mashine Tags: " + string.Join(", ", machineTags));
 
             var humanoidTags = GetRandomInstagramTags(imageLink.Length).ToList();
             Console.WriteLine("Human Tags: " + string.Join(", ", humanoidTags));
 
-            db.IndertOrUpdate("CrawlerRoundTripTestImageId", maschineTags, humanoidTags);
+            db.IndertOrUpdate("CrawlerRoundTripTestImageId", machineTags, humanoidTags);
 
             // cleanup after test
             //db.Remove("CrawlerRoundTripTestImageId");
@@ -111,6 +117,35 @@ namespace AutoTagger.TestConsole.Core
             }
 
             return result;
+        }
+
+        public static void ImportInstagramTags()
+        {
+            List<string> result = new List<string>();
+            var linkWithTags = File.ReadLines("./imageLinks.txt").ToList();
+            foreach (var linkWithTag in linkWithTags)
+            {
+                var splitted = linkWithTag.Split(',');
+                var link = splitted.First();
+                var humanoidTags = splitted.Skip(1).First().Split('/');
+
+                var tagger = new ClarifaiImageTagger();
+                var autoTaggerDatabase = new AutoTaggerDatabase();
+
+                var machineTags = tagger.GetTagsForImage(link);
+
+                autoTaggerDatabase.IndertOrUpdate(link, machineTags, humanoidTags);
+            }
+
+            //while (result.Count < 30)
+            //{
+            //    var index = random.Next(tags.Count - 1);
+            //    var item = tags[index];
+            //    tags.RemoveAt(index);
+            //    result.Add(item);
+            //}
+
+            //return result;
         }
     }
 }

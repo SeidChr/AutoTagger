@@ -37,12 +37,12 @@ namespace AutoTagger.UserInterface
             var content = new Dictionary<string, object>();
             content.Add("link", link);
 
-            var maschineTags = _taggingProvider.GetTagsForImage(link).ToList();
-            content.Add("maschineTags", maschineTags);
+            var machineTags = _taggingProvider.GetTagsForImage(link).ToList();
+            content.Add("machineTags", machineTags);
 
             try
             {
-                var instagramTags = _db.FindInstagramTags(maschineTags);
+                var instagramTags = _db.FindInstagramTags(machineTags);
                 content.Add("instagramTags", instagramTags);
             }
             catch (NotImplementedException)

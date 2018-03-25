@@ -19,11 +19,11 @@ namespace AutoTagger.Database.Standard
             this.database = new GraphDatabase();
         }
 
-        public void IndertOrUpdate(string imageId, IEnumerable<string> maschineTags, IEnumerable<string> humanoidTags)
+        public void IndertOrUpdate(string imageId, IEnumerable<string> machineTags, IEnumerable<string> humanoidTags)
         {
             this.CreateImage(imageId);
 
-            foreach (var tag in maschineTags)
+            foreach (var tag in machineTags)
             {
                 this.CreateTag(tag);
 
@@ -93,9 +93,9 @@ namespace AutoTagger.Database.Standard
             this.database.Submit($"g.V().drop()");
         }
 
-        public IEnumerable<string> FindInstagramTags(IEnumerable<string> maschineTags)
+        public IEnumerable<string> FindInstagramTags(IEnumerable<string> machineTags)
         {
-            var tagString = maschineTags.Select(CleanInput).Aggregate(string.Empty, (i, j) => i + "','" + j).Trim('\'', ',');
+            var tagString = machineTags.Select(CleanInput).Aggregate(string.Empty, (i, j) => i + "','" + j).Trim('\'', ',');
 
 
             var result = this.database.Submit(
