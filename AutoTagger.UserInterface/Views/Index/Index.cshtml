@@ -1,0 +1,29 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" />
+</head>
+<body>
+
+
+<p>Find Instagram Tags by uploading a Photo</p>
+
+<h2>Upload an image</h2>
+<form method="post" action="/image/upload" enctype="multipart/form-data">
+    <input type="file" name="file" accept="image/*">
+    <input type="submit"/>
+</form>
+
+<h2>Insert a link</h2>
+<form method="post" action="/image">
+    <input type="text" name="link" style="width: 400px"/>
+    <input type="submit"/>
+</form>
+
+</body>
+</html>
