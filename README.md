@@ -1,16 +1,12 @@
 # AutoTagger
 Find Instagram Tags by uploading a Photo
 
-## Table & Formel
-![](https://github.com/Vittel/AutoTagger/raw/master/doc/table_formel.jpg)
-
 ## Architecture
 ![](https://github.com/Vittel/AutoTagger/raw/master/doc/architecture.jpg)
 
 ## TaggingProvider
-Rest API
-localhost:80
-- GET /find
+derzeit Konsolenanwendung
+- ToDo REST Api 
 
 ## UserInterface
 Frontend:
@@ -23,3 +19,14 @@ Rest API
 ## Hosting
 Frontend with Continues Delivery
 http://autotaggerui.azurewebsites.net/index
+
+### ToDos
+  * [ ] Datenbank: Qualität der Tags erhöhen, evlt durch Nutzung einer anderen DB
+  * [ ] Schauen, ob es Instagram Datensätzze schon iwo gibt, damit nicht selbst crawlen
+  * [ ] Crawling als Job und in Azure hosten
+  * [ ] Service-based architecture
+  * [ ] Tests: Die Aktuellen überarbeiten, Dependencies mocken als Unit u. Acceptance-Tests verpacken
+  * [ ] DI ordentlich
+  * [ ] UserInterface Service: Views entfernen und wieder als Rest API
+  * [ ] SPA Frontend bauen mit Angular o.ö. und welches Rest API nutzt
+
