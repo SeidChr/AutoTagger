@@ -1,4 +1,6 @@
-﻿namespace AutoTagger.Database.Standard
+﻿using System.Threading;
+
+namespace AutoTagger.Database.Standard
 {
     using System;
     using System.Collections.Generic;
@@ -75,8 +77,27 @@
 
         public IReadOnlyCollection<dynamic> Submit(string script)
         {
-            var task = this.SubmitAsync(script);    
-            task.Wait();
+            var task = this.SubmitAsync(script);
+
+            try
+            {
+                task.Wait();
+            }
+            catch (Exception)
+            {
+                Thread.Sleep(50000);
+                try
+                {
+                    var retryTask = this.SubmitAsync(script);
+                    retryTask.Wait();
+                    return retryTask.Result;
+                }
+                catch (Exception)
+                {
+                    Console.WriteLine("Graph Query Error unrecoverable for script " + script);
+                }
+            }
+
             return task.Result;
         }
 

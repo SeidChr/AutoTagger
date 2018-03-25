@@ -79,16 +79,18 @@ namespace AutoTagger.TestConsole.Core
         {
             /// Bgsth_jAPup
             var crawler = new Crawler.Standard.Crawler();
-            crawler.GetImageDataFromShortCode("Bgsth_jAPup");
-            crawler.GetShortCodesFromHashTag("ighamburg");
+            //crawler.GetImageDataFromShortCode("Bgsth_jAPup");
+            //crawler.GetShortCodesFromHashTag("ighamburg");
             var images = crawler.GetImagesFromHashTag("ighamburg", 1000);
-            Console.WriteLine("images: " + string.Join(", ", images.Select(x=>x.ImageId)));
+            //Console.WriteLine("images: " + string.Join(", ", images.Select(x=>x.ImageId)));
             var tagger = new ClarifaiImageTagger();
             var db = new AutoTaggerDatabase();
 
             foreach (var crawlerImage in images)
             {
-                var tags = tagger.GetTagsForImageUrl(crawlerImage.ImageUrl);
+                Console.WriteLine("Adding image "+crawlerImage.ImageId + " to db");
+                var tags = tagger.GetTagsForImageUrl(crawlerImage.ImageUrl).ToList();
+                Console.WriteLine("Tags: " + string.Join(", ", tags));
                 db.IndertOrUpdate(crawlerImage.ImageId, tags, crawlerImage.HumanoidTags);
             }
         }
