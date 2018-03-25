@@ -1,6 +1,9 @@
 # AutoTagger
 Find Instagram Tags by uploading a Photo
 
+## Table & Formel
+![](https://github.com/Vittel/AutoTagger/raw/master/doc/table_formel.jpg)
+
 ## Architecture
 ![](https://github.com/Vittel/AutoTagger/raw/master/doc/architecture.jpg)
 
