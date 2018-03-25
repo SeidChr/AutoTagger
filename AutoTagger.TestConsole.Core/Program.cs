@@ -61,7 +61,7 @@ namespace AutoTagger.TestConsole.Core
             //crawler.GetImageDataFromShortCode("Bgsth_jAPup");
             //crawler.GetShortCodesFromHashTag("ighamburg");
             var crawlerDb = new LiteCrawlerDb("test.db");
-            var images = crawler.GetImagesFromHashTag(2, "world");
+            var images = crawler.GetImagesFromHashTag(30, "world");
             //Console.WriteLine("images: " + string.Join(", ", images.Select(x=>x.ImageId)));
             foreach (var crawlerImage in images)
             {
@@ -69,7 +69,7 @@ namespace AutoTagger.TestConsole.Core
                 crawlerDb.InsertOrUpdate(crawlerImage);
             }
 
-            
+            Console.WriteLine("Stored Images: " + string.Join(", ", crawlerDb.GetImageIds()));
         }
 
         private static void Crawl1000Images()

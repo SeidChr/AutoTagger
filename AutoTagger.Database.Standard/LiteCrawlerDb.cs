@@ -41,7 +41,19 @@ namespace AutoTagger.Database.Standard
         public void InsertOrUpdate(ICrawlerImage crawlerImage)
         {
             var collection = database.GetCollection<ICrawlerImage>("images");
-            collection.Insert(crawlerImage);
+            collection.Upsert(crawlerImage);
+        }
+
+        public bool Contains(string imageId)
+        {
+            var collection = database.GetCollection<ICrawlerImage>("images");
+            return collection.Find(x => x.ImageId == imageId).Any();
+        }
+
+        public IEnumerable<string> GetImageIds()
+        {
+            var collection = database.GetCollection<ICrawlerImage>("images");
+            return collection.FindAll().Select(x=>x.ImageId);
         }
     }
 }
