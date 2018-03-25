@@ -88,7 +88,7 @@ namespace AutoTagger.TestConsole.Core
 
             foreach (var crawlerImage in images)
             {
-                Console.WriteLine("Adding image "+crawlerImage.ImageId + " to db");
+                Console.WriteLine("Adding image "+ crawlerImage.ImageId + " to db. Humaniod Tags: " + string.Join(", ", crawlerImage.HumanoidTags));
                 var tags = tagger.GetTagsForImageUrl(crawlerImage.ImageUrl).ToList();
                 Console.WriteLine("Tags: " + string.Join(", ", tags));
                 db.IndertOrUpdate(crawlerImage.ImageId, tags, crawlerImage.HumanoidTags);
