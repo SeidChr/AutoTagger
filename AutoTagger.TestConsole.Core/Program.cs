@@ -60,12 +60,16 @@ namespace AutoTagger.TestConsole.Core
             var crawler = new Crawler.Standard.Crawler();
             //crawler.GetImageDataFromShortCode("Bgsth_jAPup");
             //crawler.GetShortCodesFromHashTag("ighamburg");
+            var crawlerDb = new LiteCrawlerDb("test.db");
             var images = crawler.GetImagesFromHashTag(2, "world");
             //Console.WriteLine("images: " + string.Join(", ", images.Select(x=>x.ImageId)));
             foreach (var crawlerImage in images)
             {
                 Console.WriteLine("{ \"id\":\""+crawlerImage.ImageId + "\", \"url\":\"" + crawlerImage.ImageUrl + "\",\"tags\": [" + string.Join(", ", crawlerImage.HumanoidTags.Select(x=>"'" + x + "'")) + "]}");
+                crawlerDb.InsertOrUpdate(crawlerImage);
             }
+
+            
         }
 
         private static void Crawl1000Images()
