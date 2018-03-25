@@ -52,21 +52,31 @@ namespace AutoTagger.UserInterface
             return Json(content);
         }
 
-        // POST api/<controller>
-        [HttpPost]
-        public async Task<string> Upload(IFormFile formFile)
+        // POST api/<controller>/upload
+        [HttpPost("upload")]
+        public async Task<IActionResult> Post(IFormFile file)
         {
-            var filePath = Path.GetTempFileName();
+            var content = "";
 
-            if (formFile.Length > 0)
+            if (!Request.ContentType.Contains("multipart/form-data; boundary"))
             {
-                using (var stream = new FileStream(filePath, FileMode.Create))
-                {
-                    await formFile.CopyToAsync(stream);
-                }
+                return BadRequest("wrong contentType :'(");
             }
 
-            return "YEAH";
+            if (file == null || file.Length == 0)
+            {
+                return BadRequest("No Files uploaded");
+            }
+
+
+            var filePath = Path.GetTempFileName();
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+
+            return Ok("Upload successful");
         }
 
     }
