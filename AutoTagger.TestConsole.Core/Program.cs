@@ -13,7 +13,7 @@ namespace AutoTagger.TestConsole.Core
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("D/F: Graph Database Test, C: Clarifai Tagger Test, R: Crawler Roundtrip, I: Import Testdata from File");
+            Console.WriteLine("D/F: Graph Database Test, C: Clarifai Tagger Test, R: Crawler Roundtrip, I: Import Testdata from File, X: crawler test");
             var key = Console.ReadKey();
             switch (key.KeyChar)
             {
@@ -21,10 +21,12 @@ namespace AutoTagger.TestConsole.Core
                 case 'C':
                     ClarifaiTest();
                     break;
+
                 case 'd':
                 case 'D':
                     DatabaseTest();
                     break;
+
                 case 'r':
                 case 'R':
                     CrawlerRoudTripTest();
@@ -39,6 +41,12 @@ namespace AutoTagger.TestConsole.Core
                 case 'F':
                     DatabaseReadTest();
                     break;
+
+                case 'x':
+                case 'X':
+                    CrawlerTest();
+                    break;
+
                 default:
                     Console.WriteLine("No Test");
                     break;
@@ -65,6 +73,13 @@ namespace AutoTagger.TestConsole.Core
 
             // cleanup after test
             //db.Remove("CrawlerRoundTripTestImageId");
+        }
+
+        private static void CrawlerTest()
+        {
+            /// Bgsth_jAPup
+            var crawler = new Crawler.Standard.Crawler();
+            crawler.Process("Bgsth_jAPup");
         }
 
         private static void DatabaseTest()
