@@ -15,3 +15,4 @@ localhost:5000
 cd AutoTagger\AutoTagger.UserInterface\bin\Debug\netcoreapp2.0
 dotnet AutoTagger.UserInterface.dll
 - POST /image -> body: form-data -> param "link"
+- POST /image/upload -> param "file" with image

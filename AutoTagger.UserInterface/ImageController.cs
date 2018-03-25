@@ -29,44 +29,43 @@ namespace AutoTagger.UserInterface
         [HttpPost]
         public JsonResult Post([FromForm]string link)
         {
-            return DoTagging(link);
-        }
-
-        private JsonResult DoTagging(string link)
-        {
             var content = new Dictionary<string, object>();
             content.Add("link", link);
 
-            var maschineTags = _taggingProvider.GetTagsForImage(link).ToList();
-            content.Add("maschineTags", maschineTags);
+            var machineTags = _taggingProvider.GetTagsForImage(link).ToList();
+            content.Add("machineTags", machineTags);
 
-            try
-            {
-                var instagramTags = _db.FindInstagramTags(maschineTags);
-                content.Add("instagramTags", instagramTags);
-            }
-            catch (NotImplementedException)
-            {
-            }
+            var instagramTags = _db.FindInstagramTags(machineTags);
+            content.Add("instagramTags", instagramTags);
 
             return Json(content);
         }
 
-        // POST api/<controller>
-        [HttpPost]
-        public async Task<string> Upload(IFormFile formFile)
+        // POST api/<controller>/upload
+        [HttpPost("upload")]
+        public async Task<IActionResult> Post(IFormFile file)
         {
-            var filePath = Path.GetTempFileName();
 
-            if (formFile.Length > 0)
+            if (!Request.ContentType.Contains("multipart/form-data; boundary"))
             {
-                using (var stream = new FileStream(filePath, FileMode.Create))
-                {
-                    await formFile.CopyToAsync(stream);
-                }
+                return BadRequest("wrong contentType :'(");
             }
 
-            return "YEAH";
+            if (file == null || file.Length == 0)
+            {
+                return BadRequest("No Files uploaded");
+            }
+
+
+            using (var stream = new MemoryStream())
+            {
+                await file.CopyToAsync(stream);
+                var bytes = stream.ToArray();
+                var machineTags = _taggingProvider.GetTagsForImage(bytes);
+
+                var instagramTags = _db.FindInstagramTags(machineTags);
+                return Json(new { machineTags = machineTags, instagramTags = instagramTags });
+            }
         }
 
     }
