@@ -55,5 +55,11 @@ namespace AutoTagger.Database.Standard
             var collection = database.GetCollection<ICrawlerImage>("images");
             return collection.FindAll().Select(x=>x.ImageId);
         }
+
+        public IEnumerable<string> CountTags()
+        {
+            var collection = database.GetCollection<ICrawlerImage>("images");
+            return collection.FindAll().Select(x => x.ImageId);
+        }
     }
 }
