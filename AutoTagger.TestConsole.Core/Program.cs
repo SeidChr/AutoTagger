@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using AutoTagger.Clarifai.Standard;
 using AutoTagger.Contract;
 
@@ -49,14 +50,15 @@ namespace AutoTagger.TestConsole.Core
             var tagger = new ClarifaiImageTagger() as ITaggingProvider;
 
             var maschineTags = tagger.GetTagsForImage(imageLink).ToList();
-            Console.WriteLine("Tags: " + string.Join(", ", maschineTags));
+            Console.WriteLine("Mashine Tags: " + string.Join(", ", maschineTags));
 
-            var humanoidTags = new[] { "c", "d" };
+            var humanoidTags = GetRandomInstagramTags(imageLink.Length).ToList();
+            Console.WriteLine("Human Tags: " + string.Join(", ", humanoidTags));
 
             db.IndertOrUpdate("CrawlerRoundTripTestImageId", maschineTags, humanoidTags);
 
             // cleanup after test
-            db.Remove("CrawlerRoundTripTestImageId");
+            //db.Remove("CrawlerRoundTripTestImageId");
         }
 
         private static void DatabaseTest()
@@ -95,12 +97,20 @@ namespace AutoTagger.TestConsole.Core
             Console.WriteLine("Tags: " + string.Join(", ", tags));
         }
 
-        //static IEnumerable<string> GetRandomInstagramTags()
-        //{
+        static IEnumerable<string> GetRandomInstagramTags(int seed)
+        {
+            List<string> result = new List<string>();
+            var tags = File.ReadLines("./instagramTags.txt").ToList();
+            var random = new Random(seed);
+            while (result.Count < 30)
+            {
+                var index = random.Next(tags.Count - 1);
+                var item = tags[index];
+                tags.RemoveAt(index);
+                result.Add(item);
+            }
 
-        //    var tags = File.ReadLines("./instagramTags").ToList();
-        //    var random = new Random();
-        //    while ()
-        //}
+            return result;
+        }
     }
 }
