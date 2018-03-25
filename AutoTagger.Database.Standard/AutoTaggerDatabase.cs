@@ -99,7 +99,7 @@ namespace AutoTagger.Database.Standard
 
 
             var result = this.database.Submit(
-                $"g.V().hasLabel('image').order().by(out('tagged').has('id',within('{tagString}')).count().as('count'), decr).out('itagged').dedup()");
+                $"g.V().hasLabel('image').order().by(out('tagged').has('id',within('{tagString}')).count().as('count'), decr).limit(10).out('itagged').dedup().limit(10)");
 
             return result.Select(i => (string)i["id"]);
         }
