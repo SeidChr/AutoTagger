@@ -63,7 +63,7 @@ namespace AutoTagger.TestConsole.Core
             var db = new AutoTaggerDatabase() as IAutoTaggerDatabase;
             var tagger = new ClarifaiImageTagger() as ITaggingProvider;
 
-            var machineTags = tagger.GetTagsForImage(imageLink).ToList();
+            var machineTags = tagger.GetTagsForImageUrl(imageLink).ToList();
             Console.WriteLine("Mashine Tags: " + string.Join(", ", machineTags));
 
             var humanoidTags = GetRandomInstagramTags(imageLink.Length).ToList();
@@ -79,7 +79,18 @@ namespace AutoTagger.TestConsole.Core
         {
             /// Bgsth_jAPup
             var crawler = new Crawler.Standard.Crawler();
-            crawler.Process("Bgsth_jAPup");
+            crawler.GetImageDataFromShortCode("Bgsth_jAPup");
+            crawler.GetShortCodesFromHashTag("ighamburg");
+            var images = crawler.GetImagesFromHashTag("ighamburg", 1000);
+            Console.WriteLine("images: " + string.Join(", ", images.Select(x=>x.ImageId)));
+            var tagger = new ClarifaiImageTagger();
+            var db = new AutoTaggerDatabase();
+
+            foreach (var crawlerImage in images)
+            {
+                var tags = tagger.GetTagsForImageUrl(crawlerImage.ImageUrl);
+                db.IndertOrUpdate(crawlerImage.ImageId, tags, crawlerImage.HumanoidTags);
+            }
         }
 
         private static void DatabaseTest()
@@ -114,7 +125,7 @@ namespace AutoTagger.TestConsole.Core
                 "https://images.pexels.com/photos/211707/pexels-photo-211707.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260";
             Console.WriteLine("Clarifai Test");
             var tagger = new ClarifaiImageTagger();
-            var tags = tagger.GetTagsForImage(imageLink);
+            var tags = tagger.GetTagsForImageUrl(imageLink);
             Console.WriteLine("Tags: " + string.Join(", ", tags));
         }
 
@@ -147,7 +158,7 @@ namespace AutoTagger.TestConsole.Core
                 var tagger = new ClarifaiImageTagger();
                 var autoTaggerDatabase = new AutoTaggerDatabase();
 
-                var machineTags = tagger.GetTagsForImage(link);
+                var machineTags = tagger.GetTagsForImageUrl(link);
 
                 autoTaggerDatabase.IndertOrUpdate(link, machineTags, humanoidTags);
             }

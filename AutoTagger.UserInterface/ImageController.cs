@@ -32,7 +32,7 @@ namespace AutoTagger.UserInterface
             var content = new Dictionary<string, object>();
             content.Add("link", link);
 
-            var machineTags = _taggingProvider.GetTagsForImage(link).ToList();
+            var machineTags = _taggingProvider.GetTagsForImageUrl(link).ToList();
             content.Add("machineTags", machineTags);
 
             var instagramTags = _db.FindInstagramTags(machineTags);
@@ -61,7 +61,7 @@ namespace AutoTagger.UserInterface
             {
                 await file.CopyToAsync(stream);
                 var bytes = stream.ToArray();
-                var machineTags = _taggingProvider.GetTagsForImage(bytes);
+                var machineTags = _taggingProvider.GetTagsForImageBytes(bytes);
 
                 var instagramTags = _db.FindInstagramTags(machineTags);
                 return Json(new { machineTags = machineTags, instagramTags = instagramTags });

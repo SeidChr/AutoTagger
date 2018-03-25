@@ -16,7 +16,7 @@ namespace AutoTagger.TaggingProvider
                 var link = Console.ReadLine();
                 Console.WriteLine("inserted: " + link);
 
-                var tags = imageTagger.GetTagsForImage(link);
+                var tags = imageTagger.GetTagsForImageUrl(link);
                 var output = JsonConvert.SerializeObject(tags);
                 Console.WriteLine(output);
             }
