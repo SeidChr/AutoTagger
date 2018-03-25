@@ -46,6 +46,15 @@ namespace AutoTagger.UserInterface
             return Json(content);
         }
 
+
+        [HttpGet("test")]
+        public IActionResult Test()
+        {
+            ViewBag.MachineTags = new[] { "test", "sdfsd" };
+            ViewBag.InstagramTags = new[] { "sdfsdfsdf", "sdfsd" };
+            return View("Post");
+        }
+
         // POST api/<controller>/upload
         [HttpPost("upload")]
         public async Task<IActionResult> Post(IFormFile file)
@@ -74,7 +83,10 @@ namespace AutoTagger.UserInterface
                 }
 
                 var instagramTags = _db.FindInstagramTags(machineTags);
-                return Json(new { machineTags = machineTags, instagramTags = instagramTags });
+
+                ViewBag.MachineTags = machineTags;
+                ViewBag.InstagramTags = instagramTags;
+                return this.View();
             }
         }
 
