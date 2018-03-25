@@ -48,7 +48,7 @@ namespace AutoTagger.Database.Standard
         {
             if (!this.IsTagged(imageId, tag))
             {
-                this.database.Submit($"g.V('{imageId}').addE('knows').to(g.V('{tag}'))");
+                this.database.Submit($"g.V('{imageId}').addE('tagged').to(g.V('{tag}'))");
             }
         }
 
@@ -70,13 +70,13 @@ namespace AutoTagger.Database.Standard
 
         private bool IsInstagramTagged(string imageId, string tag)
         {
-            var result = this.database.Submit($"g.V('{imageId}').outE('itagged').V('{tag}')");
+            var result = this.database.Submit($"g.V('{imageId}').out('itagged').has('id','{tag}')");
             return result.Any();
         }
 
         private bool IsTagged(string imageId, string tag)
         {
-            var result = this.database.Submit($"g.V('{imageId}').outE('tagged').V('{tag}')");
+            var result = this.database.Submit($"g.V('{imageId}').out('tagged').has('id','{tag}')");
             return result.Any();
         }
 

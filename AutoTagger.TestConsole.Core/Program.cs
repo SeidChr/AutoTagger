@@ -34,7 +34,7 @@ namespace AutoTagger.TestConsole.Core
                     database.Drop();
 
                     database.IndertOrUpdate("schiff1", new[] { "boot", "wasser" }, new[] { "urlaub", "entspannung" });
-                    database.IndertOrUpdate("boot1", new[] { "boot", "wasser" }, new[] { "urlaub", "angeln" });
+                    database.IndertOrUpdate("boot1", new[] { "boot", "fisch" }, new[] { "urlaub", "angeln" });
 
                     Console.WriteLine("Graph reset and filled.s");
 
