@@ -81,7 +81,7 @@ namespace AutoTagger.TestConsole.Core
             var crawler = new Crawler.Standard.Crawler();
             //crawler.GetImageDataFromShortCode("Bgsth_jAPup");
             //crawler.GetShortCodesFromHashTag("ighamburg");
-            var images = crawler.GetImagesFromHashTag("ighamburg", 1000);
+            var images = crawler.GetImagesFromHashTag(1000, "world");
             //Console.WriteLine("images: " + string.Join(", ", images.Select(x=>x.ImageId)));
             var tagger = new ClarifaiImageTagger();
             var db = new AutoTaggerDatabase();
