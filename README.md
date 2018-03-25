@@ -19,3 +19,7 @@ Frontend:
 Rest API
 - POST /image -> body: form-data -> param "link"
 - POST /image/upload -> param "file" with image
+
+## Hosting
+Frontend with Continues Delivery
+http://autotaggerui.azurewebsites.net/index
