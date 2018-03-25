@@ -1,4 +1,6 @@
-﻿using System.Threading;
+﻿using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading;
 
 namespace AutoTagger.Database.Standard
 {
@@ -95,6 +97,7 @@ namespace AutoTagger.Database.Standard
                 catch (Exception)
                 {
                     Console.WriteLine("Graph Query Error unrecoverable for script " + script);
+                    return new ReadOnlyCollection<dynamic>(Enumerable.Empty<dynamic>().ToList());
                 }
             }
 
