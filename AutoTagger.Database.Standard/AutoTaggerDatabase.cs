@@ -4,6 +4,8 @@ namespace AutoTagger.Database.Standard
 {
     using System;
     using System.Linq;
+    using System.Text;
+    using System.Text.RegularExpressions;
 
     using Newtonsoft.Json.Linq;
     using AutoTagger.Contract;
@@ -17,11 +19,11 @@ namespace AutoTagger.Database.Standard
             this.database = new GraphDatabase();
         }
 
-        public void IndertOrUpdate(string imageId, IEnumerable<string> maschineTags, IEnumerable<string> humanoidTags)
+        public void IndertOrUpdate(string imageId, IEnumerable<string> machineTags, IEnumerable<string> humanoidTags)
         {
             this.CreateImage(imageId);
 
-            foreach (var tag in maschineTags)
+            foreach (var tag in machineTags)
             {
                 this.CreateTag(tag);
 
@@ -40,7 +42,7 @@ namespace AutoTagger.Database.Standard
         {
             if (!this.HasNode(imageId))
             {
-                this.database.Submit($"g.addV('imageId').property('id', '{imageId}')");
+                this.database.Submit($"g.addV('image').property('id', '{CleanInput(imageId)}')");
             }
         }
 
@@ -48,7 +50,7 @@ namespace AutoTagger.Database.Standard
         {
             if (!this.IsTagged(imageId, tag))
             {
-                this.database.Submit($"g.V('{imageId}').addE('knows').to(g.V('{tag}'))");
+                this.database.Submit($"g.V('{CleanInput(imageId)}').addE('tagged').to(g.V('{CleanInput(tag)}'))");
             }
         }
 
@@ -56,7 +58,7 @@ namespace AutoTagger.Database.Standard
         {
             if (!this.IsInstagramTagged(imageId, tag))
             {
-                this.database.Submit($"g.V('{imageId}').addE('itagged').to(g.V('{tag}'))");
+                this.database.Submit($"g.V('{CleanInput(imageId)}').addE('itagged').to(g.V('{CleanInput(tag)}'))");
             }
         }
 
@@ -64,25 +66,25 @@ namespace AutoTagger.Database.Standard
         {
             if (!this.HasNode(tag))
             {
-                this.database.Submit($"g.addV('tag').property('id', '{tag}')");
+                this.database.Submit($"g.addV('tag').property('id', '{CleanInput(tag)}')");
             }
         }
 
         private bool IsInstagramTagged(string imageId, string tag)
         {
-            var result = this.database.Submit($"g.V('{imageId}').outE('itagged').V('{tag}')");
+            var result = this.database.Submit($"g.V('{CleanInput(imageId)}').out('itagged').has('id','{CleanInput(tag)}')");
             return result.Any();
         }
 
         private bool IsTagged(string imageId, string tag)
         {
-            var result = this.database.Submit($"g.V('{imageId}').outE('tagged').V('{tag}')");
+            var result = this.database.Submit($"g.V('{CleanInput(imageId)}').out('tagged').has('id','{CleanInput(tag)}')");
             return result.Any();
         }
 
         private bool HasNode(string imageId)
         {
-            var result = this.database.Submit($"g.V('{imageId}')");
+            var result = this.database.Submit($"g.V('{CleanInput(imageId)}')");
             return result.Any();
         }
 
@@ -91,14 +93,25 @@ namespace AutoTagger.Database.Standard
             this.database.Submit($"g.V().drop()");
         }
 
-        public IEnumerable<string> FindInstagramTags(IEnumerable<string> maschineTags)
+        public IEnumerable<string> FindInstagramTags(IEnumerable<string> machineTags)
         {
-            throw new NotImplementedException();
+            var tagString = machineTags.Select(CleanInput).Aggregate(string.Empty, (i, j) => i + "','" + j).Trim('\'', ',');
+
+
+            var result = this.database.Submit(
+                $"g.V().hasLabel('image').order().by(out('tagged').has('id',within('{tagString}')).count().as('count'), decr).out('itagged').dedup()");
+
+            return result.Select(i => (string)i["id"]);
         }
 
         public void Remove(string imageId)
         {
             this.database.Submit($"g.V('{imageId}').drop()");
+        }
+
+        private static string CleanInput(string input)
+        {
+            return Regex.Replace(input, @"[^\w\.@-]", string.Empty);
         }
     }
 }
