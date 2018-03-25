@@ -12,52 +12,11 @@ namespace AutoTagger.Crawler.Standard
 {
     public class Crawler : ICrawler
     {
-        public IEnumerable<ICrawlerImage> GetImages(int amount, string url)
+        private HttpClient httpClient;
+
+        public Crawler()
         {
-            var initialShortCodes = GetShortCodesFromUrl("https://www.instagram.com/");
-
-            var images = new Dictionary<string, ICrawlerImage>();
-            var processedHashTags = new HashSet<string>();
-            var hashTagQueue = new ConcurrentQueue<string>();
-
-            foreach (var hashTag in initialShortCodes.Select(GetImageDataFromShortCode).SelectMany(x => x.HumanoidTags).Distinct())
-            {
-                hashTagQueue.Enqueue(hashTag);
-            }
-
-            while (hashTagQueue.TryDequeue(out var currentHashTag))
-            {
-                if (processedHashTags.Contains(currentHashTag))
-                {
-                    continue;
-                }
-
-                processedHashTags.Add(currentHashTag);
-
-                var shortCodes = GetShortCodesFromHashTag(currentHashTag);
-
-                var imageData = shortCodes.Select(GetImageDataFromShortCode).Where(x => x != null);
-                foreach (var crawlerImage in imageData)
-                {
-                    foreach (var tag in crawlerImage.HumanoidTags
-                        .Where(t => !processedHashTags.Contains(t) && !hashTagQueue.Contains(t)))
-                    {
-                        hashTagQueue.Enqueue(tag);
-                    }
-
-                    if (images.ContainsKey(crawlerImage.ImageId))
-                    {
-                        continue;
-                    }
-
-                    images[crawlerImage.ImageId] = crawlerImage;
-                    yield return crawlerImage;
-                    if (images.Count >= amount)
-                    {
-                        yield break;
-                    }
-                }
-            }
+            httpClient = new HttpClient();
         }
 
         public IEnumerable<ICrawlerImage> GetImagesFromHashTag(int amount, params string[] hashTags)
@@ -107,11 +66,10 @@ namespace AutoTagger.Crawler.Standard
         public ICrawlerImage GetImageDataFromShortCode(string shortCode)
         {
             Console.WriteLine("Processing ShortCode " + shortCode);
-            HttpClient hc = new HttpClient();
             HttpResponseMessage result;
             try
             {
-                result = hc.GetAsync($"https://www.instagram.com/p/{shortCode}/").Result;
+                result = httpClient.GetAsync($"https://www.instagram.com/p/{shortCode}/").Result;
             }
             catch (Exception)
             {
@@ -151,8 +109,7 @@ namespace AutoTagger.Crawler.Standard
         {
             Console.WriteLine("Processing Url " + url);
 
-            HttpClient hc = new HttpClient();
-            var x = hc.GetStringAsync(url).Result;
+            var x = httpClient.GetStringAsync(url).Result;
             var matches = Regex.Matches(x, @"\""shortcode\""\:\""([^\""]+)""");
             var shortcodes = matches.OfType<Match>().Select(m => m.Groups[1].Value);
 

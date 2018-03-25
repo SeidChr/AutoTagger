@@ -29,7 +29,7 @@ namespace AutoTagger.TestConsole.Core
 
                 case 'r':
                 case 'R':
-                    CrawlerRoudTripTest();
+                    Crawl1000Images();
                     break;
 
                 case 'i':
@@ -55,27 +55,20 @@ namespace AutoTagger.TestConsole.Core
             Console.ReadLine();
         }
 
-        private static void CrawlerRoudTripTest()
+        private static void CrawlerTest()
         {
-            Console.WriteLine("Lifecycle Test");
-            var imageLink =
-                "https://images.pexels.com/photos/211707/pexels-photo-211707.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260";
-            var db = new AutoTaggerDatabase() as IAutoTaggerDatabase;
-            var tagger = new ClarifaiImageTagger() as ITaggingProvider;
-
-            var machineTags = tagger.GetTagsForImageUrl(imageLink).ToList();
-            Console.WriteLine("Mashine Tags: " + string.Join(", ", machineTags));
-
-            var humanoidTags = GetRandomInstagramTags(imageLink.Length).ToList();
-            Console.WriteLine("Human Tags: " + string.Join(", ", humanoidTags));
-
-            db.IndertOrUpdate("CrawlerRoundTripTestImageId", machineTags, humanoidTags);
-
-            // cleanup after test
-            //db.Remove("CrawlerRoundTripTestImageId");
+            var crawler = new Crawler.Standard.Crawler();
+            //crawler.GetImageDataFromShortCode("Bgsth_jAPup");
+            //crawler.GetShortCodesFromHashTag("ighamburg");
+            var images = crawler.GetImagesFromHashTag(2, "world");
+            //Console.WriteLine("images: " + string.Join(", ", images.Select(x=>x.ImageId)));
+            foreach (var crawlerImage in images)
+            {
+                Console.WriteLine("{ \"id\":\""+crawlerImage.ImageId + "\", \"url\":\"" + crawlerImage.ImageUrl + "\",\"tags\": [" + string.Join(", ", crawlerImage.HumanoidTags.Select(x=>"'" + x + "'")) + "]}");
+            }
         }
 
-        private static void CrawlerTest()
+        private static void Crawl1000Images()
         {
             /// Bgsth_jAPup
             var crawler = new Crawler.Standard.Crawler();
