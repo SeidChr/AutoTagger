@@ -8,4 +8,8 @@
     <PackageReference Include="HtmlAgilityPack" Version="1.7.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\AutoTagger.Contract\AutoTagger.Contract.csproj" />
+  </ItemGroup>
+
 </Project>

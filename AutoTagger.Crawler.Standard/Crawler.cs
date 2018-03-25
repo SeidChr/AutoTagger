@@ -5,11 +5,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text.RegularExpressions;
+using AutoTagger.Contract;
 using HtmlAgilityPack;
 
 namespace AutoTagger.Crawler.Standard
 {
-    public class Crawler
+    public class Crawler : ICrawler
     {
         public IEnumerable<ICrawlerImage> GetImages(int amount, string url)
         {
@@ -161,21 +162,10 @@ namespace AutoTagger.Crawler.Standard
             /// <meta property="og:description" content="Gefällt 46 Mal, 1 Kommentare - Christian Seidlitz (@seidchr) auf Instagram: „silent alster 3 incredible calm alsterwasser and an awesome littelbit of fog in the athmosphere…“" />
             /// <meta property="instapp:hashtags" content="wearehamburg" /><meta property="instapp:hashtags" content="welovehh" /><meta property="instapp:hashtags" content="hambourg" /><meta property="instapp:hashtags" content="iamatraveler" />
         }
-    }
 
-    public class CrawlerImage : ICrawlerImage
-    {
-        public string ImageId { get; set; }
-        public string ImageUrl { get; set; }
-        public IEnumerable<string> HumanoidTags { get; set; }
-    }
-
-    public interface ICrawlerImage
-    {
-        string ImageId { get; }
-
-        string ImageUrl { get; }
-
-        IEnumerable<string> HumanoidTags { get; }
+        public ICrawlerImage GetCrawlerImageForImageId(string imageId)
+        {
+            return GetImageDataFromShortCode(imageId);
+        }
     }
 }

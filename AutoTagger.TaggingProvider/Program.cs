@@ -20,8 +20,6 @@ namespace AutoTagger.TaggingProvider
                 var output = JsonConvert.SerializeObject(tags);
                 Console.WriteLine(output);
             }
-
-
         }
     }
 }
