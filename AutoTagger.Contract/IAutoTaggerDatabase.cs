@@ -4,9 +4,9 @@ namespace AutoTagger.Contract
 {
     public interface IAutoTaggerDatabase
     {
-        void IndertOrUpdate(string imageId, IEnumerable<string> machineTags, IEnumerable<string> humanoidTags);
+        void InsertOrUpdate(string imageId, IEnumerable<string> machineTags, IEnumerable<string> humanoidTags);
 
-        IEnumerable<string> FindInstagramTags(IEnumerable<string> machineTags);
+        IEnumerable<string> FindHumanoidTags(IEnumerable<string> machineTags);
 
         void Remove(string imageId);
     }

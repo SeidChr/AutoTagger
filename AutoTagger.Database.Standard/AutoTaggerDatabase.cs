@@ -1,25 +1,34 @@
-﻿using System.Collections.Generic;
-
-namespace AutoTagger.Database.Standard
+﻿namespace AutoTagger.Database.Standard
 {
-    using System;
+    using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
     using System.Text.RegularExpressions;
 
-    using Newtonsoft.Json.Linq;
     using AutoTagger.Contract;
 
     public class AutoTaggerDatabase : IAutoTaggerDatabase
     {
-        private readonly GraphDatabase database;
+        private readonly CosmosGraphDatabase database;
 
-        public AutoTaggerDatabase()
+        public AutoTaggerDatabase() => this.database = new CosmosGraphDatabase();
+
+        public void Drop()
         {
-            this.database = new GraphDatabase();
+            this.database.Submit($"g.V().drop()");
         }
 
-        public void IndertOrUpdate(string imageId, IEnumerable<string> machineTags, IEnumerable<string> humanoidTags)
+        public IEnumerable<string> FindHumanoidTags(IEnumerable<string> machineTags)
+        {
+            var tagString = machineTags.Select(CleanInput).Aggregate(string.Empty, (i, j) => i + "','" + j)
+                .Trim('\'', ',');
+
+            var result = this.database.Submit(
+                $"g.V().hasLabel('image').order().by(out('tagged').has('id',within('{tagString}')).count().as('count'), decr).limit(10).out('itagged').dedup().limit(10)");
+
+            return result.Select(i => (string)i["id"]);
+        }
+
+        public void InsertOrUpdate(string imageId, IEnumerable<string> machineTags, IEnumerable<string> humanoidTags)
         {
             this.CreateImage(imageId);
 
@@ -38,11 +47,18 @@ namespace AutoTagger.Database.Standard
             }
         }
 
-        private void CreateImage(string imageId)
+        public void Remove(string imageId)
         {
-            if (!this.HasNode(imageId))
+            this.database.Submit($"g.V('{imageId}').drop()");
+        }
+
+        private static string CleanInput(string input) => Regex.Replace(input, @"[^\w\.@-]", string.Empty);
+
+        private void ConnectInstagramTag(string imageId, string tag)
+        {
+            if (!this.IsInstagramTagged(imageId, tag))
             {
-                this.database.Submit($"g.addV('image').property('id', '{CleanInput(imageId)}')");
+                this.database.Submit($"g.V('{CleanInput(imageId)}').addE('itagged').to(g.V('{CleanInput(tag)}'))");
             }
         }
 
@@ -54,11 +70,11 @@ namespace AutoTagger.Database.Standard
             }
         }
 
-        private void ConnectInstagramTag(string imageId, string tag)
+        private void CreateImage(string imageId)
         {
-            if (!this.IsInstagramTagged(imageId, tag))
+            if (!this.HasNode(imageId))
             {
-                this.database.Submit($"g.V('{CleanInput(imageId)}').addE('itagged').to(g.V('{CleanInput(tag)}'))");
+                this.database.Submit($"g.addV('image').property('id', '{CleanInput(imageId)}')");
             }
         }
 
@@ -70,48 +86,28 @@ namespace AutoTagger.Database.Standard
             }
         }
 
+        private bool HasNode(string imageId)
+        {
+            var result = this.database
+                .Submit($"g.V('{CleanInput(imageId)}')");
+
+            return result.Any();
+        }
+
         private bool IsInstagramTagged(string imageId, string tag)
         {
-            var result = this.database.Submit($"g.V('{CleanInput(imageId)}').out('itagged').has('id','{CleanInput(tag)}')");
+            var result = this.database
+                .Submit($"g.V('{CleanInput(imageId)}').out('itagged').has('id','{CleanInput(tag)}')");
+
             return result.Any();
         }
 
         private bool IsTagged(string imageId, string tag)
         {
-            var result = this.database.Submit($"g.V('{CleanInput(imageId)}').out('tagged').has('id','{CleanInput(tag)}')");
+            var result = this.database
+                .Submit($"g.V('{CleanInput(imageId)}').out('tagged').has('id','{CleanInput(tag)}')");
+
             return result.Any();
-        }
-
-        private bool HasNode(string imageId)
-        {
-            var result = this.database.Submit($"g.V('{CleanInput(imageId)}')");
-            return result.Any();
-        }
-
-        public void Drop()
-        {
-            this.database.Submit($"g.V().drop()");
-        }
-
-        public IEnumerable<string> FindInstagramTags(IEnumerable<string> machineTags)
-        {
-            var tagString = machineTags.Select(CleanInput).Aggregate(string.Empty, (i, j) => i + "','" + j).Trim('\'', ',');
-
-
-            var result = this.database.Submit(
-                $"g.V().hasLabel('image').order().by(out('tagged').has('id',within('{tagString}')).count().as('count'), decr).limit(10).out('itagged').dedup().limit(10)");
-
-            return result.Select(i => (string)i["id"]);
-        }
-
-        public void Remove(string imageId)
-        {
-            this.database.Submit($"g.V('{imageId}').drop()");
-        }
-
-        private static string CleanInput(string input)
-        {
-            return Regex.Replace(input, @"[^\w\.@-]", string.Empty);
         }
     }
 }
