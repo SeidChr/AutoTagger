@@ -69,7 +69,10 @@
         // { "CountEdges", "g.E().count()" },
         // { "DropVertex", "g.V('thomas').drop()" },
         // };
-        public CosmosGraphDatabase() => this.client = CreateClient();
+        public CosmosGraphDatabase()
+        {
+            this.client = CreateClient();
+        }
 
         public IReadOnlyCollection<dynamic> Submit(string script)
         {
@@ -99,7 +102,9 @@
         }
 
         public async Task<IReadOnlyCollection<dynamic>> SubmitAsync(string query)
-            => await this.client.SubmitAsync<dynamic>(query);
+        {
+            return await this.client.SubmitAsync<dynamic>(query);
+        }
 
         private static GremlinClient CreateClient()
         {

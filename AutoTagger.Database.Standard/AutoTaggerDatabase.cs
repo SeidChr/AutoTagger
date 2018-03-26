@@ -10,7 +10,10 @@
     {
         private readonly CosmosGraphDatabase database;
 
-        public AutoTaggerDatabase() => this.database = new CosmosGraphDatabase();
+        public AutoTaggerDatabase()
+        {
+            this.database = new CosmosGraphDatabase();
+        }
 
         public void Drop()
         {
@@ -52,7 +55,10 @@
             this.database.Submit($"g.V('{imageId}').drop()");
         }
 
-        private static string CleanInput(string input) => Regex.Replace(input, @"[^\w\.@-]", string.Empty);
+        private static string CleanInput(string input)
+        {
+            return Regex.Replace(input, @"[^\w\.@-]", string.Empty);
+        }
 
         private void ConnectInstagramTag(string imageId, string tag)
         {

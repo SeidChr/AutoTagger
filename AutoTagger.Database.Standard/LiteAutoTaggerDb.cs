@@ -58,15 +58,23 @@
         }
 
         private BsonDocument Bson(string imageId, IEnumerable<string> machineTags, IEnumerable<string> humanoidTags)
-            => new BsonDocument
+        {
+            return new BsonDocument
             {
                 ["_id"]                 = this.Bson(imageId),
                 [MachineTagsFieldName]  = this.Bson(machineTags),
                 [HumanoidTagsFieldName] = this.Bson(humanoidTags)
             };
+        }
 
-        private BsonValue Bson(string x) => new BsonValue(x);
+        private BsonValue Bson(string x)
+        {
+            return new BsonValue(x);
+        }
 
-        private BsonArray Bson(IEnumerable<string> stringEnum) => new BsonArray(stringEnum.Select(this.Bson).ToArray());
+        private BsonArray Bson(IEnumerable<string> stringEnum)
+        {
+            return new BsonArray(stringEnum.Select(this.Bson).ToArray());
+        }
     }
 }
