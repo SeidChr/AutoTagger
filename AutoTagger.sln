@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2036
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoTagger", "AutoTagger\AutoTagger.csproj", "{59ECEF9C-2CD1-4100-8E61-EE46D68EDADB}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoTagger.Contract", "AutoTagger.Contract\AutoTagger.Contract.csproj", "{30CB818B-0CE3-4ED7-81E8-1D3747748AD8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoTagger.Clarifai.Standard", "AutoTagger.Clarifai.Standard\AutoTagger.Clarifai.Standard.csproj", "{B4A4A168-DB3C-4172-A2C9-3F8ECC36DDCE}"
@@ -17,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoTagger.TaggingProvider"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoTagger.UserInterface", "AutoTagger.UserInterface\AutoTagger.UserInterface.csproj", "{FE997A72-9301-4031-A16C-D23F03F5EE19}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoTagger.Crawler.Standard", "AutoTagger.Crawler.Standard\AutoTagger.Crawler.Standard.csproj", "{0DA86F10-EC95-433D-B634-722BECF35C39}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoTagger.Crawler.Standard", "AutoTagger.Crawler.Standard\AutoTagger.Crawler.Standard.csproj", "{0DA86F10-EC95-433D-B634-722BECF35C39}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,10 +23,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{59ECEF9C-2CD1-4100-8E61-EE46D68EDADB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{59ECEF9C-2CD1-4100-8E61-EE46D68EDADB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{59ECEF9C-2CD1-4100-8E61-EE46D68EDADB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{59ECEF9C-2CD1-4100-8E61-EE46D68EDADB}.Release|Any CPU.Build.0 = Release|Any CPU
 		{30CB818B-0CE3-4ED7-81E8-1D3747748AD8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{30CB818B-0CE3-4ED7-81E8-1D3747748AD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{30CB818B-0CE3-4ED7-81E8-1D3747748AD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
