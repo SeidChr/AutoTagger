@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace AutoTagger.Contract
+﻿namespace AutoTagger.Contract
 {
+    using System.Collections.Generic;
+
     public interface ITaggingProvider
     {
-        IEnumerable<string> GetTagsForImageUrl(string imageUrl);
-
         IEnumerable<string> GetTagsForImageBytes(byte[] imageBytes);
+
+        IEnumerable<string> GetTagsForImageUrl(string imageUrl);
     }
 }

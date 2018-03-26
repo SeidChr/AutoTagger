@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace AutoTagger.Contract
+﻿namespace AutoTagger.Contract
 {
     public interface ICrawler
     {

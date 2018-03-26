@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace AutoTagger.Contract
+﻿namespace AutoTagger.Contract
 {
+    using System.Collections.Generic;
+
     public interface IAutoTaggerImage
     {
-        IEnumerable<string> MachineTags { get; }
-
         IEnumerable<string> HumanoidTags { get; }
 
         string ImageId { get; }
+
+        IEnumerable<string> MachineTags { get; }
 
         double Quality { get; }
     }
