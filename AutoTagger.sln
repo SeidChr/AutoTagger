@@ -17,6 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoTagger.UserInterface", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoTagger.Crawler.Standard", "AutoTagger.Crawler.Standard\AutoTagger.Crawler.Standard.csproj", "{0DA86F10-EC95-433D-B634-722BECF35C39}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoTagger.Test.Core", "AutoTagger.Test.Core\AutoTagger.Test.Core.csproj", "{40034217-4CFC-4E99-9352-BE14DE48D9CE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{0DA86F10-EC95-433D-B634-722BECF35C39}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0DA86F10-EC95-433D-B634-722BECF35C39}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0DA86F10-EC95-433D-B634-722BECF35C39}.Release|Any CPU.Build.0 = Release|Any CPU
+		{40034217-4CFC-4E99-9352-BE14DE48D9CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{40034217-4CFC-4E99-9352-BE14DE48D9CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{40034217-4CFC-4E99-9352-BE14DE48D9CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{40034217-4CFC-4E99-9352-BE14DE48D9CE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
