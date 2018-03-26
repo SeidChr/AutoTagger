@@ -9,5 +9,9 @@ namespace AutoTagger.Contract
         string ImageUrl { get; }
 
         IEnumerable<string> HumanoidTags { get; }
+
+        int Likes { get; }
+
+        int Comments { get; }
     }
 }

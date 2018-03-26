@@ -12,7 +12,7 @@ namespace AutoTagger.Crawler.Standard
 {
     public class Crawler : ICrawler
     {
-        private HttpClient httpClient;
+        private readonly HttpClient httpClient;
 
         public Crawler()
         {
@@ -69,7 +69,7 @@ namespace AutoTagger.Crawler.Standard
             HttpResponseMessage result;
             try
             {
-                result = httpClient.GetAsync($"https://www.instagram.com/p/{shortCode}/").Result;
+                result = httpClient.GetAsync($"https://www.instagram.com/p/{shortCode}/?hl=en").Result;
             }
             catch (Exception)
             {
@@ -80,24 +80,52 @@ namespace AutoTagger.Crawler.Standard
             var document = new HtmlDocument();
             document.Load(result.Content.ReadAsStreamAsync().Result);
             var imageUrl = document.DocumentNode.SelectNodes("//meta[@property='og:image']")?.FirstOrDefault()?.Attributes["content"]?.Value;
-            var hashTags = document.DocumentNode.SelectNodes("//meta[@property='instapp:hashtags']")?.Select(x => x?.Attributes["content"]?.Value);
-            //Console.WriteLine("URL: " + imageUrl);
-            //Console.WriteLine("Tags: " + string.Join(", ", hashTags));
-            if (hashTags == null)
-            {
-                return null;
-            }
+            var qualityString = document.DocumentNode.SelectNodes("//meta[@property='og:description']")?.FirstOrDefault()?.Attributes["content"]?.Value;
 
+            (int likes, int comments) = ExtractQualityFromDescriptionString(qualityString);
+
+
+            var hashTags = document
+                .DocumentNode
+                .SelectNodes("//meta[@property='instapp:hashtags']")
+                ?.Select(x => x?.Attributes["content"]?.Value)
+                .Where(tag => tag != null);
+
+            // <meta property="og:description" content="132 Likes, 1 Comments - ..........">
+            
             return new CrawlerImage
             {
-                HumanoidTags = hashTags.Where(x=>x!=null),
+                HumanoidTags = hashTags,
                 ImageId = shortCode,
                 ImageUrl = imageUrl,
+                Likes = likes,
+                Comments = comments,
             };
+        }
 
-            /// Bgsth_jAPup
-            /// <meta property="og:description" content="Gefällt 46 Mal, 1 Kommentare - Christian Seidlitz (@seidchr) auf Instagram: „silent alster 3 incredible calm alsterwasser and an awesome littelbit of fog in the athmosphere…“" />
-            /// <meta property="instapp:hashtags" content="wearehamburg" /><meta property="instapp:hashtags" content="welovehh" /><meta property="instapp:hashtags" content="hambourg" /><meta property="instapp:hashtags" content="iamatraveler" />
+        private (int likes, int comments) ExtractQualityFromDescriptionString(string qualityString)
+        {
+            var likes = 0;
+            var comments = 0;
+
+            if (string.IsNullOrWhiteSpace(qualityString))
+            {
+                return (likes, comments);
+            }
+
+            var qualityMatch = Regex.Match(qualityString, @"(\d+)\sLikes,\s(\d+)\sComments\s-\s");
+            if (!qualityMatch.Success)
+            {
+                return (likes, comments);
+            }
+
+            var likesString = qualityMatch.Groups[1].Value;
+            var commentsString = qualityMatch.Groups[2].Value;
+
+            int.TryParse(likesString, out likes);
+            int.TryParse(commentsString, out comments);
+
+            return (likes, comments);
         }
 
         public IEnumerable<string> GetShortCodesFromHashTag(string hashTag)
@@ -113,11 +141,7 @@ namespace AutoTagger.Crawler.Standard
             var matches = Regex.Matches(x, @"\""shortcode\""\:\""([^\""]+)""");
             var shortcodes = matches.OfType<Match>().Select(m => m.Groups[1].Value);
 
-            //Console.WriteLine("ShortCodes: " + string.Join(", ", shortcodes));
             return shortcodes;
-            /// Bgsth_jAPup
-            /// <meta property="og:description" content="Gefällt 46 Mal, 1 Kommentare - Christian Seidlitz (@seidchr) auf Instagram: „silent alster 3 incredible calm alsterwasser and an awesome littelbit of fog in the athmosphere…“" />
-            /// <meta property="instapp:hashtags" content="wearehamburg" /><meta property="instapp:hashtags" content="welovehh" /><meta property="instapp:hashtags" content="hambourg" /><meta property="instapp:hashtags" content="iamatraveler" />
         }
 
         public ICrawlerImage GetCrawlerImageForImageId(string imageId)

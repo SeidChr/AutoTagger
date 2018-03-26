@@ -10,5 +10,9 @@ namespace AutoTagger.Crawler.Standard
         public string ImageUrl { get; set; }
 
         public IEnumerable<string> HumanoidTags { get; set; }
+
+        public int Likes { get; set; }
+
+        public int Comments { get; set; }
     }
 }
