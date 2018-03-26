@@ -71,8 +71,10 @@ namespace AutoTagger.TestConsole.Core
             db.InsertOrUpdate("iB", new[] { "mA", "mB", "mD" }, new[] { "hA", "hC" });
             db.InsertOrUpdate("iC", new[] { "mA", "mD", "mE" }, new[] { "hC", "hD" });
             db.InsertOrUpdate("iD", new[] { "mX", "mY", "mZ" }, new[] { "hX", "hY" });
-            db.InsertOrUpdate("iE", new[] { "mA", "mG", "mU" }, new[] { "hA", "hX" });
+            db.InsertOrUpdate("iE", new[] { "mA", "mG", "mU" }, new[] { "hA", "hF" });
+
             var tags = db.FindHumanoidTags(new[] {"mA", "mB", "mC"});
+
             Console.WriteLine("Result Tags: " + string.Join(", ", tags));
         }
 
