@@ -40,7 +40,7 @@ namespace AutoTagger.UserInterface
                 return BadRequest("No MachineTags found :'(");
             }
 
-            var instagramTags = _db.FindInstagramTags(machineTags);
+            var instagramTags = _db.FindHumanoidTags(machineTags);
             content.Add("instagramTags", instagramTags);
 
             return Json(content);
@@ -82,7 +82,7 @@ namespace AutoTagger.UserInterface
                     return BadRequest("No MachineTags found :'(");
                 }
 
-                var instagramTags = _db.FindInstagramTags(machineTags);
+                var instagramTags = _db.FindHumanoidTags(machineTags);
 
                 ViewBag.MachineTags = machineTags;
                 ViewBag.InstagramTags = instagramTags;

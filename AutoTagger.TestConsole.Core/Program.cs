@@ -1,6 +1,7 @@
 ﻿using AutoTagger.Database.Standard;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -42,6 +43,11 @@ namespace AutoTagger.TestConsole.Core
                     DatabaseReadTest();
                     break;
 
+                case 'l':
+                case 'L':
+                    LiteTaggingDbTest();
+                    break;
+
                 case 'x':
                 case 'X':
                     CrawlerTest();
@@ -52,7 +58,22 @@ namespace AutoTagger.TestConsole.Core
                     break;
             }
 
+            Console.WriteLine("Done. Pres any key to quit...");
             Console.ReadLine();
+        }
+
+        private static void LiteTaggingDbTest()
+        {
+            var db = new LiteAutoTaggerDb("taggerTest.db");
+            db.Drop();
+
+            db.InsertOrUpdate("iA", new[] { "mA", "mB", "mC" }, new[] { "hA", "hB" });
+            db.InsertOrUpdate("iB", new[] { "mA", "mB", "mD" }, new[] { "hA", "hC" });
+            db.InsertOrUpdate("iC", new[] { "mA", "mD", "mE" }, new[] { "hC", "hD" });
+            db.InsertOrUpdate("iD", new[] { "mX", "mY", "mZ" }, new[] { "hX", "hY" });
+            db.InsertOrUpdate("iE", new[] { "mA", "mG", "mU" }, new[] { "hA", "hX" });
+            var tags = db.FindHumanoidTags(new[] {"mA", "mB", "mC"});
+            Console.WriteLine("Result Tags: " + string.Join(", ", tags));
         }
 
         private static void CrawlerTest()
@@ -88,7 +109,7 @@ namespace AutoTagger.TestConsole.Core
                 Console.WriteLine("Adding image "+ crawlerImage.ImageId + " to db. Humaniod Tags: " + string.Join(", ", crawlerImage.HumanoidTags));
                 var tags = tagger.GetTagsForImageUrl(crawlerImage.ImageUrl).ToList();
                 Console.WriteLine("Tags: " + string.Join(", ", tags));
-                db.IndertOrUpdate(crawlerImage.ImageId, tags, crawlerImage.HumanoidTags);
+                db.InsertOrUpdate(crawlerImage.ImageId, tags, crawlerImage.HumanoidTags);
             }
         }
 
@@ -101,8 +122,8 @@ namespace AutoTagger.TestConsole.Core
             var database = new AutoTaggerDatabase();
             database.Drop();
 
-            database.IndertOrUpdate("schiff1", new[] { "boot", "wasser" }, new[] { "urlaub", "entspannung" });
-            database.IndertOrUpdate("boot1", new[] { "boot", "fisch" }, new[] { "urlaub", "angeln" });
+            database.InsertOrUpdate("schiff1", new[] { "boot", "wasser" }, new[] { "urlaub", "entspannung" });
+            database.InsertOrUpdate("boot1", new[] { "boot", "fisch" }, new[] { "urlaub", "angeln" });
 
             Console.WriteLine("Graph reset and filled.s");
         }
@@ -110,7 +131,7 @@ namespace AutoTagger.TestConsole.Core
         private static void DatabaseReadTest()
         {
             var database = new AutoTaggerDatabase();
-            var instagramTags = database.FindInstagramTags(new[] { "boot", "fisch", "egal" });
+            var instagramTags = database.FindHumanoidTags(new[] { "boot", "fisch", "egal" });
             Console.WriteLine("You should use the following instagram tags:");
             foreach (var tag in instagramTags)
             {
@@ -159,7 +180,7 @@ namespace AutoTagger.TestConsole.Core
 
                 var machineTags = tagger.GetTagsForImageUrl(link);
 
-                autoTaggerDatabase.IndertOrUpdate(link, machineTags, humanoidTags);
+                autoTaggerDatabase.InsertOrUpdate(link, machineTags, humanoidTags);
             }
 
             //while (result.Count < 30)

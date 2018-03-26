@@ -5,17 +5,16 @@ using AutoTagger.Contract;
 
 namespace AutoTagger.Database.Standard
 {
-    public class LiteCrawlerImage : ICrawlerImage
+    public class LiteCrawlerImage : ICrawlerImage, IAutoTaggerImage
     {
-        public LiteCrawlerImage(string imageId, string imageUrl, IEnumerable<string> humanoidTags)
-        {
-            ImageId = imageId;
-            ImageUrl = imageUrl;
-            HumanoidTags = humanoidTags;
-        }
+        public string ImageId { get; set; }
 
-        public string ImageId { get; }
-        public string ImageUrl { get; }
-        public IEnumerable<string> HumanoidTags { get; }
+        public double Quality { get; set; }
+
+        public string ImageUrl { get; set; }
+
+        public IEnumerable<string> MachineTags { get; set; }
+
+        public IEnumerable<string> HumanoidTags { get; set; }
     }
 }

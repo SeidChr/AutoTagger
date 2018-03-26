@@ -23,7 +23,12 @@ namespace AutoTagger.Database.Standard
             ICrawlerImage ImageFromBson(BsonValue value)
             {
                 var doc = value.AsDocument;
-                return new LiteCrawlerImage(doc["_id"], doc["url"], doc["tags"].AsArray.Select(t => t.AsString));
+                return new LiteCrawlerImage
+                {
+                    ImageId = doc["_id"],
+                    ImageUrl = doc["url"],
+                    HumanoidTags = doc["tags"].AsArray.Select(t => t.AsString),
+                };
             }
 
             var mapper = new BsonMapper();
