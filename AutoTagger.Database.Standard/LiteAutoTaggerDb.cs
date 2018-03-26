@@ -45,7 +45,7 @@ namespace AutoTagger.Database.Standard
         private BsonArray Bson(IEnumerable<string> stringEnum) => new BsonArray(stringEnum.Select(Bson).ToArray());
 
         private Query AnyIn(string field, IEnumerable<string> stringEnum) 
-            => Query.Or(stringEnum.Select(x => Query.EQ("$."+field + ".*", x)).ToArray());
+            => Query.Or(stringEnum.Select(x => Query.EQ("$."+field + "[*]", x)).ToArray());
 
         public IEnumerable<string> FindHumanoidTags(IEnumerable<string> machineTags)
         {
