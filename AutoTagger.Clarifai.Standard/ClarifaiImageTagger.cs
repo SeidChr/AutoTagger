@@ -14,7 +14,10 @@
 
         private readonly ClarifaiClient client;
 
-        public ClarifaiImageTagger() => this.client = new ClarifaiClient(ClarifaiApiKey);
+        public ClarifaiImageTagger()
+        {
+            this.client = new ClarifaiClient(ClarifaiApiKey);
+        }
 
         public IEnumerable<string> GetTagsForImageBytes(byte[] imageBytes)
         {
