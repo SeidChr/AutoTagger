@@ -15,13 +15,13 @@ Beispiel-Bild hat MTags *M3*, *M4*, *M5*. Wir wollen die erfolgreichsten ITags b
   * Fragestellung: Welches sind die erfolgreichsten Bilder?
   * Suche in der Datenbank nach allen Einträgen, die MTag *M3* oder *M4* enthalten
   * für jeden Eintrag folgendes berechnen:
-    * [anz] Die Anzahl der übereinstimmenden MTags (z.B. bei ID=3 -> *M4*)
-    * [fehlt] Die Anzahl der fehlenden Hashtags, die auf Input- oder Entry-Seite zu viel sind. (z.B. ID=3 hat *M5* bis *M10* zu viel, sowie *M3* auf Input-Seite)
-    * searchQuality =  [fehlt]/[anz]
-    * relQuality = searchQulity * popularity
-  * Nun hat jeder Eintrag die tempotäte Spalte relQuality. Sortiere alle Einträge nach relQuality absteigerd.
+    * [overall] Die Anzahl der übereinstimmenden MTags (z.B. bei ID=3 -> *M4*)
+    * [missing] Die Anzahl der fehlenden Hashtags, die auf Input- oder Entry-Seite zu viel sind. (z.B. ID=3 hat *M5* bis *M10* zu viel, sowie *M3* auf Input-Seite)
+    * searchQuality =  [missing]/[overall]
+    * relationQuality = searchQulity * popularity
+  * Nun hat jeder Eintrag die tempotäte Spalte relationQuality. Sortiere alle Einträge nach relQuality absteigerd.
   * Bekomme die ersten 10 Einträge
-BeispieL
+Beispiel:
 
 | relQuality | ITags |
 | --- | --- |
