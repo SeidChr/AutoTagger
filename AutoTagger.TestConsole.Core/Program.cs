@@ -64,7 +64,7 @@ namespace AutoTagger.TestConsole.Core
 
         private static void LiteTaggingDbTest()
         {
-            var db = new LiteAutoTaggerDb("taggerTest.db");
+            var db = new LiteAutoTaggerDb("taggerTest.ldb");
             db.Drop();
 
             db.InsertOrUpdate("iA", new[] { "mA", "mB", "mC" }, new[] { "hA", "hB" });
@@ -81,7 +81,7 @@ namespace AutoTagger.TestConsole.Core
             var crawler = new Crawler.Standard.Crawler();
             //crawler.GetImageDataFromShortCode("Bgsth_jAPup");
             //crawler.GetShortCodesFromHashTag("ighamburg");
-            var crawlerDb = new LiteCrawlerDb("test.db");
+            var crawlerDb = new LiteCrawlerDb("test.ldb");
             var images = crawler.GetImagesFromHashTag(30, "world");
             //Console.WriteLine("images: " + string.Join(", ", images.Select(x=>x.ImageId)));
             foreach (var crawlerImage in images)
