@@ -76,13 +76,5 @@
                 return this.View();
             }
         }
-
-        [HttpGet("test")]
-        public IActionResult Test()
-        {
-            this.ViewBag.MachineTags   = new[] { "test", "sdfsd" };
-            this.ViewBag.InstagramTags = new[] { "sdfsdfsdf", "sdfsd" };
-            return this.View("Post");
-        }
     }
 }
