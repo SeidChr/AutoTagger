@@ -21,9 +21,17 @@
         public ITestOutputHelper TestConsole { get; }
 
         [Fact]
+        public void SpeedCrawlerTest()
+        {
+            var speedCrawler = new InstagramCrawlerV2();
+            var goodTags = speedCrawler.Get("https://www.instagram.com/explore/tags/hamburg/");
+            this.TestConsole.WriteLine(string.Join(", ", goodTags));
+        }
+
+        [Fact]
         public void CrawlerRoundtrip()
         {
-            var crawler = new InstagramCrawler();
+            var crawler = new InstagramCrawlerV1();
             var images  = crawler.CrawlImages(10);
 
             var tagger = new ClarifaiImageTagger();
@@ -59,7 +67,7 @@
         [Fact]
         public void CrawlerTest()
         {
-            var crawler = new InstagramCrawler();
+            var crawler = new InstagramCrawlerV1();
 
             // crawler.GetImageDataFromShortCode("Bgsth_jAPup");
             // crawler.GetShortCodesFromHashTag("ighamburg");
@@ -82,7 +90,7 @@
         [Fact]
         public void RandomHashtagsTest()
         {
-            var crawler     = new InstagramCrawler();
+            var crawler     = new InstagramCrawlerV1();
             var hashtagEnum = crawler.GetRandomHashTags().ToList();
 
             foreach (var hashtag in hashtagEnum)

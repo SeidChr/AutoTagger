@@ -4,23 +4,13 @@
     using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Net.Http;
     using System.Text.RegularExpressions;
 
     using AutoTagger.Contract;
 
-    using HtmlAgilityPack;
-
-    public class InstagramCrawler : ICrawler
+    public class InstagramCrawlerV1 : HttpCrawler, ICrawler
     {
-        private readonly HttpClient httpClient;
-
-        public InstagramCrawler()
-        {
-            this.httpClient = new HttpClient();
-        }
-
-        public IEnumerable<ICrawlerImage> CrawlImages(int amount, params string[] seedHashTags)
+        public virtual IEnumerable<ICrawlerImage> CrawlImages(int amount, params string[] seedHashTags)
         {
             var images            = new Dictionary<string, ICrawlerImage>();
             var processedHashTags = new HashSet<string>();
@@ -139,24 +129,6 @@
             return (likes, comments);
         }
 
-        private HtmlNode FetchDocument(string url)
-        {
-            HttpResponseMessage result;
-            try
-            {
-                result = this.httpClient.GetAsync(url).Result;
-            }
-            catch (Exception)
-            {
-                Console.WriteLine("Exception while fetching url " + url);
-                return null;
-            }
-
-            var document = new HtmlDocument();
-            document.Load(result.Content.ReadAsStreamAsync().Result);
-            return document.DocumentNode;
-        }
-
         private IEnumerable<string> GetShortCodesFromHashTag(string hashTag)
         {
             return this.GetShortCodesFromInstagramUrl($"https://www.instagram.com/explore/tags/{hashTag}/");
@@ -166,7 +138,7 @@
         {
             Console.WriteLine("Processing Url " + url);
 
-            var x          = this.httpClient.GetStringAsync(url).Result;
+            var x          = this.HttpClient.GetStringAsync(url).Result;
             var matches    = Regex.Matches(x, @"\""shortcode\""\:\""([^\""]+)""");
             var shortcodes = matches.OfType<Match>().Select(m => m.Groups[1].Value);
 
