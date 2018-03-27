@@ -9,7 +9,7 @@ namespace AutoTagger.Test.Core
     public class LiteDbTests
     {
         [Fact]
-        private static void LiteTaggingDbTest()
+        public void LiteTaggingDbTest()
         {
             var db = new LiteAutoTaggerDb("taggerTest.ldb");
 

@@ -41,55 +41,10 @@
             Console.WriteLine("Tags: " + string.Join(", ", tags));
         }
 
-        private static void Crawl1000Images()
-        {
-            var crawler = new Crawler.Standard.Crawler();
-            var images  = crawler.GetImagesFromHashTag(1000, "world");
-
-            var tagger = new ClarifaiImageTagger();
-            var db     = new AutoTaggerDatabase();
-
-            foreach (var crawlerImage in images)
-            {
-                Console.WriteLine(
-                    "Adding image " + crawlerImage.ImageId + " to db. Humaniod Tags: "
-                    + string.Join(", ", crawlerImage.HumanoidTags));
-
-                var tags = tagger.GetTagsForImageUrl(crawlerImage.ImageUrl).ToList();
-                Console.WriteLine("Tags: " + string.Join(", ", tags));
-                db.InsertOrUpdate(crawlerImage.ImageId, tags, crawlerImage.HumanoidTags);
-            }
-        }
-
-        private static void CrawlerTest()
-        {
-            var crawler = new Crawler.Standard.Crawler();
-
-            // crawler.GetImageDataFromShortCode("Bgsth_jAPup");
-            // crawler.GetShortCodesFromHashTag("ighamburg");
-            var crawlerDb = new LiteCrawlerDb("test.ldb");
-            var images    = crawler.GetImagesFromHashTag(30, "world");
-
-            // Console.WriteLine("images: " + string.Join(", ", images.Select(x=>x.ImageId)));
-            foreach (var crawlerImage in images)
-            {
-                Console.WriteLine(
-                    "{ \"id\":\""      + crawlerImage.ImageId
-                    + "\", \"url\":\"" + crawlerImage.ImageUrl
-                    + "\",\"tags\": ["
-                    + string.Join(", ", crawlerImage.HumanoidTags.Select(x => "'" + x + "'")) + "]}");
-
-                crawlerDb.InsertOrUpdate(crawlerImage);
-            }
-
-            Console.WriteLine("Stored Images: " + string.Join(", ", crawlerDb.GetImageIds()));
-        }
-
         private static void DatabaseReadTest()
         {
-            var database = new AutoTaggerDatabase();
-            var instagramTags = database
-                .FindHumanoidTags(new[] { "boot", "fisch", "egal" });
+            var database      = new AutoTaggerDatabase();
+            var instagramTags = database.FindHumanoidTags(new[] { "boot", "fisch", "egal" });
 
             Console.WriteLine("You should use the following instagram tags:");
             foreach (var tag in instagramTags)
@@ -106,15 +61,9 @@
             var database = new AutoTaggerDatabase();
             database.Drop();
 
-            database.InsertOrUpdate(
-                "schiff1",
-                new[] { "boot", "wasser" },
-                new[] { "urlaub", "entspannung" });
+            database.InsertOrUpdate("schiff1", new[] { "boot", "wasser" }, new[] { "urlaub", "entspannung" });
 
-            database.InsertOrUpdate(
-                "boot1",
-                new[] { "boot", "fisch" },
-                new[] { "urlaub", "angeln" });
+            database.InsertOrUpdate("boot1", new[] { "boot", "fisch" }, new[] { "urlaub", "angeln" });
 
             Console.WriteLine("Graph reset and filled.s");
         }
@@ -135,12 +84,9 @@
             return result;
         }
 
-
-
         private static void Main(string[] args)
         {
-            Console.WriteLine(
-                "D/F: Graph Database Test, C: Clarifai Tagger Test, R: Crawler Roundtrip, I: Import Testdata from File, X: crawler test");
+            Console.WriteLine("D/F: Graph Database Test, C: Clarifai Tagger Test, I: Import Testdata from File");
             var key = Console.ReadKey();
             switch (key.KeyChar)
             {
@@ -154,11 +100,6 @@
                     DatabaseTest();
                     break;
 
-                case 'r':
-                case 'R':
-                    Crawl1000Images();
-                    break;
-
                 case 'i':
                 case 'I':
                     ImportInstagramTags();
@@ -167,11 +108,6 @@
                 case 'f':
                 case 'F':
                     DatabaseReadTest();
-                    break;
-                    
-                case 'x':
-                case 'X':
-                    CrawlerTest();
                     break;
 
                 default:
