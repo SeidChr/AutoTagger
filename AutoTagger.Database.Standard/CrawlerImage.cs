@@ -4,7 +4,7 @@
 
     using AutoTagger.Contract;
 
-    public class LiteCrawlerImage : ICrawlerImage, IAutoTaggerImage
+    public class CrawlerImage : ICrawlerImage, IAutoTaggerImage
     {
         public int Comments { get; set; }
 

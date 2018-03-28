@@ -14,28 +14,28 @@
     [Route("[controller]")]
     public class ImageController : Controller
     {
-        private readonly IAutoTaggerDatabase db;
+        private readonly IAutoTaggerRepository _repository;
 
-        private readonly ITaggingProvider taggingProvider;
+        private readonly ITaggingProvider _taggingProvider;
 
-        public ImageController(IAutoTaggerDatabase db, ITaggingProvider taggingProvider)
+        public ImageController(IAutoTaggerRepository repository, ITaggingProvider taggingProvider)
         {
-            this.db              = db;
-            this.taggingProvider = taggingProvider;
+            _repository = repository;
+            _taggingProvider = taggingProvider;
         }
 
         [HttpPost("Link")]
         [ProducesResponseType(typeof(void), 200)]
         public IActionResult Post(ScanLinkModel model)
         {
-            var machineTags = this.taggingProvider.GetTagsForImageUrl(model.Link).ToList();
+            var machineTags = this._taggingProvider.GetTagsForImageUrl(model.Link).ToList();
 
             if (!machineTags.Any())
             {
                 return this.BadRequest("No MachineTags found :'(");
             }
 
-            var instagramTags = this.db.FindHumanoidTags(machineTags);
+            var instagramTags = this._repository.FindHumanoidTags(machineTags);
 
             var content = new Dictionary<string, object>
             {
@@ -65,14 +65,14 @@
             {
                 await file.CopyToAsync(stream);
                 var bytes       = stream.ToArray();
-                var machineTags = this.taggingProvider.GetTagsForImageBytes(bytes).ToList();
+                var machineTags = this._taggingProvider.GetTagsForImageBytes(bytes).ToList();
 
                 if (!machineTags.Any())
                 {
                     return this.BadRequest("No MachineTags found :'(");
                 }
 
-                var instagramTags = this.db.FindHumanoidTags(machineTags);
+                var instagramTags = this._repository.FindHumanoidTags(machineTags);
 
                 var content = new Dictionary<string, object>
                 {

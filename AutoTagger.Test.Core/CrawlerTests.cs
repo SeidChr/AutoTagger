@@ -27,7 +27,7 @@
             var images  = crawler.CrawlImages(10);
 
             var tagger = new ClarifaiImageTagger();
-            var db     = new LiteAutoTaggerDb("fullImportedImages.ldb");
+            var db     = new LiteDbAutoTaggerContext("fullImportedImages.ldb");
 
             IEnumerable<string> lastMTags = null;
             IEnumerable<string> lastHTags = null;
@@ -63,7 +63,7 @@
 
             // crawler.GetImageDataFromShortCode("Bgsth_jAPup");
             // crawler.GetShortCodesFromHashTag("ighamburg");
-            var crawlerDb = new LiteCrawlerDb("test.ldb");
+            var crawlerDb = new LiteCrawlerContext("test.ldb");
             var images    = crawler.CrawlImages(30);
 
             // Console.WriteLine("images: " + string.Join(", ", images.Select(x=>x.ImageId)));

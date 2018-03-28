@@ -7,13 +7,13 @@
 
     using LiteDB;
 
-    public class LiteCrawlerDb : ICrawlerDatabase
+    public class LiteCrawlerContext : ICrawlerContext
     {
         private readonly LiteDatabase database;
 
         private readonly LiteCollection<ICrawlerImage> images;
 
-        public LiteCrawlerDb(string fileName)
+        public LiteCrawlerContext(string fileName)
         {
             BsonDocument BsonFromImage(ICrawlerImage image)
             {
@@ -28,7 +28,7 @@
             ICrawlerImage ImageFromBson(BsonValue value)
             {
                 var doc = value.AsDocument;
-                return new LiteCrawlerImage
+                return new CrawlerImage
                 {
                     ImageId      = doc["_id"],
                     ImageUrl     = doc["url"],
@@ -61,6 +61,10 @@
         public void InsertOrUpdate(ICrawlerImage crawlerImage)
         {
             this.images.Upsert(crawlerImage);
+        }
+
+        public void Dispose()
+        {
         }
     }
 }

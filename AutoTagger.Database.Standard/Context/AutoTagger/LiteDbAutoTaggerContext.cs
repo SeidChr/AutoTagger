@@ -7,7 +7,7 @@
 
     using LiteDB;
 
-    public class LiteAutoTaggerDb : IAutoTaggerDatabase
+    public class LiteDbAutoTaggerContext : IAutoTaggerContext
     {
         private const string HumanoidTagsFieldName = "humanoidTags";
 
@@ -19,7 +19,7 @@
 
         private readonly LiteCollection<BsonDocument> images;
 
-        public LiteAutoTaggerDb(string fileName)
+        public LiteDbAutoTaggerContext(string fileName)
         {
             this.database = new LiteDatabase(fileName);
             this.images   = this.database.GetCollection(ImagesCollectionName);
@@ -50,6 +50,11 @@
         public void Remove(string imageId)
         {
             this.images.Delete(new BsonValue(imageId));
+        }
+
+        public void Dispose()
+        {
+            
         }
 
         private Query AnyIn(string field, IEnumerable<string> stringEnum)

@@ -4,7 +4,6 @@
     using AutoTagger.Contract;
     using AutoTagger.Database.Standard;
     using AutoTagger.UserInterface.Controllers.FIlter;
-
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
@@ -54,7 +53,8 @@
         {
             services.AddMvc();
 
-            services.AddTransient<IAutoTaggerDatabase, AutoTaggerDatabase>();
+            services.AddTransient<IAutoTaggerRepository, AutoTaggerRepository>();
+            services.AddTransient<IAutoTaggerContext, CosmosAutoTaggerContext>();
             services.AddTransient<ITaggingProvider, ClarifaiImageTagger>();
 
             services.AddSwaggerGen(

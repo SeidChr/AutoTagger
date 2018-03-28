@@ -6,11 +6,11 @@
 
     using AutoTagger.Contract;
 
-    public class AutoTaggerDatabase : IAutoTaggerDatabase
+    public class CosmosAutoTaggerContext : IAutoTaggerContext
     {
         private readonly CosmosGraphDatabase database;
 
-        public AutoTaggerDatabase()
+        public CosmosAutoTaggerContext()
         {
             this.database = new CosmosGraphDatabase();
         }
@@ -53,6 +53,10 @@
         public void Remove(string imageId)
         {
             this.database.Submit($"g.V('{imageId}').drop()");
+        }
+
+        public void Dispose()
+        {
         }
 
         private static string CleanInput(string input)

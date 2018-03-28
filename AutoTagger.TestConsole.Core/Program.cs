@@ -19,12 +19,12 @@
                 var link         = splitted.First();
                 var humanoidTags = splitted.Skip(1).First().Split('/');
 
-                var tagger             = new ClarifaiImageTagger();
-                var autoTaggerDatabase = new AutoTaggerDatabase();
+                var tagger = new ClarifaiImageTagger();
+                var context = new CosmosAutoTaggerContext();
 
                 var machineTags = tagger.GetTagsForImageUrl(link);
 
-                autoTaggerDatabase.InsertOrUpdate(link, machineTags, humanoidTags);
+                context.InsertOrUpdate(link, machineTags, humanoidTags);
             }
         }
 
@@ -43,7 +43,7 @@
 
         private static void DatabaseReadTest()
         {
-            var database      = new AutoTaggerDatabase();
+            var database      = new CosmosAutoTaggerContext();
             var instagramTags = database.FindHumanoidTags(new[] { "boot", "fisch", "egal" });
 
             Console.WriteLine("You should use the following instagram tags:");
@@ -58,7 +58,7 @@
             // Console.WriteLine("Database Test");
             // var db = new CosmosGraphDatabase();
             // var result = db.Submit("g.V()");
-            var database = new AutoTaggerDatabase();
+            var database = new CosmosAutoTaggerContext();
             database.Drop();
 
             database.InsertOrUpdate("schiff1", new[] { "boot", "wasser" }, new[] { "urlaub", "entspannung" });
