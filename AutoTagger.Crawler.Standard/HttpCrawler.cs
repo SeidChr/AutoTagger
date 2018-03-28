@@ -4,6 +4,7 @@ using System.Text;
 
 namespace AutoTagger.Crawler.Standard
 {
+    using System.Net;
     using System.Net.Http;
 
     using HtmlAgilityPack;
@@ -23,6 +24,11 @@ namespace AutoTagger.Crawler.Standard
             try
             {
                 result = this.HttpClient.GetAsync(url).Result;
+                var status = result.StatusCode;
+                if (status != HttpStatusCode.OK)
+                {
+                    return null;
+                }
             }
             catch (Exception)
             {

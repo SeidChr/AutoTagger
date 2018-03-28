@@ -1,6 +1,7 @@
 ﻿namespace AutoTagger.Test.Core
 {
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -24,8 +25,32 @@
         public void SpeedCrawlerTest()
         {
             var speedCrawler = new InstagramCrawlerV2();
-            var goodTags = speedCrawler.Get("https://www.instagram.com/explore/tags/hamburg/");
-            this.TestConsole.WriteLine(string.Join(", ", goodTags));
+            var queue = new ConcurrentQueue<string>();
+            queue.Enqueue("hamburg");
+            speedCrawler.FoundImage += i =>
+            {
+                this.TestConsole.WriteLine(i.ToString());
+                foreach (var humanoidTag in i.HumanoidTags)
+                {
+                    if (!queue.Contains(humanoidTag))
+                    {
+                        queue.Enqueue(humanoidTag);
+                    }
+                }
+            };
+
+            int parsed = 0;
+            while (parsed < 10 && queue.TryDequeue(out var hashtag))
+            {
+                parsed++;
+
+                this.TestConsole.WriteLine("Queue Size: " + queue.Count);
+                this.TestConsole.WriteLine("Parsing HashTag: #" + hashtag);
+                speedCrawler.ParseHashTagPage(hashtag);
+            }
+
+            this.TestConsole.WriteLine("Remained Queue: " + string.Join(", ", queue));
+            this.TestConsole.WriteLine("HashTag Pages Parsed: " + parsed);
         }
 
         [Fact]

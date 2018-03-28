@@ -4,6 +4,8 @@
 
     using AutoTagger.Contract;
 
+    using Newtonsoft.Json;
+
     public class CrawlerImage : ICrawlerImage
     {
         public int Comments { get; set; }
@@ -15,5 +17,10 @@
         public string ImageUrl { get; set; }
 
         public int Likes { get; set; }
+
+        public override string ToString()
+        {
+            return JsonConvert.SerializeObject(this);
+        }
     }
 }
