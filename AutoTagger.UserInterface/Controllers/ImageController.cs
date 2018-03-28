@@ -28,7 +28,8 @@
         [ProducesResponseType(typeof(void), 200)]
         public IActionResult Post(ScanLinkModel model)
         {
-            var machineTags = this._taggingProvider.GetTagsForImageUrl(model.Link).ToList();
+            //var machineTags = this._taggingProvider.GetTagsForImageUrl(model.Link).ToList();
+            var machineTags = new List<string> { "beach", "sun", "water" };
 
             if (!machineTags.Any())
             {

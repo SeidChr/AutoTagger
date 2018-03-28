@@ -18,12 +18,12 @@ LEFT JOIN
     #[missing]/[overall]
     #(count(m.value)-2*matches+3) / (count(m.value)+3-matches) as searchQuality,
     #[searchQuality]/[popularity]
-    ((count(m.value)-2*matches+3) / (count(m.value)+3-matches)) * p.popularity as relationQuality
+    ((count(m.value)-2*matches+3) / (count(m.value)+3-matches)) * popularity as relationQuality
     FROM photos as p
     LEFT JOIN mtags as m ON m.photoId =  p.id
     LEFT JOIN
     (
-        SELECT p.id, p.popularity, count(m.value) as matches
+        SELECT p.id, (p.likes+p.comments)/p.follower as popularity, count(m.value) as matches
         FROM photos as p
         LEFT JOIN mtags as m ON m.photoId =  p.id
         WHERE m.`value` = 'M3' OR m.`value` = 'M4' OR m.`value` = 'M123'
@@ -37,7 +37,9 @@ LEFT JOIN
 WHERE sub2.id IS NOT NULL
 GROUP by i.value
 ORDER by count(i.value) DESC, relationQuality DESC
+LIMIT 30
 ```
+
 notice: 
 - die ```3``` die da drinsteht ist die gesamte Anzahl der Tags, die man abfragt. diese würde später als c# variable da reingebaut werden
 - die auskommentierten Sachen können einkommentiert werden zum debuggen

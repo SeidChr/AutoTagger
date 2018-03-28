@@ -84,16 +84,17 @@ namespace AutoTagger.Database.Standard.Context.AutoTagger
             whereCondition = whereCondition.Trim(charsToTrim);
 
             string query = "SELECT i.id, i.value, relationQuality, count(i.value) FROM itags as i LEFT JOIN ( SELECT p.id, "
-                         + $"(count(m.value) - 2 * matches + {countInsertTags}) / (count(m.value) + {countInsertTags} - matches) * p.popularity as relationQuality "
-                         + "FROM photos as p LEFT JOIN mtags as m ON m.photoId = p.id "
-                         + "LEFT JOIN ( SELECT p.id, p.popularity, count(m.value) as matches "
-                         + "FROM photos as p LEFT JOIN mtags as m ON m.photoId = p.id "
-                         + $"WHERE {whereCondition} "
-                         + "GROUP by p.id ) as sub1 ON p.id = sub1.id WHERE sub1.id IS NOT NULL "
-                         + $"GROUP by p.id ORDER by relationQuality DESC LIMIT {countTopPhotos} ) as sub2 ON sub2.id = i.photoId "
-                         + "WHERE sub2.id IS NOT NULL "
-                         + "GROUP ORDER by count(i.value) DESC, relationQuality DESC "
-                         + $"LIMIT {numberOfTagsIWantToGet}";
+                + $"(count(m.value) - 2 * matches + {countInsertTags}) / (count(m.value) + {countInsertTags} - matches) * popularity as relationQuality "
+                + "FROM photos as p LEFT JOIN mtags as m ON m.photoId = p.id "
+                + "LEFT JOIN ( SELECT p.id, (p.likes+p.comments)/p.follower as popularity, count(m.value) as matches "
+                + "FROM photos as p LEFT JOIN mtags as m ON m.photoId = p.id "
+                + $"WHERE {whereCondition} "
+                + "GROUP by p.id ) as sub1 ON p.id = sub1.id WHERE sub1.id IS NOT NULL "
+                + $"GROUP by p.id ORDER by relationQuality DESC LIMIT {countTopPhotos} ) as sub2 ON sub2.id = i.photoId "
+                + "WHERE sub2.id IS NOT NULL "
+                + "GROUP by i.value ORDER by count(i.value) DESC, relationQuality DESC "
+                + $"LIMIT {numberOfTagsIWantToGet}"
+                ;
 
             return query;
         }
