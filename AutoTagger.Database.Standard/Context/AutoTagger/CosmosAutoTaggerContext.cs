@@ -1,10 +1,9 @@
-﻿namespace AutoTagger.Database.Standard
+﻿namespace AutoTagger.Database.Standard.Context.AutoTagger
 {
     using System.Collections.Generic;
     using System.Linq;
     using System.Text.RegularExpressions;
-
-    using AutoTagger.Contract;
+    using global::AutoTagger.Contract;
 
     public class CosmosAutoTaggerContext : IAutoTaggerContext
     {

@@ -4,9 +4,9 @@
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-
     using AutoTagger.Clarifai.Standard;
     using AutoTagger.Database.Standard;
+    using AutoTagger.Database.Standard.Context.AutoTagger;
 
     internal class Program
     {
