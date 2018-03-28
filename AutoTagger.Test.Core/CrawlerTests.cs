@@ -3,11 +3,10 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-
     using AutoTagger.Clarifai.Standard;
     using AutoTagger.Crawler.Standard;
     using AutoTagger.Database.Standard;
-
+    using AutoTagger.Database.Standard.Context.AutoTagger;
     using Xunit;
     using Xunit.Abstractions;
 
