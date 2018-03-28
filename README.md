@@ -6,17 +6,16 @@ Find the best Instagram Hashtags for a specific Photo - Proof of Concept Cloud S
 
 ## TaggingProvider
 derzeit Konsolenanwendung
-- ToDo REST Api 
+
+## Crawler
+@Christian, schreib mal was dazu ;)
 
 ## UserInterface
 Frontend with Continues Delivery:
 http://autotaggerui.azurewebsites.net/index
 
 Rest API
-```
-POST /image -> body: form-data -> param link
-POST /image/upload -> param "file" with image
-```
+Siehe Swagger Doku (UserInterface starten: ```/swagger```)
 
 # Links
   * https://dnughh.slack.com/messages/C9VD9KUTV/team/U7EU90J4S/
