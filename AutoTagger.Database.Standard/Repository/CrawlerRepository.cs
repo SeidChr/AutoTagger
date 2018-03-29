@@ -1,21 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace AutoTagger.Database.Standard
+﻿namespace AutoTagger.Database.Standard.Repository
 {
     using AutoTagger.Contract;
 
     public class CrawlerRepository : BaseRepository, ICrawlerRepository
     {
+        private readonly ICrawlerContext context;
+
         public CrawlerRepository(ICrawlerContext context)
+            : base(context)
         {
-            _context = context;
+            this.context = context;
         }
 
         public void InsertOrUpdate(ICrawlerImage crawlerImage)
         {
-            (_context as ICrawlerContext).InsertOrUpdate(crawlerImage);
+            this.context.InsertOrUpdate(crawlerImage);
         }
     }
 }

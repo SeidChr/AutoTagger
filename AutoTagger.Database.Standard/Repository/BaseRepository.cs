@@ -1,30 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace AutoTagger.Database.Standard
+﻿namespace AutoTagger.Database.Standard.Repository
 {
-    using AutoTagger.Contract;
+    using System;
 
     public class BaseRepository : IDisposable
     {
-        protected IContext _context;
+        private readonly IDisposable disposableContext;
 
-        protected bool isDisposed;
+        private bool isDisposed;
+
+        public BaseRepository(IDisposable disposableContext)
+        {
+            this.disposableContext = disposableContext;
+        }
+
+        public void Dispose()
+        {
+            this.Dispose(true);
+            GC.SuppressFinalize(this);
+        }
 
         protected virtual void Dispose(bool disposing)
         {
             if (!this.isDisposed && disposing)
             {
-                _context.Dispose();
+                this.disposableContext.Dispose();
             }
-            this.isDisposed = true;
-        }
 
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
+            this.isDisposed = true;
         }
     }
 }

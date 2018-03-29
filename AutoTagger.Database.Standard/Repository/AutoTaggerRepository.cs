@@ -1,31 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace AutoTagger.Database.Standard
+﻿namespace AutoTagger.Database.Standard
 {
+    using System.Collections.Generic;
+
     using AutoTagger.Contract;
+    using AutoTagger.Database.Standard.Repository;
 
     public class AutoTaggerRepository : BaseRepository, IAutoTaggerRepository
     {
+        private readonly IAutoTaggerContext context;
+
         public AutoTaggerRepository(IAutoTaggerContext context)
+            : base(context)
         {
-            _context = context;
+            this.context = context;
         }
 
         public IEnumerable<string> FindHumanoidTags(IEnumerable<string> machineTags)
         {
-            return (_context as IAutoTaggerContext).FindHumanoidTags(machineTags);
+            return this.context.FindHumanoidTags(machineTags);
         }
 
         public void InsertOrUpdate(string imageId, IEnumerable<string> machineTags, IEnumerable<string> humanoidTags)
         {
-            (_context as IAutoTaggerContext).InsertOrUpdate(imageId, machineTags, humanoidTags);
+            this.context.InsertOrUpdate(imageId, machineTags, humanoidTags);
         }
 
         public void Remove(string imageId)
         {
-            (_context as IAutoTaggerContext).Remove(imageId);
+            this.context.Remove(imageId);
         }
     }
 }

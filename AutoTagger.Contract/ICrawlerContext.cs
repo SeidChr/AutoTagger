@@ -1,6 +1,8 @@
 ﻿namespace AutoTagger.Contract
 {
-    public interface ICrawlerContext : IContext
+    using System;
+
+    public interface ICrawlerContext : IDisposable
     {
         void InsertOrUpdate(ICrawlerImage crawlerImage);
     }
