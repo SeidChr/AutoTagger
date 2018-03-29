@@ -1,9 +1,8 @@
-﻿namespace AutoTagger.Database.Standard
+﻿namespace AutoTagger.Database.Standard.Repository
 {
     using System.Collections.Generic;
 
     using AutoTagger.Contract;
-    using AutoTagger.Database.Standard.Repository;
 
     public class AutoTaggerRepository : BaseRepository, IAutoTaggerRepository
     {

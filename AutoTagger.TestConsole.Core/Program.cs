@@ -7,6 +7,7 @@
 
     using AutoTagger.Clarifai.Standard;
     using AutoTagger.Database.Standard;
+    using AutoTagger.Database.Standard.Repository;
 
     internal class Program
     {

@@ -3,6 +3,7 @@
     using AutoTagger.Clarifai.Standard;
     using AutoTagger.Contract;
     using AutoTagger.Database.Standard;
+    using AutoTagger.Database.Standard.Repository;
     using AutoTagger.UserInterface.Controllers.FIlter;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
