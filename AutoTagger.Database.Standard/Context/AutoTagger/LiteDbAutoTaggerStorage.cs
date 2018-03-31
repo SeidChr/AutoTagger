@@ -35,11 +35,22 @@
             // find top 100 oldest persons aged between 20 and 30
             ////var results = col.Find(Query.And(Query.All("Age", Query.Descending), Query.Between("Age", 20, 30)), limit: 100);
             // .Find(Query.And(AnyIn(machineTags, "mashineTags"), Query.All("quality", Query.Descending)))
-            return this.images
-                .Find(this.AnyIn(MachineTagsFieldName, machineTags))
-                .SelectMany(b => b[HumanoidTagsFieldName].AsArray.Select(ht => ht.AsString))
-                .Distinct()
-                .Take(30);
+            var queryTags = machineTags.ToList();
+            var documents = this.images.Find(this.AnyIn(MachineTagsFieldName, queryTags));
+            var linqFilterSet = documents.Select(
+                doc =>
+                {
+                    var documentMachineTags = doc[MachineTagsFieldName].AsArray.Select(ht => ht.AsString).ToList();
+                    return new
+                    {
+                        Query        = queryTags,
+                        HumanoidTags = doc[HumanoidTagsFieldName].AsArray.Select(ht => ht.AsString),
+                        MachineTags  = documentMachineTags,
+                        MatchQuality = documentMachineTags.Count(dt => queryTags.Contains(dt))
+                    };
+                }).OrderByDescending(x => x.MatchQuality).SelectMany(x => x.HumanoidTags);
+
+            return linqFilterSet;
         }
 
         public void InsertOrUpdate(string imageId, IEnumerable<string> machineTags, IEnumerable<string> humanoidTags)
