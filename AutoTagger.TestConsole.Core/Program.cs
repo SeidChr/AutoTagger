@@ -7,7 +7,6 @@
 
     using AutoTagger.Clarifai.Standard;
     using AutoTagger.Database.Standard;
-    using AutoTagger.Database.Standard.Repository;
 
     internal class Program
     {
@@ -21,8 +20,7 @@
                 var humanoidTags = splitted.Skip(1).First().Split('/');
 
                 var tagger = new ClarifaiImageTagger();
-                var context = new CosmosAutoTaggerContext();
-                var repository = new AutoTaggerRepository(context);
+                var repository = new CosmosAutoTaggerStorage();
 
                 var machineTags = tagger.GetTagsForImageUrl(link);
 
@@ -45,8 +43,7 @@
 
         private static void DatabaseReadTest()
         {
-            var context    = new CosmosAutoTaggerContext();
-            var repository = new AutoTaggerRepository(context);
+            var repository = new CosmosAutoTaggerStorage();
             var instagramTags = repository.FindHumanoidTags(new[] { "boot", "fisch", "egal" });
 
             Console.WriteLine("You should use the following instagram tags:");
@@ -61,8 +58,7 @@
             // Console.WriteLine("Database Test");
             // var db = new CosmosGraphDatabase();
             // var result = db.Submit("g.V()");
-            var context    = new CosmosAutoTaggerContext();
-            var repository = new AutoTaggerRepository(context);
+            var repository = new CosmosAutoTaggerStorage();
             //context.Drop();
 
             repository.InsertOrUpdate("schiff1", new[] { "boot", "wasser" }, new[] { "urlaub", "entspannung" });

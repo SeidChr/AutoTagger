@@ -7,13 +7,13 @@
 
     using LiteDB;
 
-    public class LiteCrawlerContext : ICrawlerContext
+    public class LiteCrawlerStorage : ICrawlerStorage
     {
         private readonly LiteDatabase database;
 
         private readonly LiteCollection<ICrawlerImage> images;
 
-        public LiteCrawlerContext(string fileName)
+        public LiteCrawlerStorage(string fileName)
         {
             BsonDocument BsonFromImage(ICrawlerImage image)
             {

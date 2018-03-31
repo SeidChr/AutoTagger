@@ -6,11 +6,11 @@
 
     using AutoTagger.Contract;
 
-    public class CosmosAutoTaggerContext : IAutoTaggerContext
+    public class CosmosAutoTaggerStorage : IAutoTaggerStorage
     {
         private readonly CosmosGraphDatabase database;
 
-        public CosmosAutoTaggerContext()
+        public CosmosAutoTaggerStorage()
         {
             this.database = new CosmosGraphDatabase();
         }

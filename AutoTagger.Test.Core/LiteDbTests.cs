@@ -11,7 +11,7 @@ namespace AutoTagger.Test.Core
         [Fact]
         public void LiteTaggingDbTest()
         {
-            var db = new LiteDbAutoTaggerContext("taggerTest.ldb");
+            var db = new LiteDbAutoTaggerStorage("taggerTest.ldb");
 
             db.InsertOrUpdate("iA", new[] { "mA", "mB", "mC" }, new[] { "hA", "hB" });
             db.InsertOrUpdate("iB", new[] { "mA", "mB", "mD" }, new[] { "hA", "hC" });

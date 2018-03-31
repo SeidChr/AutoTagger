@@ -7,7 +7,7 @@
 
     using LiteDB;
 
-    public class LiteDbAutoTaggerContext : IAutoTaggerContext
+    public class LiteDbAutoTaggerStorage : IAutoTaggerStorage
     {
         private const string HumanoidTagsFieldName = "humanoidTags";
 
@@ -19,7 +19,7 @@
 
         private readonly LiteCollection<BsonDocument> images;
 
-        public LiteDbAutoTaggerContext(string fileName)
+        public LiteDbAutoTaggerStorage(string fileName)
         {
             this.database = new LiteDatabase(fileName);
             this.images   = this.database.GetCollection(ImagesCollectionName);

@@ -1,13 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace AutoTagger.Contract
+﻿namespace AutoTagger.Contract
 {
-    public interface IAutoTaggerRepository
+    using System;
+    using System.Collections.Generic;
+
+    public interface IAutoTaggerStorage : IDisposable
     {
         IEnumerable<string> FindHumanoidTags(IEnumerable<string> machineTags);
-        void Remove(string imageId);
+
         void InsertOrUpdate(string imageId, IEnumerable<string> machineTags, IEnumerable<string> humanoidTags);
+
+        void Remove(string imageId);
     }
 }

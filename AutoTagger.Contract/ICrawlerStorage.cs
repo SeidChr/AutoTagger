@@ -2,7 +2,7 @@
 {
     using System;
 
-    public interface ICrawlerContext : IDisposable
+    public interface ICrawlerStorage : IDisposable
     {
         void InsertOrUpdate(ICrawlerImage crawlerImage);
     }

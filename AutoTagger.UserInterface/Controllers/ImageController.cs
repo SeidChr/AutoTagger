@@ -14,28 +14,28 @@
     [Route("[controller]")]
     public class ImageController : Controller
     {
-        private readonly IAutoTaggerRepository _repository;
+        private readonly IAutoTaggerStorage repository;
 
-        private readonly ITaggingProvider _taggingProvider;
+        private readonly ITaggingProvider taggingProvider;
 
-        public ImageController(IAutoTaggerRepository repository, ITaggingProvider taggingProvider)
+        public ImageController(IAutoTaggerStorage repository, ITaggingProvider taggingProvider)
         {
-            _repository = repository;
-            _taggingProvider = taggingProvider;
+            this.repository      = repository;
+            this.taggingProvider = taggingProvider;
         }
 
         [HttpPost("Link")]
         [ProducesResponseType(typeof(void), 200)]
         public IActionResult Post(ScanLinkModel model)
         {
-            var machineTags = this._taggingProvider.GetTagsForImageUrl(model.Link).ToList();
+            var machineTags = this.taggingProvider.GetTagsForImageUrl(model.Link).ToList();
 
             if (!machineTags.Any())
             {
                 return this.BadRequest("No MachineTags found :'(");
             }
 
-            var instagramTags = this._repository.FindHumanoidTags(machineTags);
+            var instagramTags = this.repository.FindHumanoidTags(machineTags);
 
             var content = new Dictionary<string, object>
             {
@@ -65,14 +65,14 @@
             {
                 await file.CopyToAsync(stream);
                 var bytes       = stream.ToArray();
-                var machineTags = this._taggingProvider.GetTagsForImageBytes(bytes).ToList();
+                var machineTags = this.taggingProvider.GetTagsForImageBytes(bytes).ToList();
 
                 if (!machineTags.Any())
                 {
                     return this.BadRequest("No MachineTags found :'(");
                 }
 
-                var instagramTags = this._repository.FindHumanoidTags(machineTags);
+                var instagramTags = this.repository.FindHumanoidTags(machineTags);
 
                 var content = new Dictionary<string, object>
                 {
