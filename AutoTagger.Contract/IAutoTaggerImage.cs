@@ -2,12 +2,8 @@
 {
     using System.Collections.Generic;
 
-    public interface IAutoTaggerImage
+    public interface IAutoTaggerImage : ICrawlerImage
     {
-        IEnumerable<string> HumanoidTags { get; }
-
-        string ImageId { get; }
-
         IEnumerable<string> MachineTags { get; }
 
         double Quality { get; }

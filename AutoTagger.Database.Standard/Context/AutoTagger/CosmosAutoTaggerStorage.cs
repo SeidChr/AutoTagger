@@ -5,6 +5,7 @@
     using System.Text.RegularExpressions;
 
     using AutoTagger.Contract;
+    using AutoTagger.Database.Standard.Helper;
 
     public class CosmosAutoTaggerStorage : IAutoTaggerStorage
     {
