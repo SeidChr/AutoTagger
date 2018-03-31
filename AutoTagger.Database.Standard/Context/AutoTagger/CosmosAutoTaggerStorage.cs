@@ -5,12 +5,13 @@
     using System.Text.RegularExpressions;
 
     using AutoTagger.Contract;
+    using AutoTagger.Database.Standard.Helper;
 
-    public class AutoTaggerDatabase : IAutoTaggerDatabase
+    public class CosmosAutoTaggerStorage : IAutoTaggerStorage
     {
         private readonly CosmosGraphDatabase database;
 
-        public AutoTaggerDatabase()
+        public CosmosAutoTaggerStorage()
         {
             this.database = new CosmosGraphDatabase();
         }
@@ -53,6 +54,10 @@
         public void Remove(string imageId)
         {
             this.database.Submit($"g.V('{imageId}').drop()");
+        }
+
+        public void Dispose()
+        {
         }
 
         private static string CleanInput(string input)

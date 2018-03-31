@@ -14,13 +14,13 @@
     [Route("[controller]")]
     public class ImageController : Controller
     {
-        private readonly IAutoTaggerDatabase db;
+        private readonly IAutoTaggerStorage repository;
 
         private readonly ITaggingProvider taggingProvider;
 
-        public ImageController(IAutoTaggerDatabase db, ITaggingProvider taggingProvider)
+        public ImageController(IAutoTaggerStorage repository, ITaggingProvider taggingProvider)
         {
-            this.db              = db;
+            this.repository      = repository;
             this.taggingProvider = taggingProvider;
         }
 
@@ -35,7 +35,7 @@
                 return this.BadRequest("No MachineTags found :'(");
             }
 
-            var instagramTags = this.db.FindHumanoidTags(machineTags);
+            var instagramTags = this.repository.FindHumanoidTags(machineTags);
 
             var content = new Dictionary<string, object>
             {
@@ -72,7 +72,7 @@
                     return this.BadRequest("No MachineTags found :'(");
                 }
 
-                var instagramTags = this.db.FindHumanoidTags(machineTags);
+                var instagramTags = this.repository.FindHumanoidTags(machineTags);
 
                 var content = new Dictionary<string, object>
                 {

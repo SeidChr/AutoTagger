@@ -18,6 +18,8 @@
 
         public int Likes { get; set; }
 
+        public int AuthorPopularity { get; set; }
+
         public override string ToString()
         {
             return JsonConvert.SerializeObject(this);

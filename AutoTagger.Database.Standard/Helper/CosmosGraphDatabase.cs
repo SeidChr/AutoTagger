@@ -1,4 +1,4 @@
-﻿namespace AutoTagger.Database.Standard
+﻿namespace AutoTagger.Database.Standard.Helper
 {
     using System;
     using System.Collections.Generic;

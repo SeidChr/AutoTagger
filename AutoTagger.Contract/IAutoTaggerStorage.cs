@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
 
-    public interface IAutoTaggerDatabase
+    public interface IAutoTaggerStorage
     {
         IEnumerable<string> FindHumanoidTags(IEnumerable<string> machineTags);
 

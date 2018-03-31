@@ -19,12 +19,12 @@
                 var link         = splitted.First();
                 var humanoidTags = splitted.Skip(1).First().Split('/');
 
-                var tagger             = new ClarifaiImageTagger();
-                var autoTaggerDatabase = new AutoTaggerDatabase();
+                var tagger = new ClarifaiImageTagger();
+                var repository = new CosmosAutoTaggerStorage();
 
                 var machineTags = tagger.GetTagsForImageUrl(link);
 
-                autoTaggerDatabase.InsertOrUpdate(link, machineTags, humanoidTags);
+                repository.InsertOrUpdate(link, machineTags, humanoidTags);
             }
         }
 
@@ -43,8 +43,8 @@
 
         private static void DatabaseReadTest()
         {
-            var database      = new AutoTaggerDatabase();
-            var instagramTags = database.FindHumanoidTags(new[] { "boot", "fisch", "egal" });
+            var repository = new CosmosAutoTaggerStorage();
+            var instagramTags = repository.FindHumanoidTags(new[] { "boot", "fisch", "egal" });
 
             Console.WriteLine("You should use the following instagram tags:");
             foreach (var tag in instagramTags)
@@ -53,17 +53,17 @@
             }
         }
 
-        private static void DatabaseTest()
+        private static void DatabaseInsertTest()
         {
             // Console.WriteLine("Database Test");
             // var db = new CosmosGraphDatabase();
             // var result = db.Submit("g.V()");
-            var database = new AutoTaggerDatabase();
-            database.Drop();
+            var repository = new CosmosAutoTaggerStorage();
+            //context.Drop();
 
-            database.InsertOrUpdate("schiff1", new[] { "boot", "wasser" }, new[] { "urlaub", "entspannung" });
+            repository.InsertOrUpdate("schiff1", new[] { "boot", "wasser" }, new[] { "urlaub", "entspannung" });
 
-            database.InsertOrUpdate("boot1", new[] { "boot", "fisch" }, new[] { "urlaub", "angeln" });
+            repository.InsertOrUpdate("boot1", new[] { "boot", "fisch" }, new[] { "urlaub", "angeln" });
 
             Console.WriteLine("Graph reset and filled.s");
         }
@@ -86,37 +86,35 @@
 
         private static void Main(string[] args)
         {
-            Console.WriteLine("D/F: Graph Database Test, C: Clarifai Tagger Test, I: Import Testdata from File");
-            var key = Console.ReadKey();
-            switch (key.KeyChar)
+            Console.WriteLine("1: Database Insert \n" +
+                              "2: Database Read\n" +
+                              "3: Clarifai Tagger\n" +
+                              "4: Import Testdata from File"
+                              );
+            while(true)
             {
-                case 'c':
-                case 'C':
-                    ClarifaiTest();
-                    break;
+                var key = Console.ReadKey();
+                switch (key.KeyChar)
+                {
+                    case '1':
+                        DatabaseInsertTest();
+                        break;
 
-                case 'd':
-                case 'D':
-                    DatabaseTest();
-                    break;
+                    case '2':
+                        DatabaseReadTest();
+                        break;
 
-                case 'i':
-                case 'I':
-                    ImportInstagramTags();
-                    break;
+                    case '3':
+                        ClarifaiTest();
+                        break;
 
-                case 'f':
-                case 'F':
-                    DatabaseReadTest();
-                    break;
-
-                default:
-                    Console.WriteLine("No Test");
-                    break;
+                    case '4':
+                        ImportInstagramTags();
+                        break;
+                }
+                Console.WriteLine("------------");
             }
-
-            Console.WriteLine("Done. Pres any key to quit...");
-            Console.ReadLine();
+            
         }
     }
 }

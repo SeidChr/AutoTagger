@@ -1,6 +1,8 @@
 ﻿namespace AutoTagger.Contract
 {
-    public interface ICrawlerDatabase
+    using System;
+
+    public interface ICrawlerStorage
     {
         void InsertOrUpdate(ICrawlerImage crawlerImage);
     }

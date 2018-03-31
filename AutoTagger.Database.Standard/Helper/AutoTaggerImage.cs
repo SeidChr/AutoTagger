@@ -4,8 +4,10 @@
 
     using AutoTagger.Contract;
 
-    public class LiteCrawlerImage : ICrawlerImage, IAutoTaggerImage
+    public class AutoTaggerImage : ICrawlerImage, IAutoTaggerImage
     {
+        public int AuthorPopularity { get; set; }
+
         public int Comments { get; set; }
 
         public IEnumerable<string> HumanoidTags { get; set; }
