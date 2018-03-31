@@ -52,11 +52,6 @@
             this.images.Delete(new BsonValue(imageId));
         }
 
-        public void Dispose()
-        {
-            
-        }
-
         private Query AnyIn(string field, IEnumerable<string> stringEnum)
         {
             return Query.Or(stringEnum.Select(x => Query.EQ("$." + field + "[*]", x)).ToArray());

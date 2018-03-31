@@ -1,9 +1,8 @@
 ﻿namespace AutoTagger.Contract
 {
-    using System;
     using System.Collections.Generic;
 
-    public interface IAutoTaggerStorage : IDisposable
+    public interface IAutoTaggerStorage
     {
         IEnumerable<string> FindHumanoidTags(IEnumerable<string> machineTags);
 
