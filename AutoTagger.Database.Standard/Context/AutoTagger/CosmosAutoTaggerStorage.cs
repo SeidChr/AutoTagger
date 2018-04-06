@@ -4,12 +4,13 @@
     using System.Linq;
     using System.Text.RegularExpressions;
     using global::AutoTagger.Contract;
+    using global::AutoTagger.Database.Standard.Helper;
 
-    public class CosmosAutoTaggerContext : IAutoTaggerContext
+    public class CosmosAutoTaggerStorage : IAutoTaggerStorage
     {
         private readonly CosmosGraphDatabase database;
 
-        public CosmosAutoTaggerContext()
+        public CosmosAutoTaggerStorage()
         {
             this.database = new CosmosGraphDatabase();
         }

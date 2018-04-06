@@ -7,13 +7,11 @@
 
     using LiteDB;
 
-    public class LiteCrawlerContext : ICrawlerContext
+    public class LiteCrawlerStorage : ICrawlerStorage
     {
-        private readonly LiteDatabase database;
-
         private readonly LiteCollection<ICrawlerImage> images;
 
-        public LiteCrawlerContext(string fileName)
+        public LiteCrawlerStorage(string fileName)
         {
             BsonDocument BsonFromImage(ICrawlerImage image)
             {
@@ -28,7 +26,7 @@
             ICrawlerImage ImageFromBson(BsonValue value)
             {
                 var doc = value.AsDocument;
-                return new CrawlerImage
+                return new AutoTaggerImage
                 {
                     ImageId      = doc["_id"],
                     ImageUrl     = doc["url"],
@@ -39,8 +37,8 @@
             var mapper = new BsonMapper();
             mapper.RegisterType(BsonFromImage, ImageFromBson);
 
-            this.database = new LiteDatabase(fileName, mapper);
-            this.images   = this.database.GetCollection<ICrawlerImage>("images");
+            var database = new LiteDatabase(fileName, mapper);
+            this.images   = database.GetCollection<ICrawlerImage>("images");
         }
 
         public bool Contains(string imageId)
@@ -61,10 +59,6 @@
         public void InsertOrUpdate(ICrawlerImage crawlerImage)
         {
             this.images.Upsert(crawlerImage);
-        }
-
-        public void Dispose()
-        {
         }
     }
 }

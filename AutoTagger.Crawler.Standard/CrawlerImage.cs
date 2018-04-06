@@ -15,5 +15,7 @@
         public string ImageUrl { get; set; }
 
         public int Likes { get; set; }
+
+        public int AuthorPopularity { get; set; }
     }
 }

@@ -13,5 +13,7 @@
         string ImageUrl { get; }
 
         int Likes { get; }
+
+        int AuthorPopularity { get; }
     }
 }

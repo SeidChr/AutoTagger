@@ -7,7 +7,7 @@ namespace AutoTagger.Database.Standard.Context.AutoTagger
     using global::AutoTagger.Contract;
     using MySql.Data.MySqlClient;
 
-    public class MysqlAutoTaggerContext : IAutoTaggerContext, IDisposable
+    public class MysqlAutoTaggerStorage : IAutoTaggerStorage, IDisposable
     {
         private const string IP = "78.46.178.185";
         private const string DB = "instatagger";
@@ -16,7 +16,7 @@ namespace AutoTagger.Database.Standard.Context.AutoTagger
 
         private readonly MySqlConnection connection;
 
-        public MysqlAutoTaggerContext()
+        public MysqlAutoTaggerStorage()
         {
             var myConnectionString = $"SERVER={IP};" +
                                      $"DATABASE={DB};" +

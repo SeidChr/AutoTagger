@@ -54,8 +54,7 @@
         {
             services.AddMvc();
 
-            services.AddTransient<IAutoTaggerRepository, AutoTaggerRepository>();
-            services.AddTransient<IAutoTaggerContext, MysqlAutoTaggerContext>();
+            services.AddTransient<IAutoTaggerStorage, CosmosAutoTaggerStorage>();
             services.AddTransient<ITaggingProvider, ClarifaiImageTagger>();
 
             services.AddSwaggerGen(

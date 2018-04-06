@@ -6,7 +6,7 @@ namespace AutoTagger.Database.Standard.Context.AutoTagger
     using global::AutoTagger.Contract;
     using LiteDB;
 
-    public class LiteDbAutoTaggerContext : IAutoTaggerContext
+    public class LiteDbAutoTaggerStorage : IAutoTaggerStorage
     {
         private const string HumanoidTagsFieldName = "humanoidTags";
 
@@ -18,7 +18,7 @@ namespace AutoTagger.Database.Standard.Context.AutoTagger
 
         private readonly LiteCollection<BsonDocument> images;
 
-        public LiteDbAutoTaggerContext(string fileName)
+        public LiteDbAutoTaggerStorage(string fileName)
         {
             this.database = new LiteDatabase(fileName);
             this.images   = this.database.GetCollection(ImagesCollectionName);
@@ -49,11 +49,6 @@ namespace AutoTagger.Database.Standard.Context.AutoTagger
         public void Remove(string imageId)
         {
             this.images.Delete(new BsonValue(imageId));
-        }
-
-        public void Dispose()
-        {
-            
         }
 
         private Query AnyIn(string field, IEnumerable<string> stringEnum)
