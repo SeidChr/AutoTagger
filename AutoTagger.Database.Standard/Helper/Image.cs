@@ -4,13 +4,13 @@
 
     using AutoTagger.Contract;
 
-    public class AutoTaggerImage : ICrawlerImage, IAutoTaggerImage
+    public class Image : IImage
     {
-        public int AuthorPopularity { get; set; }
-
-        public int Comments { get; set; }
+        public IEnumerable<string> MachineTags { get; set; }
 
         public IEnumerable<string> HumanoidTags { get; set; }
+
+        public int Comments { get; set; }
 
         public string ImageId { get; set; }
 
@@ -18,8 +18,6 @@
 
         public int Likes { get; set; }
 
-        public IEnumerable<string> MachineTags { get; set; }
-
-        public double Quality { get; set; }
+        public int Follower { get; set; }
     }
 }

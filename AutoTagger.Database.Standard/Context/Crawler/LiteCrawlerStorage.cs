@@ -2,18 +2,16 @@
 {
     using System.Collections.Generic;
     using System.Linq;
-
     using AutoTagger.Contract;
-
     using LiteDB;
 
     public class LiteCrawlerStorage : ICrawlerStorage
     {
-        private readonly LiteCollection<ICrawlerImage> images;
+        private readonly LiteCollection<IImage> images;
 
         public LiteCrawlerStorage(string fileName)
         {
-            BsonDocument BsonFromImage(ICrawlerImage image)
+            BsonDocument BsonFromImage(IImage image)
             {
                 return new BsonDocument
                 {
@@ -23,10 +21,10 @@
                 };
             }
 
-            ICrawlerImage ImageFromBson(BsonValue value)
+            IImage ImageFromBson(BsonValue value)
             {
                 var doc = value.AsDocument;
-                return new AutoTaggerImage
+                return new Image
                 {
                     ImageId      = doc["_id"],
                     ImageUrl     = doc["url"],
@@ -38,7 +36,7 @@
             mapper.RegisterType(BsonFromImage, ImageFromBson);
 
             var database = new LiteDatabase(fileName, mapper);
-            this.images   = database.GetCollection<ICrawlerImage>("images");
+            this.images   = database.GetCollection<IImage>("images");
         }
 
         public bool Contains(string imageId)
@@ -56,7 +54,7 @@
             return this.images.FindAll().Select(x => x.ImageId);
         }
 
-        public void InsertOrUpdate(ICrawlerImage crawlerImage)
+        public void InsertOrUpdate(IImage crawlerImage)
         {
             this.images.Upsert(crawlerImage);
         }

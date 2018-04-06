@@ -4,6 +4,6 @@
 
     public interface ICrawlerStorage
     {
-        void InsertOrUpdate(ICrawlerImage crawlerImage);
+        void InsertOrUpdate(IImage image);
     }
 }

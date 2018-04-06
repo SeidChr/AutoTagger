@@ -4,32 +4,34 @@
     using System.Collections.Generic;
     using System.Linq;
     using AutoTagger.Clarifai.Standard;
+    using AutoTagger.Contract;
     using AutoTagger.Crawler.Standard;
-    using AutoTagger.Database.Standard;
-    using AutoTagger.Database.Standard.Context.AutoTagger;
+    using AutoTagger.Database.Standard.Context.Crawler;
+
     using Xunit;
     using Xunit.Abstractions;
 
     public class CrawlerTests
     {
+        private readonly ICrawlerStorage db;
+        private ITestOutputHelper TestConsole { get; }
+
         public CrawlerTests(ITestOutputHelper testConsole)
         {
-            this.TestConsole = testConsole;
+            TestConsole = testConsole;
+            //var db = new LiteCrawlerStorage("test.ldb");
+            db = new MysqlCrawlerStorage();
         }
-
-        public ITestOutputHelper TestConsole { get; }
 
         [Fact]
         public void CrawlerRoundtrip()
         {
-            var crawler = new InstagramCrawler();
-            var images  = crawler.CrawlImages(10);
+            var crawler = new Crawler();
+            var images  = crawler.DoCrawling(1);
 
             var tagger = new ClarifaiImageTagger();
-            var db     = new LiteDbAutoTaggerStorage("fullImportedImages.ldb");
 
             IEnumerable<string> lastMTags = null;
-            IEnumerable<string> lastHTags = null;
 
             foreach (var crawlerImage in images)
             {
@@ -40,15 +42,14 @@
                 var tags = tagger.GetTagsForImageUrl(crawlerImage.ImageUrl).ToList();
 
                 lastMTags = tags;
-                lastHTags = crawlerImage.HumanoidTags;
 
                 Console.WriteLine("Tags: " + string.Join(", ", tags));
-                db.InsertOrUpdate(crawlerImage.ImageId, tags, crawlerImage.HumanoidTags);
+                db.InsertOrUpdate(crawlerImage);
             }
 
             Assert.NotNull(lastMTags);
-            var foundHTags = db.FindHumanoidTags(lastMTags).ToList();
-            this.TestConsole.WriteLine(string.Join(", ", lastMTags) + " >>> " + string.Join(", ", foundHTags));
+            //var foundHTags = db.FindHumanoidTags(lastMTags).ToList();
+            //this.TestConsole.WriteLine(string.Join(", ", lastMTags) + " >>> " + string.Join(", ", foundHTags));
 
             // var similar    = lastHTags.Count(lastHTag => foundHTags.Contains(lastHTag));
 
@@ -58,30 +59,28 @@
         [Fact]
         public void CrawlerTest()
         {
-            var crawler = new InstagramCrawler();
+            var crawler = new Crawler();
 
-            // crawler.GetImageDataFromShortCode("Bgsth_jAPup");
-            // crawler.GetShortCodesFromHashTag("ighamburg");
-            var crawlerDb = new LiteCrawlerStorage("test.ldb");
-            var images    = crawler.CrawlImages(30);
+            var images    = crawler.DoCrawling(2);
 
-            // Console.WriteLine("images: " + string.Join(", ", images.Select(x=>x.ImageId)));
+            Console.WriteLine("images: " + string.Join(", ", images.Select(x => x.ImageId)));
+
             foreach (var crawlerImage in images)
             {
                 this.TestConsole.WriteLine(
                     "{ \"id\":\"" + crawlerImage.ImageId + "\", \"url\":\"" + crawlerImage.ImageUrl + "\",\"tags\": ["
                   + string.Join(", ", crawlerImage.HumanoidTags.Select(x => "'" + x + "'")) + "]}");
 
-                crawlerDb.InsertOrUpdate(crawlerImage);
+                db.InsertOrUpdate(crawlerImage);
             }
 
-            this.TestConsole.WriteLine("Stored Images: " + string.Join(", ", crawlerDb.GetImageIds()));
+            //this.TestConsole.WriteLine("Stored Images: " + string.Join(", ", crawlerDb.GetImageIds()));
         }
 
         [Fact]
         public void RandomHashtagsTest()
         {
-            var crawler     = new InstagramCrawler();
+            var crawler     = new Crawler();
             var hashtagEnum = crawler.GetRandomHashTags().ToList();
 
             foreach (var hashtag in hashtagEnum)

@@ -11,21 +11,22 @@
 
     using HtmlAgilityPack;
 
-    public class InstagramCrawler : ICrawler
+    public class Crawler : ICrawler
     {
         private readonly HttpClient httpClient;
 
-        public InstagramCrawler()
+        public Crawler()
         {
             this.httpClient = new HttpClient();
         }
 
-        public IEnumerable<ICrawlerImage> CrawlImages(int amount, params string[] seedHashTags)
+        public IEnumerable<IImage> DoCrawling(int amount, params string[] hashTags)
         {
-            var images            = new Dictionary<string, ICrawlerImage>();
+            var images            = new Dictionary<string, IImage>();
             var processedHashTags = new HashSet<string>();
             var hashTagQueue      = new ConcurrentQueue<string>();
-            foreach (var hashTag in seedHashTags)
+
+            foreach (var hashTag in hashTags)
             {
                 hashTagQueue.Enqueue(hashTag);
             }
@@ -69,12 +70,12 @@
             }
         }
 
-        public ICrawlerImage GetCrawlerImageForImageId(string imageId)
+        public IImage GetCrawlerImageForImageId(string imageId)
         {
             return this.GetImageDataFromShortCode(imageId);
         }
 
-        public ICrawlerImage GetImageDataFromShortCode(string shortCode)
+        public IImage GetImageDataFromShortCode(string shortCode)
         {
             Console.WriteLine("Processing ShortCode " + shortCode);
             var document = this.FetchDocument($"https://www.instagram.com/p/{shortCode}/?hl=en");
@@ -91,7 +92,7 @@
                 ?.Select(x => x?.Attributes["content"]?.Value).Where(tag => tag != null);
 
             // <meta property="og:description" content="132 Likes, 1 Comments - ..........">
-            var result = new CrawlerImage
+            var result = new Image
             {
                 HumanoidTags = hashTags ?? Enumerable.Empty<string>(),
                 ImageId      = shortCode,
@@ -166,8 +167,8 @@
         {
             Console.WriteLine("Processing Url " + url);
 
-            var x          = this.httpClient.GetStringAsync(url).Result;
-            var matches    = Regex.Matches(x, @"\""shortcode\""\:\""([^\""]+)""");
+            var res        = this.httpClient.GetStringAsync(url).Result;
+            var matches    = Regex.Matches(res, @"\""shortcode\""\:\""([^\""]+)""");
             var shortcodes = matches.OfType<Match>().Select(m => m.Groups[1].Value);
 
             return shortcodes;

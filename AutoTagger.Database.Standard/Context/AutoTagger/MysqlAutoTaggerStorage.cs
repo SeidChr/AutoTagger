@@ -7,33 +7,11 @@ namespace AutoTagger.Database.Standard.Context.AutoTagger
     using global::AutoTagger.Contract;
     using MySql.Data.MySqlClient;
 
-    public class MysqlAutoTaggerStorage : IAutoTaggerStorage, IDisposable
+    public class MysqlAutoTaggerStorage : MysqlStorage, IAutoTaggerStorage
     {
-        private const string IP = "78.46.178.185";
-        private const string DB = "instatagger";
-        private const string USER = "InstaTagger";
-        private const string PW = "ovI5Aq3J0xOjjwXn";
-
-        private readonly MySqlConnection connection;
-
-        public MysqlAutoTaggerStorage()
-        {
-            var myConnectionString = $"SERVER={IP};" +
-                                     $"DATABASE={DB};" +
-                                     $"UID={USER};" +
-                                     $"PASSWORD={PW};";
-            connection = new MySqlConnection(myConnectionString);
-            connection.Open();
-        }
-
-        public void Dispose()
-        {
-            connection.Close();
-        }
-
         public IEnumerable<string> FindHumanoidTags(IEnumerable<string> machineTags)
         {
-            MySqlCommand command = connection.CreateCommand();
+            var command = connection.CreateCommand();
             command.CommandText = BuildQuery(machineTags);
 
             var output = new List<string>();
@@ -50,15 +28,7 @@ namespace AutoTagger.Database.Standard.Context.AutoTagger
 
         public void Remove(string imageId)
         {
-        }
-
-        public void InsertOrUpdate(ICrawlerImage crawlerImage)
-        {
-            MySqlCommand comm = this.connection.CreateCommand();
-            //comm.CommandText  = "INSERT INTO photos(person,address) VALUES(@person, @address)";
-            //comm.Parameters.Add("@person", "Myname");
-            //comm.Parameters.Add("@address", "Myaddress");
-            comm.ExecuteNonQuery();
+            throw new NotImplementedException();
         }
 
         public void InsertOrUpdate(string imageId, IEnumerable<string> machineTags, IEnumerable<string> humanoidTags)
