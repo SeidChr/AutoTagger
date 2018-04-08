@@ -2,17 +2,33 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <ApplicationIcon />
+    <OutputType>Library</OutputType>
+    <StartupObject />
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="EntityFramework" Version="6.2.0" />
     <PackageReference Include="Gremlin.Net" Version="3.3.1" />
     <PackageReference Include="LiteDB" Version="4.1.2" />
     <PackageReference Include="Microsoft.Azure.DocumentDB.Core" Version="1.9.1" />
-    <PackageReference Include="MySql.Data" Version="6.10.6" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\AutoTagger.Contract\AutoTagger.Contract.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="MySql.Data">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\MySQL\MySQL Connector Net 6.10.6\Assemblies\v4.5.2\MySql.Data.dll</HintPath>
+      <Private>true</Private>
+      <Aliases>global</Aliases>
+    </Reference>
+    <Reference Include="MySql.Data.Entity.EF6">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\MySQL\MySQL Connector Net 6.10.6\Assemblies\v4.5.2\MySql.Data.Entity.EF6.dll</HintPath>
+      <Private>true</Private>
+      <Aliases>global</Aliases>
+    </Reference>
   </ItemGroup>
 
 </Project>
