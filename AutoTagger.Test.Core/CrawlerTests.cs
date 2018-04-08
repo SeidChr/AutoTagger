@@ -61,7 +61,7 @@
         {
             var crawler = new Crawler();
 
-            var images    = crawler.DoCrawling(2);
+            var images    = crawler.DoCrawling(1, "travel");  
 
             Console.WriteLine("images: " + string.Join(", ", images.Select(x => x.ImageId)));
 

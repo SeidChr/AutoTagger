@@ -31,9 +31,12 @@
                 hashTagQueue.Enqueue(hashTag);
             }
 
-            foreach (var randomHashTag in this.GetRandomHashTags())
+            if (hashTags.Length == 0)
             {
-                hashTagQueue.Enqueue(randomHashTag);
+                foreach (var randomHashTag in this.GetRandomHashTags())
+                {
+                    hashTagQueue.Enqueue(randomHashTag);
+                }
             }
 
             while (hashTagQueue.TryDequeue(out var currentHashTag))
@@ -78,7 +81,10 @@
         public IImage GetImageDataFromShortCode(string shortCode)
         {
             Console.WriteLine("Processing ShortCode " + shortCode);
-            var document = this.FetchDocument($"https://www.instagram.com/p/{shortCode}/?hl=en");
+
+            var instaUrl = $"https://www.instagram.com/p/{shortCode}/?hl=en";
+
+            var document = this.FetchDocument(instaUrl);
 
             var imageUrl = document.SelectNodes("//meta[@property='og:image']")?.FirstOrDefault()?.Attributes["content"]
                 ?.Value;
@@ -97,6 +103,7 @@
                 HumanoidTags = hashTags ?? Enumerable.Empty<string>(),
                 ImageId      = shortCode,
                 ImageUrl     = imageUrl,
+                InstaUrl     = instaUrl,
                 Likes        = likes,
                 Comments     = comments
             };

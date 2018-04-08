@@ -10,14 +10,18 @@
 
         public IEnumerable<string> HumanoidTags { get; set; }
 
-        public int Comments { get; set; }
+        public int Id { get; set; }
 
         public string ImageId { get; set; }
 
         public string ImageUrl { get; set; }
 
+        public string InstaUrl { get; set; }
+
         public int Likes { get; set; }
 
         public int Follower { get; set; }
+
+        public int Comments { get; set; }
     }
 }

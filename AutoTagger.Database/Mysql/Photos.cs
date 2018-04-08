@@ -17,24 +17,36 @@ namespace AutoTagger.Database.Mysql
         {
             var photo = new Photos
             {
-                Img      = image.ImageUrl,
+                ImgUrl = image.ImageUrl,
+                ImgId = image.ImageId,
+                InstaUrl = image.InstaUrl,
                 Likes    = image.Likes,
                 Comments = image.Comments,
                 Follower = image.Follower
             };
-            foreach (var iTag in image.HumanoidTags)
+            if (image.HumanoidTags != null)
             {
-                photo.Itags.Add(new Itags {Value = iTag });
+                foreach (var iTag in image.HumanoidTags)
+                {
+                    photo.Itags.Add(new Itags {Value = iTag });
+                }
             }
-            foreach (var mTag in image.MachineTags)
+
+            if (image.MachineTags != null)
             {
-                photo.Mtags.Add(new Mtags { Value = mTag });
+                foreach (var mTag in image.MachineTags)
+                {
+                    photo.Mtags.Add(new Mtags { Value = mTag });
+                }
             }
+
             return photo;
         }
 
         public int Id { get; set; }
-        public string Img { get; set; }
+        public string ImgUrl { get; set; }
+        public string ImgId { get; set; }
+        public string InstaUrl { get; set; }
         public int Likes { get; set; }
         public int Comments { get; set; }
         public int Follower { get; set; }

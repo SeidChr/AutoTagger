@@ -89,6 +89,19 @@ namespace AutoTagger.Database.Mysql
                     .HasColumnName("id")
                     .HasColumnType("int(11)");
 
+                entity.Property(e => e.ImgUrl)
+                    .IsRequired()
+                    .HasColumnName("imgUrl");
+
+                entity.Property(e => e.ImgId)
+                    .IsRequired()
+                    .HasColumnName("imgId")
+                    .HasMaxLength(50);
+
+                entity.Property(e => e.InstaUrl)
+                    .IsRequired()
+                    .HasColumnName("instaUrl");
+
                 entity.Property(e => e.Comments)
                     .HasColumnName("comments")
                     .HasColumnType("int(11)");
@@ -96,11 +109,6 @@ namespace AutoTagger.Database.Mysql
                 entity.Property(e => e.Follower)
                     .HasColumnName("follower")
                     .HasColumnType("int(11)");
-
-                entity.Property(e => e.Img)
-                    .IsRequired()
-                    .HasColumnName("img")
-                    .HasMaxLength(50);
 
                 entity.Property(e => e.Likes)
                     .HasColumnName("likes")

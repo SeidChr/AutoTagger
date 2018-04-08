@@ -14,20 +14,20 @@
         {
             // Arrange
             var crawlerDb = new MysqlCrawlerStorage();
-            //var autoTaggerDb = new MysqlAutoTaggerStorage();
             var image = new Image()
             {
                 Comments = 10,
                 Follower = 200,
                 HumanoidTags = new List<string> { "catlove", "instabeach", "hamburg" },
                 MachineTags = new List<string> { "cat", "beach", "city" },
-                ImageUrl = "testImageUrl",
+                ImageUrl = "content.com/pic/ab12xy67",
+                ImageId = "ab12xy67",
+                InstaUrl = "instagram.com/abc123",
                 Likes = 1337
             };
 
             // Act
             crawlerDb.InsertOrUpdate(image);
-            //var res = autoTaggerDb.FindHumanoidTags(new List<String>() { "cat" });
 
             // Assert
             Assert.NotEmpty(image.ImageId);
