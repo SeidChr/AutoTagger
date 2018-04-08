@@ -2,9 +2,8 @@
 {
     using System.Collections.Generic;
     using System.Linq;
-
     using global::AutoTagger.Contract;
-    using global::AutoTagger.Database.Helper;
+    using global::AutoTagger.Crawler.Standard;
 
     using LiteDB;
 

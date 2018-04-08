@@ -2,8 +2,7 @@
 {
     using AutoTagger.Clarifai.Standard;
     using AutoTagger.Contract;
-    using AutoTagger.Database.Standard;
-    using AutoTagger.Database.Standard.Context.AutoTagger;
+    using AutoTagger.Database.Context.AutoTagger;
     using AutoTagger.UserInterface.Controllers.FIlter;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;

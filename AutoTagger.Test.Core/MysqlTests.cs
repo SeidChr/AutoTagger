@@ -2,15 +2,15 @@
 {
     using System;
     using System.Collections.Generic;
-
+    using AutoTagger.Crawler.Standard;
+    using AutoTagger.Database.Context.AutoTagger;
     using AutoTagger.Database.Context.Crawler;
     using Xunit;
-    using Image = Crawler.Standard.Image;
 
     public class MysqlTests
     {
         [Fact]
-        public void WhenCrawlerInsert_ThenDbShouldSaveCorrectly()
+        public void WhenCrawlerInsert()
         {
             // Arrange
             var crawlerDb = new MysqlCrawlerStorage();
@@ -30,6 +30,23 @@
 
             // Assert
             Assert.NotEmpty(image.ImageId);
+        }
+
+        [Fact]
+        public void WhenGettingAllPhotos()
+        {
+            // Arrange
+            var mysql = new MysqlAutoTaggerStorage();
+
+            // Act
+            var photos = mysql.GetAllPhotos();
+
+            // Assert
+            foreach (var photo in photos)
+            {
+                Console.WriteLine(photo.Id);
+            }
+            Assert.NotEmpty(photos);
         }
     }
 }

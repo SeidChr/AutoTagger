@@ -17,11 +17,18 @@
   
   <ItemGroup>
     <ProjectReference Include="..\AutoTagger.Contract\AutoTagger.Contract.csproj" />
+    <ProjectReference Include="..\AutoTagger.Crawler.Standard\AutoTagger.Crawler.Standard.csproj" />
   </ItemGroup>
   
   <ItemGroup>
     <Reference Include="LiteDB">
       <HintPath>..\..\..\..\.nuget\packages\litedb\4.1.2\lib\netstandard2.0\LiteDB.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Http.Abstractions">
+      <HintPath>..\..\..\..\.nuget\packages\microsoft.aspnetcore.http.abstractions\2.0.2\lib\netstandard2.0\Microsoft.AspNetCore.Http.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.IdentityModel.Protocols">
+      <HintPath>..\..\..\..\..\..\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.identitymodel.protocols\2.1.4\lib\netstandard1.4\Microsoft.IdentityModel.Protocols.dll</HintPath>
     </Reference>
   </ItemGroup>
   

@@ -10,8 +10,8 @@ namespace AutoTagger.Database.Context
 
     public class MysqlStorage /*: IDisposable*/
     {
-        protected InstataggerContext db = new InstataggerContext();
-        
+        protected InstataggerContext db;
+
         //private const string IP = "78.46.178.185";
         //private const string DB = "instatagger";
         //private const string USER = "InstaTagger";
@@ -19,15 +19,17 @@ namespace AutoTagger.Database.Context
 
         //protected readonly MySqlConnection connection;
 
-        //public MysqlStorage()
-        //{
-        //    var myConnectionString = $"SERVER={IP};" +
-        //                             $"DATABASE={DB};" +
-        //                             $"UID={USER};" +
-        //                             $"PASSWORD={PW};";
-        //    connection = new MySqlConnection(myConnectionString);
-        //    connection.Open();
-        //}
+        public MysqlStorage()
+        {
+            db = new InstataggerContext();
+
+            //    var myConnectionString = $"SERVER={IP};" +
+            //                             $"DATABASE={DB};" +
+            //                             $"UID={USER};" +
+            //                             $"PASSWORD={PW};";
+            //    connection = new MySqlConnection(myConnectionString);
+            //    connection.Open();
+        }
 
         //public void Dispose()
         //{

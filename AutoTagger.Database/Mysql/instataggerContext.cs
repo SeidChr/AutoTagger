@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AutoTagger.Database.Mysql
 {
+    using Microsoft.Extensions.Configuration;
+
     public partial class InstataggerContext : DbContext
     {
         public virtual DbSet<Itags> Itags { get; set; }
@@ -13,8 +15,11 @@ namespace AutoTagger.Database.Mysql
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
                 optionsBuilder.UseMySql("Server=78.46.178.185;User Id=InstaTagger;Password=ovI5Aq3J0xOjjwXn;Database=instatagger");
+
+                //string userName = Configuration.GetSection("AppConfiguration")["UserName"];
+                //services.Configure<AppConfiguration>(Configuration.GetSection("AppConfiguration"));
             }
         }
 

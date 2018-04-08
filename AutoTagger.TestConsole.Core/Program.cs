@@ -85,13 +85,6 @@
 
         private static void Main(string[] args)
         {
-            var mysql = new MysqlAutoTaggerStorage();
-            var photos = mysql.GetAllPhotos();
-            foreach (var photo in photos)
-            {
-                Console.WriteLine(photo.Id);
-            }
-
             Console.WriteLine("1: Database Insert \n" +
                               "2: Database Read\n" +
                               "3: Clarifai Tagger\n" +
