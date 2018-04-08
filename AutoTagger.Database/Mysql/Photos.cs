@@ -13,6 +13,19 @@ namespace AutoTagger.Database.Mysql
             Mtags = new HashSet<Mtags>();
         }
 
+        public int Id { get; set; }
+        public string ImgUrl { get; set; }
+        public string ImgId { get; set; }
+        public string InstaUrl { get; set; }
+        public int Likes { get; set; }
+        public int Comments { get; set; }
+        public int Follower { get; set; }
+        public string User { get; set; }
+        public DateTimeOffset Created { get; set; }
+
+        public ICollection<Itags> Itags { get; set; }
+        public ICollection<Mtags> Mtags { get; set; }
+
         public static Photos FromImage(IImage image)
         {
             var photo = new Photos
@@ -22,7 +35,8 @@ namespace AutoTagger.Database.Mysql
                 InstaUrl = image.InstaUrl,
                 Likes    = image.Likes,
                 Comments = image.Comments,
-                Follower = image.Follower
+                Follower = image.Follower,
+                User     = ""
             };
             if (image.HumanoidTags != null)
             {
@@ -43,17 +57,5 @@ namespace AutoTagger.Database.Mysql
             return photo;
         }
 
-        public int Id { get; set; }
-        public string ImgUrl { get; set; }
-        public string ImgId { get; set; }
-        public string InstaUrl { get; set; }
-        public int Likes { get; set; }
-        public int Comments { get; set; }
-        public int Follower { get; set; }
-        public string User { get; set; }
-        public DateTimeOffset Created { get; set; }
-
-        public ICollection<Itags> Itags { get; set; }
-        public ICollection<Mtags> Mtags { get; set; }
     }
 }

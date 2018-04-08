@@ -63,15 +63,15 @@
 
             var images    = crawler.DoCrawling(1, "travel");  
 
-            Console.WriteLine("images: " + string.Join(", ", images.Select(x => x.ImageId)));
+            //Console.WriteLine("images: " + string.Join(", ", images.Select(x => x.ImageId)));
 
-            foreach (var crawlerImage in images)
+            foreach (var image in images)
             {
                 this.TestConsole.WriteLine(
-                    "{ \"id\":\"" + crawlerImage.ImageId + "\", \"url\":\"" + crawlerImage.ImageUrl + "\",\"tags\": ["
-                  + string.Join(", ", crawlerImage.HumanoidTags.Select(x => "'" + x + "'")) + "]}");
+                    "{ \"id\":\"" + image.ImageId + "\", \"url\":\"" + image.ImageUrl + "\",\"tags\": ["
+                  + string.Join(", ", image.HumanoidTags.Select(x => "'" + x + "'")) + "]}");
 
-                db.InsertOrUpdate(crawlerImage);
+                db.InsertOrUpdate(image);
             }
 
             //this.TestConsole.WriteLine("Stored Images: " + string.Join(", ", crawlerDb.GetImageIds()));
@@ -80,7 +80,7 @@
         [Fact]
         public void RandomHashtagsTest()
         {
-            var crawler     = new Crawler();
+            var crawler     = new CrawlingJob();
             var hashtagEnum = crawler.GetRandomHashtags().ToList();
 
             foreach (var hashtag in hashtagEnum)

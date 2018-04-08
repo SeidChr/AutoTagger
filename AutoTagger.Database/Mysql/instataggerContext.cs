@@ -4,7 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace AutoTagger.Database
 {
-    public partial class instataggerContext : DbContext
+    using AutoTagger.Database.Mysql;
+
+    public partial class InstataggerContext : DbContext
     {
         public virtual DbSet<Itags> Itags { get; set; }
         public virtual DbSet<Mtags> Mtags { get; set; }
@@ -97,6 +99,7 @@ namespace AutoTagger.Database
                     .ValueGeneratedOnAdd();
 
                 entity.Property(e => e.ImgId)
+                    .IsRequired()
                     .HasColumnName("imgId")
                     .HasMaxLength(50);
 
@@ -127,7 +130,6 @@ namespace AutoTagger.Database
                     .HasColumnType("int(11)");
 
                 entity.Property(e => e.User)
-                    .IsRequired()
                     .HasColumnName("user")
                     .HasMaxLength(50);
             });

@@ -13,7 +13,7 @@ namespace AutoTagger.Crawler.Standard
 
     using HtmlAgilityPack;
 
-    class CrawlingJob : ICrawlingJob
+    public class CrawlingJob : ICrawlingJob
     {
         private readonly HttpClient httpClient;
 
