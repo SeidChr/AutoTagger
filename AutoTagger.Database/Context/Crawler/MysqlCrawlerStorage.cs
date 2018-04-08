@@ -1,6 +1,7 @@
 ﻿namespace AutoTagger.Database.Context.Crawler
 {
     using System.Collections.Generic;
+    using System.Linq;
     using System.Runtime.InteropServices;
 
     using global::AutoTagger.Contract;
@@ -15,37 +16,24 @@
 
         public void InsertOrUpdate(IImage image)
         {
+            this.RemoveIfExisting(image);
+
             var photo = Photos.FromImage(image);
             this.db.Photos.Add(photo);
             this.db.SaveChanges();
-
             image.ImageId = photo.Id.ToString();
-
-            //this.command = this.connection.CreateCommand();
-            //var lastOldId = this.command.LastInsertedId;
-
-            //InsertPhoto(image);
-            //InsertHumanoidTags(image.ImageId, image.HumanoidTags);
         }
 
-        //private void InsertPhoto(IImage image)
-        //{
-        //    this.command.CommandText = "INSERT INTO photos(img,likes,comments,follower) VALUES(@img, @likes,@comments,@follower)";
-        //    this.command.Parameters.AddWithValue("@img", image.ImageUrl);
-        //    this.command.Parameters.AddWithValue("@likes", image.Likes);
-        //    this.command.Parameters.AddWithValue("@comments", image.Comments);
-        //    this.command.Parameters.AddWithValue("@follower", image.Follower);
-        //    this.command.ExecuteNonQuery();
-        //    var lastNewId = this.command.LastInsertedId;
-        //    image.ImageId = lastNewId.ToString();
-        //}
-
-        private void InsertHumanoidTags(string imageId, IEnumerable<string> humonoidTags)
+        private void RemoveIfExisting(IImage image)
         {
-        }
-
-        private void InsertMachineTags(IEnumerable<string> machineTags)
-        {
+            var existingPhoto = this.db.Photos.FirstOrDefault(x => x.ImgId == image.ImageId);
+            if (existingPhoto != null)
+            {
+                this.db.Itags.RemoveRange(this.db.Itags.Where(x => x.PhotoId == existingPhoto.Id));
+                this.db.Mtags.RemoveRange(this.db.Mtags.Where(x => x.PhotoId == existingPhoto.Id));
+                this.db.Photos.Remove(existingPhoto);
+                this.db.SaveChanges();
+            }
         }
     }
 }
