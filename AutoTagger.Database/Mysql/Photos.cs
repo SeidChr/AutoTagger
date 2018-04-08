@@ -17,8 +17,8 @@ namespace AutoTagger.Database.Mysql
         {
             var photo = new Photos
             {
-                ImgUrl = image.ImageUrl,
-                ImgId = image.ImageId,
+                ImgUrl   = image.ImageUrl,
+                ImgId    = image.ImageId,
                 InstaUrl = image.InstaUrl,
                 Likes    = image.Likes,
                 Comments = image.Comments,
@@ -28,7 +28,7 @@ namespace AutoTagger.Database.Mysql
             {
                 foreach (var iTag in image.HumanoidTags)
                 {
-                    photo.Itags.Add(new Itags {Value = iTag });
+                    photo.Itags.Add(new Itags { Value = iTag });
                 }
             }
 
@@ -50,6 +50,8 @@ namespace AutoTagger.Database.Mysql
         public int Likes { get; set; }
         public int Comments { get; set; }
         public int Follower { get; set; }
+        public string User { get; set; }
+        public DateTimeOffset Created { get; set; }
 
         public ICollection<Itags> Itags { get; set; }
         public ICollection<Mtags> Mtags { get; set; }
