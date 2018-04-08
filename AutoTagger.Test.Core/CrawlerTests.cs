@@ -81,7 +81,7 @@
         public void RandomHashtagsTest()
         {
             var crawler     = new Crawler();
-            var hashtagEnum = crawler.GetRandomHashTags().ToList();
+            var hashtagEnum = crawler.GetRandomHashtags().ToList();
 
             foreach (var hashtag in hashtagEnum)
             {

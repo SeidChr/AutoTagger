@@ -10,7 +10,7 @@
 
         int Id { get; set; }
 
-        string ImageId { get; set; }
+        string ImageId { get; set; } // Shortcode
 
         string ImageUrl { get; set; }
 
