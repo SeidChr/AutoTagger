@@ -19,7 +19,8 @@
             {
                 Comments = 10,
                 Follower = 200,
-                HumanoidTags = new List<string> { "cat", "beach", "city" },
+                HumanoidTags = new List<string> { "catlove", "instabeach", "hamburg" },
+                MachineTags = new List<string> { "cat", "beach", "city" },
                 ImageUrl = "testImageUrl",
                 Likes = 1337
             };

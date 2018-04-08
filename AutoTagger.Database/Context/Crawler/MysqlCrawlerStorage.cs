@@ -5,6 +5,7 @@
 
     using global::AutoTagger.Contract;
     using global::AutoTagger.Database.Context;
+    using global::AutoTagger.Database.Mysql;
 
     using MySql.Data.MySqlClient;
 
@@ -14,6 +15,12 @@
 
         public void InsertOrUpdate(IImage image)
         {
+            var photo = Photos.FromImage(image);
+            this.db.Photos.Add(photo);
+            this.db.SaveChanges();
+
+            image.ImageId = photo.Id.ToString();
+
             //this.command = this.connection.CreateCommand();
             //var lastOldId = this.command.LastInsertedId;
 

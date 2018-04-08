@@ -3,8 +3,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AutoTagger.Database.Mysql
 {
-    using Microsoft.Extensions.Configuration;
-
     public partial class InstataggerContext : DbContext
     {
         public virtual DbSet<Itags> Itags { get; set; }
