@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace AutoTagger.Database
+namespace AutoTagger.Database.Mysql
 {
     public partial class Photos
     {

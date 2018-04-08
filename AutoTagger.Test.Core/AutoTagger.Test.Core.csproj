@@ -16,7 +16,13 @@
   <ItemGroup>
     <ProjectReference Include="..\AutoTagger.Clarifai.Standard\AutoTagger.Clarifai.Standard.csproj" />
     <ProjectReference Include="..\AutoTagger.Crawler.Standard\AutoTagger.Crawler.Standard.csproj" />
-    <ProjectReference Include="..\AutoTagger.Database.Standard\AutoTagger.Database.Standard.csproj" />
+    <ProjectReference Include="..\AutoTagger.Database\AutoTagger.Database.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="LiteDB">
+      <HintPath>..\..\..\..\.nuget\packages\litedb\4.1.2\lib\netstandard2.0\LiteDB.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

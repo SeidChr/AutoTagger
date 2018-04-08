@@ -1,10 +1,9 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace AutoTagger.Database
+namespace AutoTagger.Database.Mysql
 {
-    public partial class instataggerContext : DbContext
+    public partial class InstataggerContext : DbContext
     {
         public virtual DbSet<Itags> Itags { get; set; }
         public virtual DbSet<Mtags> Mtags { get; set; }

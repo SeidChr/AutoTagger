@@ -6,7 +6,7 @@
     using AutoTagger.Clarifai.Standard;
     using AutoTagger.Contract;
     using AutoTagger.Crawler.Standard;
-    using AutoTagger.Database.Standard.Context.Crawler;
+    using AutoTagger.Database.Context.Crawler;
 
     using Xunit;
     using Xunit.Abstractions;

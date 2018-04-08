@@ -2,8 +2,8 @@
 {
     using System;
     using System.Collections.Generic;
-    using AutoTagger.Database.Standard.Context.AutoTagger;
-    using AutoTagger.Database.Standard.Context.Crawler;
+
+    using AutoTagger.Database.Context.Crawler;
     using Xunit;
     using Image = Crawler.Standard.Image;
 

@@ -5,8 +5,7 @@
     using System.IO;
     using System.Linq;
     using AutoTagger.Clarifai.Standard;
-    using AutoTagger.Database.Standard;
-    using AutoTagger.Database.Standard.Context.AutoTagger;
+    using AutoTagger.Database.Context.AutoTagger;
 
     internal class Program
     {
@@ -86,6 +85,13 @@
 
         private static void Main(string[] args)
         {
+            var mysql = new MysqlAutoTaggerStorage();
+            var photos = mysql.GetAllPhotos();
+            foreach (var photo in photos)
+            {
+                Console.WriteLine(photo.Id);
+            }
+
             Console.WriteLine("1: Database Insert \n" +
                               "2: Database Read\n" +
                               "3: Clarifai Tagger\n" +

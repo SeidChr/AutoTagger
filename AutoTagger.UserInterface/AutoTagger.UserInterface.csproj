@@ -23,7 +23,6 @@
   <ItemGroup>
     <ProjectReference Include="..\AutoTagger.Clarifai.Standard\AutoTagger.Clarifai.Standard.csproj" />
     <ProjectReference Include="..\AutoTagger.Contract\AutoTagger.Contract.csproj" />
-    <ProjectReference Include="..\AutoTagger.Database.Standard\AutoTagger.Database.Standard.csproj" />
   </ItemGroup>
 
 </Project>
