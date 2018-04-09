@@ -13,6 +13,8 @@
     {
         private const int MinimumHashTagCount = 5;
 
+        private const int MinimumLikesCount = 300;
+
         private static readonly Regex FindHashTagsRegex = new Regex(@"#\w+", RegexOptions.Compiled);
 
         private static readonly Regex FindJsonRegex = new Regex(
@@ -35,14 +37,12 @@
 
             if (scriptNode == null)
             {
-                ////yield break;
                 return;
             }
 
             var match = FindJsonRegex.Match(scriptNode.InnerText);
             if (!match.Success || !match.Groups[1].Success)
             {
-                ////yield break;
                 return;
             }
 
@@ -65,8 +65,14 @@
                 string imageText = x.node.edge_media_to_caption.edges[0].node.text;
                 imageText = imageText?.Replace("\\n", "\n");
                 imageText = System.Web.HttpUtility.HtmlDecode(imageText);
-                var hashTags = this.ParseHashTags(imageText).ToList();
+                var hashTags = ParseHashTags(imageText).ToList();
                 if (hashTags.Count < MinimumHashTagCount)
+                {
+                    return;
+                }
+
+                var likesCount = x.node.edge_liked_by.count;
+                if (likesCount < MinimumLikesCount)
                 {
                     return;
                 }
@@ -88,7 +94,7 @@
             this.FoundImage?.Invoke(image);
         }
 
-        private IEnumerable<string> ParseHashTags(string text)
+        private static IEnumerable<string> ParseHashTags(string text)
         {
             if (text == null)
             {

@@ -27,6 +27,8 @@
         [Fact]
         public void SpeedCrawlerTest()
         {
+            var limit = 10;
+
             var speedCrawler = new CrawlerV2();
             var queue = new ConcurrentQueue<string>();
             queue.Enqueue("hamburg");
@@ -42,10 +44,9 @@
                 }
             };
 
-            int parsed = 0;
-            while (parsed < 10 && queue.TryDequeue(out var hashtag))
+            while (limit > 0 && queue.TryDequeue(out var hashtag))
             {
-                parsed++;
+                limit--;
 
                 this.TestConsole.WriteLine("Queue Size: " + queue.Count);
                 this.TestConsole.WriteLine("Parsing HashTag: #" + hashtag);
@@ -53,7 +54,6 @@
             }
 
             this.TestConsole.WriteLine("Remained Queue: " + string.Join(", ", queue));
-            this.TestConsole.WriteLine("HashTag Pages Parsed: " + parsed);
         }
 
         [Fact]
