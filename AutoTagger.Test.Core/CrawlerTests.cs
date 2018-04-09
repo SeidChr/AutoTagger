@@ -1,6 +1,7 @@
 ﻿namespace AutoTagger.Test.Core
 {
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Linq;
     using AutoTagger.Clarifai.Standard;
@@ -24,9 +25,41 @@
         }
 
         [Fact]
+        public void SpeedCrawlerTest()
+        {
+            var speedCrawler = new CrawlerV2();
+            var queue = new ConcurrentQueue<string>();
+            queue.Enqueue("hamburg");
+            speedCrawler.FoundImage += i =>
+            {
+                this.TestConsole.WriteLine(i.ToString());
+                foreach (var humanoidTag in i.HumanoidTags)
+                {
+                    if (!queue.Contains(humanoidTag))
+                    {
+                        queue.Enqueue(humanoidTag);
+                    }
+                }
+            };
+
+            int parsed = 0;
+            while (parsed < 10 && queue.TryDequeue(out var hashtag))
+            {
+                parsed++;
+
+                this.TestConsole.WriteLine("Queue Size: " + queue.Count);
+                this.TestConsole.WriteLine("Parsing HashTag: #" + hashtag);
+                speedCrawler.ParseHashTagPage(hashtag);
+            }
+
+            this.TestConsole.WriteLine("Remained Queue: " + string.Join(", ", queue));
+            this.TestConsole.WriteLine("HashTag Pages Parsed: " + parsed);
+        }
+
+        [Fact]
         public void CrawlerRoundtrip()
         {
-            var crawler = new Crawler();
+            var crawler = new CrawlerV1();
             var images  = crawler.DoCrawling(1);
 
             var tagger = new ClarifaiImageTagger();
@@ -59,7 +92,7 @@
         [Fact]
         public void CrawlerTest()
         {
-            var crawler = new Crawler();
+            var crawler = new CrawlerV1();
 
             var images    = crawler.DoCrawling(1, "travel");  
 

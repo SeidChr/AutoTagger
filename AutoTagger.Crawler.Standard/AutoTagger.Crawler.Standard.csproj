@@ -6,10 +6,17 @@
 
   <ItemGroup>
     <PackageReference Include="HtmlAgilityPack" Version="1.7.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\AutoTagger.Contract\AutoTagger.Contract.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp">
+      <HintPath>..\..\..\..\..\..\Windows\Microsoft.NET\assembly\GAC_MSIL\Microsoft.CSharp\v4.0_4.0.0.0__b03f5f7f11d50a3a\Microsoft.CSharp.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

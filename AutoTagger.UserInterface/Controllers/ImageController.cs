@@ -52,7 +52,7 @@
         {
             if (!this.Request.ContentType.Contains("multipart/form-data; boundary"))
             {
-                return this.BadRequest("wrong contentType :'(");
+                return this.BadRequest("Wrong ContentType :'(");
             }
 
             if (file == null || file.Length == 0)

@@ -11,12 +11,12 @@
 
     using HtmlAgilityPack;
 
-    public class Crawler : ICrawler
+    public class CrawlerV1 : ICrawler
     {
         private readonly HashtagQueue<string> hashtagQueue;
         private readonly CrawlingJob crawlingJob;
 
-        public Crawler()
+        public CrawlerV1()
         {
             this.hashtagQueue = new HashtagQueue<string>();
             this.crawlingJob = new CrawlingJob();

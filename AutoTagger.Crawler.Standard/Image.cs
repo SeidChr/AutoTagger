@@ -4,6 +4,8 @@
 
     using AutoTagger.Contract;
 
+    using Newtonsoft.Json;
+
     public class Image : IImage
     {
         public IEnumerable<string> MachineTags { get; set; }
@@ -23,5 +25,10 @@
         public int Follower { get; set; }
 
         public int Comments { get; set; }
+
+        public override string ToString()
+        {
+            return JsonConvert.SerializeObject(this);
+        }
     }
 }

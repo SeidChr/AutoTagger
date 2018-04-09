@@ -4,24 +4,12 @@ using System.Text;
 
 namespace AutoTagger.Crawler.Standard
 {
-    using System.Collections.Concurrent;
     using System.Linq;
-    using System.Net.Http;
     using System.Text.RegularExpressions;
-
     using AutoTagger.Contract;
 
-    using HtmlAgilityPack;
-
-    public class CrawlingJob : ICrawlingJob
+    public class CrawlingJob : HttpCrawler, ICrawlingJob
     {
-        private readonly HttpClient httpClient;
-
-        public CrawlingJob()
-        {
-            this.httpClient   = new HttpClient();
-        }
-
         public IImage GetImageDataFromShortcode(string shortcode)
         {
             Console.WriteLine("Processing ShortCode " + shortcode);
@@ -91,24 +79,6 @@ namespace AutoTagger.Crawler.Standard
             return (likes, comments);
         }
 
-        private HtmlNode FetchDocument(string url)
-        {
-            HttpResponseMessage result;
-            try
-            {
-                result = this.httpClient.GetAsync(url).Result;
-            }
-            catch (Exception)
-            {
-                Console.WriteLine("Exception while fetching url " + url);
-                return null;
-            }
-
-            var document = new HtmlDocument();
-            document.Load(result.Content.ReadAsStreamAsync().Result);
-            return document.DocumentNode;
-        }
-
         public IEnumerable<string> GetShortcodesFromHashtag(string hashTag)
         {
             var url = $"https://www.instagram.com/explore/tags/{hashTag}/";
@@ -119,7 +89,7 @@ namespace AutoTagger.Crawler.Standard
         {
             Console.WriteLine("Processing Url " + url);
 
-            var res = this.httpClient.GetStringAsync(url).Result;
+            var res = this.HttpClient.GetStringAsync(url).Result;
             var matches = Regex.Matches(res, @"\""shortcode\""\:\""([^\""]+)""");
             var shortcodes = matches.OfType<Match>().Select(m => m.Groups[1].Value);
 
