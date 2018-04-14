@@ -53,7 +53,7 @@
             var images = this.exploreTagsPageCrawler.Parse(url, ImagesOverviewPageCrawler.PageType.ExploreTags);
             foreach (var image in images)
             {
-                yield return image.ImageId;
+                yield return image.Shortcode;
             }
         }
 

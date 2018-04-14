@@ -20,9 +20,8 @@
                 Follower = 200,
                 HumanoidTags = new List<string> { "catlove", "instabeach", "hamburg" },
                 MachineTags = new List<string> { "cat", "beach", "city" },
-                ImageUrl = "content.com/pic/ab12xy67",
-                ImageId = "ab12xy67",
-                InstaUrl = "instagram.com/abc123",
+                Url = "content.com/pic/ab12xy67",
+                Shortcode = "ab12xy67",
                 Likes = 1337,
                 User = "DarioDomi"
             };
@@ -31,7 +30,7 @@
             crawlerDb.InsertOrUpdate(image);
 
             // Assert
-            Assert.NotEmpty(image.ImageId);
+            Assert.NotEmpty(image.Shortcode);
         }
 
         [Fact]

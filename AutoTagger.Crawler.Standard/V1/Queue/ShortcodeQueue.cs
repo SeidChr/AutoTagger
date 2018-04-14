@@ -50,7 +50,7 @@ namespace AutoTagger.Crawler.Standard.V1
 
                 foreach (var image in images)
                 {
-                    var imageId = (T)Convert.ChangeType(image.ImageId, typeof(T));
+                    var imageId = (T)Convert.ChangeType(image.Shortcode, typeof(T));
                     if (this.IsProcessed(imageId))
                     {
                         continue;

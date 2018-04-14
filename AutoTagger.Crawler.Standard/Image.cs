@@ -14,11 +14,9 @@
 
         public int Id { get; set; }
 
-        public string ImageId { get; set; }
+        public string Shortcode { get; set; }
 
-        public string ImageUrl { get; set; }
-
-        public string InstaUrl { get; set; }
+        public string Url { get; set; }
 
         public int Likes { get; set; }
 

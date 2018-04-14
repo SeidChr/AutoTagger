@@ -4,11 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Text.RegularExpressions;
-
     using AutoTagger.Contract;
-
-    using HtmlAgilityPack;
-    using Newtonsoft.Json;
 
     class ImagesOverviewPageCrawler : HttpCrawler
     {
@@ -52,10 +48,10 @@
             switch (currentPageType)
             {
                 case PageType.ExploreTags:
-                    nodes = data?.entry_data?.TagPage?[0]?.graphql?.hashtag?.edge_hashtag_to_top_posts?.edges;
+                    nodes = data.entry_data?.TagPage?[0]?.graphql?.hashtag?.edge_hashtag_to_top_posts?.edges;
                     break;
                 case PageType.Profile:
-                    nodes = data?.entry_data?.ProfilePage?[0]?.graphql?.user?.edge_owner_to_timeline_media?.edges;
+                    nodes = data.entry_data?.ProfilePage?[0]?.graphql?.user?.edge_owner_to_timeline_media?.edges;
                     break;
             }
 
@@ -92,10 +88,9 @@
                 {
                     Likes = likes,
                     CommentCount = innerNode.edge_media_to_comment.count,
-                    ImageId = innerNode.shortcode,
+                    Shortcode = innerNode.shortcode,
                     HumanoidTags = hashTags,
-                    ImageUrl = innerNode.display_url,
-                    InstaUrl = ""
+                    Url = innerNode.display_url
                 };
                 yield return image;
             }

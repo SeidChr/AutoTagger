@@ -10,11 +10,9 @@
 
         int Id { get; set; }
 
-        string ImageId { get; set; } // Shortcode
+        string Shortcode { get; set; }
 
-        string ImageUrl { get; set; }
-
-        string InstaUrl { get; set; }
+        string Url { get; set; }
 
         int Likes { get; set; }
 

@@ -21,12 +21,12 @@
             var photo = Photos.FromImage(image);
             this.db.Photos.Add(photo);
             this.db.SaveChanges();
-            image.ImageId = photo.Id.ToString();
+            image.Shortcode = photo.Id.ToString();
         }
 
         private void RemoveIfExisting(IImage image)
         {
-            var existingPhoto = this.db.Photos.FirstOrDefault(x => x.ImgId == image.ImageId);
+            var existingPhoto = this.db.Photos.FirstOrDefault(x => x.Shortcode == image.Shortcode);
             if (existingPhoto != null)
             {
                 this.db.Itags.RemoveRange(this.db.Itags.Where(x => x.PhotoId == existingPhoto.Id));

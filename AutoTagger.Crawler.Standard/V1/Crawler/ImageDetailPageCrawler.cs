@@ -29,7 +29,7 @@
             {
                 return null;
             }
-            return data?.entry_data?.PostPage?[0]?.graphql?.shortcode_media?.owner?.username.ToString();
+            return data.entry_data?.PostPage?[0]?.graphql?.shortcode_media?.owner?.username.ToString();
         }
     }
 }

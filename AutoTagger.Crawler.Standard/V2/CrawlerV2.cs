@@ -82,9 +82,9 @@
                     {
                         Likes        = x.node.edge_liked_by.count,
                         CommentCount     = x.node.edge_media_to_comment.count,
-                        ImageId      = x.node.shortcode,
+                        Shortcode      = x.node.shortcode,
                         HumanoidTags = hashTags,
-                        ImageUrl     = x.node.display_url
+                        Url     = x.node.display_url
                     });
             }
         }

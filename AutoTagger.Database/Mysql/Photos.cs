@@ -14,9 +14,8 @@ namespace AutoTagger.Database.Mysql
         }
 
         public int Id { get; set; }
-        public string ImgUrl { get; set; }
-        public string ImgId { get; set; }
-        public string InstaUrl { get; set; }
+        public string Url { get; set; }
+        public string Shortcode { get; set; }
         public int Likes { get; set; }
         public int Comments { get; set; }
         public int Follower { get; set; }
@@ -30,9 +29,8 @@ namespace AutoTagger.Database.Mysql
         {
             var photo = new Photos
             {
-                ImgUrl   = image.ImageUrl,
-                ImgId    = image.ImageId,
-                InstaUrl = image.InstaUrl,
+                Url      = image.Url,
+                Shortcode = image.Shortcode,
                 Likes    = image.Likes,
                 Comments = image.CommentCount,
                 Follower = image.Follower,

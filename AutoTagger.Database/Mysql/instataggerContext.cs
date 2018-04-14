@@ -16,8 +16,7 @@ namespace AutoTagger.Database
         {
             if (!optionsBuilder.IsConfigured)
             {
-                #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseMySql("Server=78.46.178.185;User Id=InstaTagger;Password=ovI5Aq3J0xOjjwXn;Database=instatagger; convert zero datetime=True");
+                optionsBuilder.UseMySql("Server=78.46.178.185;User Id=InstaTagger;Password=ovI5Aq3J0xOjjwXn;Database=instatagger");
             }
         }
 
@@ -81,7 +80,7 @@ namespace AutoTagger.Database
 
             modelBuilder.Entity<Photos>(entity =>
             {
-                entity.HasKey(e => new { e.Id, e.ImgId });
+                entity.HasKey(e => new { e.Id, e.Shortcode });
 
                 entity.ToTable("photos");
 
@@ -89,7 +88,7 @@ namespace AutoTagger.Database
                     .HasName("id")
                     .IsUnique();
 
-                entity.HasIndex(e => e.ImgId)
+                entity.HasIndex(e => e.Shortcode)
                     .HasName("imgId")
                     .IsUnique();
 
@@ -98,9 +97,8 @@ namespace AutoTagger.Database
                     .HasColumnType("int(11)")
                     .ValueGeneratedOnAdd();
 
-                entity.Property(e => e.ImgId)
-                    .IsRequired()
-                    .HasColumnName("imgId")
+                entity.Property(e => e.Shortcode)
+                    .HasColumnName("shortcode")
                     .HasMaxLength(50);
 
                 entity.Property(e => e.Comments)
@@ -109,20 +107,17 @@ namespace AutoTagger.Database
 
                 entity.Property(e => e.Created)
                     .HasColumnName("created")
-                    .HasColumnType("timestamp");
+                    .HasColumnType("timestamp")
+                    .HasDefaultValueSql("'CURRENT_TIMESTAMP'")
+                    .ValueGeneratedOnAddOrUpdate();
 
                 entity.Property(e => e.Follower)
                     .HasColumnName("follower")
                     .HasColumnType("int(11)");
 
-                entity.Property(e => e.ImgUrl)
+                entity.Property(e => e.Url)
                     .IsRequired()
-                    .HasColumnName("imgUrl")
-                    .HasColumnType("text");
-
-                entity.Property(e => e.InstaUrl)
-                    .IsRequired()
-                    .HasColumnName("instaUrl")
+                    .HasColumnName("url")
                     .HasColumnType("text");
 
                 entity.Property(e => e.Likes)
@@ -130,6 +125,7 @@ namespace AutoTagger.Database
                     .HasColumnType("int(11)");
 
                 entity.Property(e => e.User)
+                    .IsRequired()
                     .HasColumnName("user")
                     .HasMaxLength(50);
             });

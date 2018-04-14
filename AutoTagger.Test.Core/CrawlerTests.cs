@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
     using AutoTagger.Clarifai.Standard;
     using AutoTagger.Contract;
@@ -71,10 +72,10 @@
             foreach (var crawlerImage in images)
             {
                 this.testConsole.WriteLine(
-                    crawlerImage.ImageId + ">L" + crawlerImage.Likes + ">C" + crawlerImage.CommentCount + " >>> "
+                    crawlerImage.Shortcode + ">L" + crawlerImage.Likes + ">C" + crawlerImage.CommentCount + " >>> "
                   + string.Join(", ", crawlerImage.HumanoidTags));
 
-                var tags = tagger.GetTagsForImageUrl(crawlerImage.ImageUrl).ToList();
+                var tags = tagger.GetTagsForImageUrl(crawlerImage.Url).ToList();
 
                 lastMTags = tags;
 
@@ -96,20 +97,16 @@
         {
             var crawler = new CrawlerV1();
 
-            var images    = crawler.DoCrawling(6, "travel");  
-
-            //Console.WriteLine("images: " + string.Join(", ", images.Select(x => x.ImageId)));
+            var images = crawler.DoCrawling(20, "travel");  
 
             foreach (var image in images)
             {
                 this.testConsole.WriteLine(
-                    "{ \"id\":\"" + image.ImageId + "\", \"url\":\"" + image.ImageUrl + "\",\"tags\": ["
+                    "{ \"id\":\"" + image.Shortcode + "\", \"url\":\"" + image.Url + "\",\"tags\": ["
                   + string.Join(", ", image.HumanoidTags.Select(x => "'" + x + "'")) + "]}");
 
                 db.InsertOrUpdate(image);
             }
-
-            //this.testConsole.WriteLine("Stored Images: " + string.Join(", ", crawlerDb.GetImageIds()));
         }
 
         [Fact]

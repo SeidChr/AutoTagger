@@ -17,8 +17,8 @@
             {
                 return new BsonDocument
                 {
-                    ["_id"]  = image.ImageId,
-                    ["url"]  = image.ImageUrl,
+                    ["_id"]  = image.Shortcode,
+                    ["url"]  = image.Url,
                     ["tags"] = new BsonArray(image.HumanoidTags.Select(t => new BsonValue(t)))
                 };
             }
@@ -28,8 +28,8 @@
                 var doc = value.AsDocument;
                 return new Image
                 {
-                    ImageId      = doc["_id"],
-                    ImageUrl     = doc["url"],
+                    Shortcode      = doc["_id"],
+                    Url     = doc["url"],
                     HumanoidTags = doc["tags"].AsArray.Select(t => t.AsString)
                 };
             }
@@ -43,17 +43,17 @@
 
         public bool Contains(string imageId)
         {
-            return this.images.Find(x => x.ImageId == imageId).Any();
+            return this.images.Find(x => x.Shortcode == imageId).Any();
         }
 
         public IEnumerable<string> CountTags()
         {
-            return this.images.FindAll().Select(x => x.ImageId);
+            return this.images.FindAll().Select(x => x.Shortcode);
         }
 
         public IEnumerable<string> GetImageIds()
         {
-            return this.images.FindAll().Select(x => x.ImageId);
+            return this.images.FindAll().Select(x => x.Shortcode);
         }
 
         public void InsertOrUpdate(IImage crawlerImage)
