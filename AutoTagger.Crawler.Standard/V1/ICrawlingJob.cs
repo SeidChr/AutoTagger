@@ -11,6 +11,5 @@ namespace AutoTagger.Crawler.Standard
         IImage GetImageDataFromShortcode(string shortcode);
         IEnumerable<string> GetRandomHashtags();
         IEnumerable<string> GetShortcodesFromHashtag(string hashTag);
-        IEnumerable<string> GetShortCodesFromInstagramUrl(string url);
     }
 }

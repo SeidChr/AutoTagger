@@ -1,15 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace AutoTagger.Crawler.Standard
+﻿namespace AutoTagger.Crawler.Standard
 {
+    using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Text.RegularExpressions;
+
     using AutoTagger.Contract;
+    using AutoTagger.Crawler.Standard.V1;
 
     public class CrawlingJob : HttpCrawler, ICrawlingJob
     {
+        private ExploreTagsPageCrawler exploreTagsPageCrawler;
+
+        public CrawlingJob()
+        {
+            this.exploreTagsPageCrawler = new ExploreTagsPageCrawler();
+        }
+
         public IImage GetImageDataFromShortcode(string shortcode)
         {
             Console.WriteLine("Processing ShortCode " + shortcode);
@@ -26,7 +33,8 @@ namespace AutoTagger.Crawler.Standard
 
             (int likes, int comments) = this.ExtractQualityFromDescription(qualityString);
 
-            var hashTags = document.SelectNodes("//meta[@property='instExtractQualityFromDescriptionStringpp:hashtags']")
+            var hashTags = document
+                .SelectNodes("//meta[@property='instExtractQualityFromDescriptionStringpp:hashtags']")
                 ?.Select(x => x?.Attributes["content"]?.Value).Where(tag => tag != null);
 
             // <meta property="og:description" content="132 Likes, 1 Comments - ..........">
@@ -54,9 +62,27 @@ namespace AutoTagger.Crawler.Standard
             return nodes.Select(n => n.InnerText.Trim(' ', '#'));
         }
 
+        public IEnumerable<string> GetShortcodesFromHashtag(string hashTag)
+        {
+            return this.exploreTagsPageCrawler.Parse(hashTag);
+            //var url = $"https://www.instagram.com/explore/tags/{hashTag}/";
+            //return this.GetShortCodesFromUrl(url);
+        }
+
+        //public IEnumerable<string> GetShortCodesFromUrl(string url)
+        //{
+        //    Console.WriteLine("Processing Url " + url);
+
+        //    var res        = this.HttpClient.GetStringAsync(url).Result;
+        //    var matches    = Regex.Matches(res, @"\""shortcode\""\:\""([^\""]+)""");
+        //    var shortcodes = matches.OfType<Match>().Select(m => m.Groups[1].Value);
+
+        //    return shortcodes;
+        //}
+
         private (int likes, int comments) ExtractQualityFromDescription(string qualityString)
         {
-            var likes = 0;
+            var likes    = 0;
             var comments = 0;
 
             if (string.IsNullOrWhiteSpace(qualityString))
@@ -70,7 +96,7 @@ namespace AutoTagger.Crawler.Standard
                 return (likes, comments);
             }
 
-            var likesString = qualityMatch.Groups[1].Value;
+            var likesString    = qualityMatch.Groups[1].Value;
             var commentsString = qualityMatch.Groups[2].Value;
 
             int.TryParse(likesString, out likes);
@@ -78,23 +104,5 @@ namespace AutoTagger.Crawler.Standard
 
             return (likes, comments);
         }
-
-        public IEnumerable<string> GetShortcodesFromHashtag(string hashTag)
-        {
-            var url = $"https://www.instagram.com/explore/tags/{hashTag}/";
-            return this.GetShortCodesFromInstagramUrl(url);
-        }
-
-        public IEnumerable<string> GetShortCodesFromInstagramUrl(string url)
-        {
-            Console.WriteLine("Processing Url " + url);
-
-            var res = this.HttpClient.GetStringAsync(url).Result;
-            var matches = Regex.Matches(res, @"\""shortcode\""\:\""([^\""]+)""");
-            var shortcodes = matches.OfType<Match>().Select(m => m.Groups[1].Value);
-
-            return shortcodes;
-        }
-
     }
 }

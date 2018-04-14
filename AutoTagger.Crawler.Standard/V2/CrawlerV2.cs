@@ -13,7 +13,7 @@
     {
         private const int MinimumHashTagCount = 5;
 
-        private const int MinimumLikesCount = 300;
+        private const int MinimumLikesCount = 100;
 
         private static readonly Regex FindHashTagsRegex = new Regex(@"#\w+", RegexOptions.Compiled);
 

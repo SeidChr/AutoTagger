@@ -15,13 +15,13 @@
     public class CrawlerTests
     {
         private readonly ICrawlerStorage db;
-        private ITestOutputHelper TestConsole { get; }
+        private ITestOutputHelper testConsole { get; }
 
         public CrawlerTests(ITestOutputHelper testConsole)
         {
-            TestConsole = testConsole;
-            //var db = new LiteCrawlerStorage("test.ldb");
-            db = new MysqlCrawlerStorage();
+            this.testConsole = testConsole;
+            //this.db = new LiteCrawlerStorage("test.ldb");
+            this.db = new MysqlCrawlerStorage();
         }
 
         [Fact]
@@ -34,7 +34,7 @@
             queue.Enqueue("hamburg");
             speedCrawler.FoundImage += i =>
             {
-                this.TestConsole.WriteLine(i.ToString());
+                this.testConsole.WriteLine(i.ToString());
                 foreach (var humanoidTag in i.HumanoidTags)
                 {
                     if (!queue.Contains(humanoidTag))
@@ -48,12 +48,12 @@
             {
                 limit--;
 
-                this.TestConsole.WriteLine("Queue Size: " + queue.Count);
-                this.TestConsole.WriteLine("Parsing HashTag: #" + hashtag);
+                this.testConsole.WriteLine("Queue Size: " + queue.Count);
+                this.testConsole.WriteLine("Parsing HashTag: #" + hashtag);
                 speedCrawler.ParseHashTagPage(hashtag);
             }
 
-            this.TestConsole.WriteLine("Remained Queue: " + string.Join(", ", queue));
+            this.testConsole.WriteLine("Remained Queue: " + string.Join(", ", queue));
         }
 
         [Fact]
@@ -68,7 +68,7 @@
 
             foreach (var crawlerImage in images)
             {
-                this.TestConsole.WriteLine(
+                this.testConsole.WriteLine(
                     crawlerImage.ImageId + ">L" + crawlerImage.Likes + ">C" + crawlerImage.Comments + " >>> "
                   + string.Join(", ", crawlerImage.HumanoidTags));
 
@@ -82,7 +82,7 @@
 
             Assert.NotNull(lastMTags);
             //var foundHTags = db.FindHumanoidTags(lastMTags).ToList();
-            //this.TestConsole.WriteLine(string.Join(", ", lastMTags) + " >>> " + string.Join(", ", foundHTags));
+            //this.testConsole.WriteLine(string.Join(", ", lastMTags) + " >>> " + string.Join(", ", foundHTags));
 
             // var similar    = lastHTags.Count(lastHTag => foundHTags.Contains(lastHTag));
 
@@ -100,14 +100,14 @@
 
             foreach (var image in images)
             {
-                this.TestConsole.WriteLine(
+                this.testConsole.WriteLine(
                     "{ \"id\":\"" + image.ImageId + "\", \"url\":\"" + image.ImageUrl + "\",\"tags\": ["
                   + string.Join(", ", image.HumanoidTags.Select(x => "'" + x + "'")) + "]}");
 
                 db.InsertOrUpdate(image);
             }
 
-            //this.TestConsole.WriteLine("Stored Images: " + string.Join(", ", crawlerDb.GetImageIds()));
+            //this.testConsole.WriteLine("Stored Images: " + string.Join(", ", crawlerDb.GetImageIds()));
         }
 
         [Fact]
@@ -118,7 +118,7 @@
 
             foreach (var hashtag in hashtagEnum)
             {
-                this.TestConsole.WriteLine(hashtag);
+                this.testConsole.WriteLine(hashtag);
             }
 
             Assert.True(hashtagEnum.Count > 2, "not enough random hashtags");
