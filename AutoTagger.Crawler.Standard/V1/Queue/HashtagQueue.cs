@@ -55,8 +55,6 @@
 
                     yield return image;
                 }
-
-                yield break;
             }
         }
 

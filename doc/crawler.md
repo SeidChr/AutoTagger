@@ -21,6 +21,7 @@
 (4)
   * Crawl user-page
   * Get all 12 images
-  * check Conditions MinLikes, MinHashtagsCount
+  * check Conditions MinLikes, MinHashtagsCount, MinFollowerCount
   * get imageLink with likes and commentCount from userpage
+  * instagram hashtags toLower()
   * do database save

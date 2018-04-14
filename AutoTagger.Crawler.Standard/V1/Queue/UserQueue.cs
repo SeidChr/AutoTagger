@@ -31,10 +31,12 @@ namespace AutoTagger.Crawler.Standard.V1
                 var userName = (string)Convert.ChangeType(userNameAsT, typeof(string));
                 this.AddProcessed(userNameAsT);
 
-                return userPageCrawling(userName);
+                var images = userPageCrawling(userName);
+                foreach (var image in images)
+                {
+                    yield return image;
+                }
             }
-
-            return null;
         }
 
         public new void Enqueue(T shortCode)

@@ -39,6 +39,7 @@ namespace AutoTagger.Crawler.Standard.V1
                 {
                     continue;
                 }
+                this.AddProcessed(currentShortcode);
 
                 var userName = imagePageCrawling(currentShortcode);
                 if (String.IsNullOrEmpty(userName))
@@ -50,13 +51,6 @@ namespace AutoTagger.Crawler.Standard.V1
 
                 foreach (var image in images)
                 {
-                    var imageId = (T)Convert.ChangeType(image.Shortcode, typeof(T));
-                    if (this.IsProcessed(imageId))
-                    {
-                        continue;
-                    }
-
-                    this.AddProcessed(imageId);
                     yield return image;
 
                     if (this.IsLimitReached())

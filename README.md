@@ -1,6 +1,9 @@
 # AutoTagger
 Find the best Instagram Hashtags for a specific Photo - Proof of Concept Cloud Solution Hackathon 24.03. + 25.03.2018
 
+## Architecture
+![](https://github.com/Vittel/AutoTagger/raw/master/doc/architecture.png)
+
 ## Crawler
 siehe doc/crawler.md und 
 

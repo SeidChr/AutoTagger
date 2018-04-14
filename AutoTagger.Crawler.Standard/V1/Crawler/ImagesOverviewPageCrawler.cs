@@ -15,8 +15,9 @@
             Profile
         }
 
-        private const int MinimumHashTagCount = 5;
-        private const int MinimumLikes = 100;
+        private const int MinHashTagCount = 5;
+        private const int MinLikes = 100;
+        private const int MinFollowerCount = 500;
         private static readonly Regex FindHashTagsRegex = new Regex(@"#\w+", RegexOptions.Compiled);
 
         public IEnumerable<IImage> Parse(string url, PageType currentPageType)
@@ -32,6 +33,10 @@
                 {
                     var followerCount = Convert.ToInt32(data?.entry_data?.ProfilePage?[0]?.graphql?.user?.edge_followed_by?.count.ToString());
                     image.Follower    = followerCount;
+                    if (followerCount < MinFollowerCount)
+                    {
+                        continue;
+                    }
                 }
                 yield return image;
             }
@@ -98,7 +103,7 @@
 
         private static bool MeetsConditions(int hashTagsCount, int likes)
         {
-            return hashTagsCount > MinimumHashTagCount && likes > MinimumLikes;
+            return hashTagsCount > MinHashTagCount && likes > MinLikes;
         }
 
         private static IEnumerable<string> ParseHashTags(string text)
@@ -108,7 +113,7 @@
                 return Enumerable.Empty<string>();
             }
 
-            return FindHashTagsRegex.Matches(text).OfType<Match>().Select(m => m?.Value.Trim(' ', '#'))
+            return FindHashTagsRegex.Matches(text).OfType<Match>().Select(m => m?.Value.Trim(' ', '#').ToLower())
                 .Where(x => !string.IsNullOrWhiteSpace(x)).Distinct();
         }
     }
