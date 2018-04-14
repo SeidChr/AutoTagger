@@ -90,11 +90,13 @@ namespace AutoTagger.Crawler.Standard.V1
 
         public void SetLimit(int limit)
         {
-            this.limit = limit;
+            this.limit = limit > 0 ? limit : -1;
         }
 
         private bool IsLimitReached()
         {
+            if (limit == -1)
+                return false;
             return this.processed.Count >= this.limit;
         }
 

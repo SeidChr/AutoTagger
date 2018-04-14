@@ -96,7 +96,8 @@
         {
             var crawler = new CrawlerV1();
 
-            var images = crawler.DoCrawling(3, "travel");  
+            //var images = crawler.DoCrawling(3, "travel");  
+            var images = crawler.DoCrawling(0);  
 
             foreach (var image in images)
             {
