@@ -46,6 +46,12 @@
 
                 foreach (var image in images)
                 {
+                    // limit check
+                    if (image == null)
+                    {
+                        yield break;
+                    }
+
                     var hTags = image.HumanoidTags;
                     foreach (var tag in hTags)
                     {

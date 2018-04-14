@@ -39,7 +39,10 @@ namespace AutoTagger.Crawler.Standard.V1
                 {
                     continue;
                 }
-                this.AddProcessed(currentShortcode);
+                if (this.IsLimitReached())
+                {
+                    yield return null;
+                }
 
                 var userName = imagePageCrawling(currentShortcode);
                 if (String.IsNullOrEmpty(userName))
@@ -51,12 +54,9 @@ namespace AutoTagger.Crawler.Standard.V1
 
                 foreach (var image in images)
                 {
+                    var shortcode = (T)Convert.ChangeType(image.Shortcode, typeof(T));
+                    this.AddProcessed(shortcode);
                     yield return image;
-
-                    if (this.IsLimitReached())
-                    {
-                        yield break;
-                    }
                 }
             }
         }
@@ -98,5 +98,9 @@ namespace AutoTagger.Crawler.Standard.V1
             return this.processed.Count >= this.limit;
         }
 
+    }
+
+    internal class CrawlerLimitException : Exception
+    {
     }
 }
