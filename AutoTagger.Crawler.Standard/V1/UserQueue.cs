@@ -54,12 +54,12 @@ namespace AutoTagger.Crawler.Standard.V1
             base.Enqueue(shortCode);
         }
 
-        public bool IsProcessed(T value)
+        private bool IsProcessed(T value)
         {
             return this.processed.Contains(value);
         }
 
-        public void AddProcessed(T value)
+        private void AddProcessed(T value)
         {
             this.processed.Add(value);
         }

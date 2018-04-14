@@ -23,14 +23,22 @@
         private const int MinimumLikes = 100;
         private static readonly Regex FindHashTagsRegex = new Regex(@"#\w+", RegexOptions.Compiled);
 
-        //public event Action<IImage> FoundImage;
-
         public IEnumerable<IImage> Parse(string url, PageType currentPageType)
         {
             var document = this.FetchDocument(url);
-            var scriptNode = GetScriptNodeData(document);
-            var nodes = GetImageNodes(scriptNode, currentPageType);
-            return GetImages(nodes);
+            var data = GetScriptNodeData(document);
+            var nodes = GetImageNodes(data, currentPageType);
+            var images = GetImages(nodes);
+
+            foreach (IImage image in images)
+            {
+                if (currentPageType == PageType.Profile)
+                {
+                    var followerCount = Convert.ToInt32(data?.entry_data?.ProfilePage?[0]?.graphql?.user?.edge_followed_by?.count.ToString());
+                    image.Follower    = followerCount;
+                }
+                yield return image;
+            }
         }
 
         private static dynamic GetImageNodes(dynamic data, PageType currentPageType)
@@ -87,14 +95,9 @@
                     ImageId = innerNode.shortcode,
                     HumanoidTags = hashTags,
                     ImageUrl = innerNode.display_url,
-                    User = "",
-                    Follower = 0,
-                    InstaUrl = innerNode.thumbnail_src
+                    InstaUrl = ""
                 };
                 yield return image;
-                //this.OnFoundImage(image);
-
-                //yield return node.node.shortcode;
             }
         }
 
@@ -102,11 +105,6 @@
         {
             return hashTagsCount > MinimumHashTagCount && likes > MinimumLikes;
         }
-
-        //protected virtual void OnFoundImage(IImage image)
-        //{
-        //    this.FoundImage?.Invoke(image);
-        //}
 
         private static IEnumerable<string> ParseHashTags(string text)
         {

@@ -67,7 +67,7 @@ namespace AutoTagger.Crawler.Standard.V1
             }
         }
 
-        public new void Enqueue(T shortCode)
+        private new void Enqueue(T shortCode)
         {
             if (shortCode == null)
             {
@@ -84,12 +84,12 @@ namespace AutoTagger.Crawler.Standard.V1
             base.Enqueue(shortCode);
         }
 
-        public bool IsProcessed(T value)
+        private bool IsProcessed(T value)
         {
             return this.processed.Contains(value);
         }
 
-        public void AddProcessed(T value)
+        private void AddProcessed(T value)
         {
             this.processed.Add(value);
         }
@@ -99,7 +99,7 @@ namespace AutoTagger.Crawler.Standard.V1
             this.limit = limit;
         }
 
-        public bool IsLimitReached()
+        private bool IsLimitReached()
         {
             return this.processed.Count >= this.limit;
         }

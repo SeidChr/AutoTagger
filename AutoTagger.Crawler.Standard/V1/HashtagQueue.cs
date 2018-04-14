@@ -82,7 +82,7 @@
             return this.processed.Contains(tag);
         }
 
-        public void AddProcessed(T value)
+        private void AddProcessed(T value)
         {
             this.processed.Add(value);
         }

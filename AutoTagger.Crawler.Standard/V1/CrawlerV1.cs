@@ -66,7 +66,12 @@
         private IEnumerable<IImage> userCrawlerFunc(string userName)
         {
             var url = $"https://www.instagram.com/{userName}/?hl=en";
-            return this.exploreTagsPageCrawler.Parse(url, ImagesOverviewPageCrawler.PageType.Profile);
+            var images = this.exploreTagsPageCrawler.Parse(url, ImagesOverviewPageCrawler.PageType.Profile);
+            foreach (var image in images)
+            {
+                image.User = userName;
+                yield return image;
+            }
         }
     }
 }
