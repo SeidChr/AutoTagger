@@ -77,7 +77,12 @@
 
             foreach (var node in nodes)
             {
-                string text = node?.node?.edge_media_to_caption?.edges?[0]?.node?.text;
+                dynamic edges = node?.node?.edge_media_to_caption?.edges;
+                if (edges.ToString() == "[]")
+                {
+                    continue;
+                }
+                string text = edges[0]?.node?.text;
                 text = text?.Replace("\\n", "\n");
                 text = System.Web.HttpUtility.HtmlDecode(text);
                 var hashTags = ParseHashTags(text).ToList();
@@ -85,7 +90,7 @@
                 int likes = node?.node?.edge_liked_by?.count;
                 if (!MeetsConditions(hashTags.Count, likes))
                 {
-                    yield break;
+                    continue;
                 }
 
                 var innerNode = node?.node;
