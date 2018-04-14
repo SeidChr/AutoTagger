@@ -41,6 +41,10 @@ namespace AutoTagger.Crawler.Standard.V1
                 }
 
                 var userName = imagePageCrawling(currentShortcode);
+                if (String.IsNullOrEmpty(userName))
+                {
+                    continue;
+                }
                 userQueue.Enqueue(userName);
                 var images = userQueue.Process(userPageCrawling);
 

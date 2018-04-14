@@ -1,5 +1,6 @@
 ﻿namespace AutoTagger.Crawler.Standard.V1
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text.RegularExpressions;
@@ -9,48 +10,47 @@
     using HtmlAgilityPack;
     using Newtonsoft.Json;
 
-    class ExploreTagsPageCrawler : HttpCrawler
+    class ImagesOverviewPageCrawler : HttpCrawler
     {
+        public enum PageType
+        {
+            None,
+            ExploreTags,
+            Profile
+        }
+
         private const int MinimumHashTagCount = 5;
-
         private const int MinimumLikes = 100;
-
         private static readonly Regex FindHashTagsRegex = new Regex(@"#\w+", RegexOptions.Compiled);
-
-        private static readonly Regex FindJsonRegex = new Regex(
-            @"\s*window\s*\.\s*_sharedData\s*\=\s*(.*)\s*\;\s*",
-            RegexOptions.Compiled);
 
         //public event Action<IImage> FoundImage;
 
-        public IEnumerable<IImage> Parse(string url)
+        public IEnumerable<IImage> Parse(string url, PageType currentPageType)
         {
-
             var document = this.FetchDocument(url);
-
-            var scriptNode = GetScriptNode(document);
-
-            var nodes = GetImageNodes(scriptNode);
-
+            var scriptNode = GetScriptNodeData(document);
+            var nodes = GetImageNodes(scriptNode, currentPageType);
             return GetImages(nodes);
         }
 
-        private static dynamic GetImageNodes(HtmlNode scriptNode)
+        private static dynamic GetImageNodes(dynamic data, PageType currentPageType)
         {
-            if (scriptNode == null)
+            if (data == null)
             {
                 return null;
             }
 
-            var match = FindJsonRegex.Match(scriptNode.InnerText);
-            if (!match.Success || !match.Groups[1].Success)
+            dynamic nodes = null;
+            switch (currentPageType)
             {
-                return null;
+                case PageType.ExploreTags:
+                    nodes = data?.entry_data?.TagPage?[0]?.graphql?.hashtag?.edge_hashtag_to_top_posts?.edges;
+                    break;
+                case PageType.Profile:
+                    nodes = data?.entry_data?.ProfilePage?[0]?.graphql?.user?.edge_owner_to_timeline_media?.edges;
+                    break;
             }
 
-            dynamic instaDataArray = JsonConvert.DeserializeObject(match.Groups[1].Value);
-
-            var nodes = instaDataArray?.entry_data?.TagPage[0]?.graphql?.hashtag?.edge_hashtag_to_top_posts?.edges;
             if (nodes == null)
             {
                 return null;
@@ -79,27 +79,23 @@
                     yield break;
                 }
 
+                var innerNode = node.node;
                 var image = new Image
                 {
                     Likes = likes,
-                    CommentCount = node.node.edge_media_to_comment.count,
-                    ImageId = node.node.shortcode,
+                    CommentCount = innerNode.edge_media_to_comment.count,
+                    ImageId = innerNode.shortcode,
                     HumanoidTags = hashTags,
-                    ImageUrl = node.node.display_url
+                    ImageUrl = innerNode.display_url,
+                    User = "",
+                    Follower = 0,
+                    InstaUrl = innerNode.thumbnail_src
                 };
                 yield return image;
                 //this.OnFoundImage(image);
 
                 //yield return node.node.shortcode;
             }
-        }
-
-        private static HtmlNode GetScriptNode(HtmlNode document)
-        {
-            var scriptNode = document?.SelectNodes("//script")
-                .FirstOrDefault(n => n.InnerText.Contains("window._sharedData = "));
-
-            return scriptNode;
         }
 
         private static bool MeetsConditions(int hashTagsCount, int likes)

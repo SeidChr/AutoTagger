@@ -10,8 +10,8 @@
         private readonly HashtagQueue<string> hashtagQueue;
 
         private readonly RandomTagsCrawler randomTagsCrawler;
-        private readonly ExploreTagsPageCrawler exploreTagsCrawler;
-        private readonly ImagePageCrawler imagePageCrawler;
+        private readonly ImagesOverviewPageCrawler exploreTagsPageCrawler;
+        private readonly ImageDetailPageCrawler imageDetailPageCrawler;
         //private readonly UserPageCrawler userPageCrawler;
 
         public CrawlerV1()
@@ -19,8 +19,8 @@
             this.hashtagQueue = new HashtagQueue<string>();
 
             this.randomTagsCrawler = new RandomTagsCrawler();
-            this.exploreTagsCrawler = new ExploreTagsPageCrawler();
-            this.imagePageCrawler = new ImagePageCrawler();
+            this.exploreTagsPageCrawler = new ImagesOverviewPageCrawler();
+            this.imageDetailPageCrawler = new ImageDetailPageCrawler();
             //this.userPageCrawler = new UserPageCrawler();
         }
 
@@ -30,7 +30,7 @@
             this.hashtagQueue.SetLimit(limit);
             return this.hashtagQueue.Process(
                 this.exploreTagsCrawlerFunc,
-                this.imagePageCrawler.Parse,
+                this.imagePageCrawlerFunc,
                 this.userCrawlerFunc
                 );
         }
@@ -50,17 +50,23 @@
         private IEnumerable<string> exploreTagsCrawlerFunc(string hashTag)
         {
             var url = $"https://www.instagram.com/explore/tags/{hashTag}/";
-            var images = this.exploreTagsCrawler.Parse(url);
+            var images = this.exploreTagsPageCrawler.Parse(url, ImagesOverviewPageCrawler.PageType.ExploreTags);
             foreach (var image in images)
             {
                 yield return image.ImageId;
             }
         }
 
+        private string imagePageCrawlerFunc(string shortcode)
+        {
+            var url = $"https://www.instagram.com/p/{shortcode}/?hl=en";
+            return this.imageDetailPageCrawler.Parse(url);
+        }
+
         private IEnumerable<IImage> userCrawlerFunc(string userName)
         {
             var url = $"https://www.instagram.com/{userName}/?hl=en";
-            return this.exploreTagsCrawler.Parse(url);
+            return this.exploreTagsPageCrawler.Parse(url, ImagesOverviewPageCrawler.PageType.Profile);
         }
     }
 }

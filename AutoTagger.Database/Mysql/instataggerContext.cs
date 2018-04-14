@@ -17,7 +17,7 @@ namespace AutoTagger.Database
             if (!optionsBuilder.IsConfigured)
             {
                 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseMySql("Server=78.46.178.185;User Id=InstaTagger;Password=ovI5Aq3J0xOjjwXn;Database=instatagger");
+                optionsBuilder.UseMySql("Server=78.46.178.185;User Id=InstaTagger;Password=ovI5Aq3J0xOjjwXn;Database=instatagger; convert zero datetime=True");
             }
         }
 
