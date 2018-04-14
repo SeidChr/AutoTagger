@@ -1,24 +1,27 @@
 # AutoTagger
-Find the best Instagram Hashtags for a specific Photo - Proof of Concept Cloud Solution Hackathon 24.03. + 25.03.2018
+Find the best Instagram Hashtags for a specific Photo - Proof of Concept started developing at Cloud Solution Hackathon Hamburg 24.03. + 25.03.2018
 
 ## Architecture
 ![](https://github.com/Vittel/AutoTagger/raw/master/doc/architecture.png)
 
 ## Crawler
-siehe doc/crawler.md und 
+see [doc/crawler.md](https://github.com/Vittel/AutoTagger/blob/master/doc/crawler.md)
 
 ## Database
-Siehe doc/better-database.md und doc/relational-query.md.
-Testing with CosmosDB von Azure (Graph), LiteDB (NoSQL) und MySQL DB (relational)
+see
+  * [doc/better-database.md](https://github.com/Vittel/AutoTagger/blob/master/doc/better-database.md)
+  * [doc/relational-query.md](https://github.com/Vittel/AutoTagger/blob/master/doc/relational-query.md)
+
+Tested with CosmosDB von Azure (Graph), LiteDB (NoSQL) und MySQL DB (relational)
 
 ## UserInterface
-  * http://autotaggerui.azurewebsites.net/index
+  * [Azure Hosting](http://autotaggerui.azurewebsites.net/index)
 
 Rest API
 Siehe Swagger Doku (UserInterface starten: ```/swagger```)
 
 # Links
-  * Slack: https://dnughh.slack.com/messages/C9VD9KUTV/team/U7EU90J4S/
+  * [Slack](https://dnughh.slack.com/messages/C9VD9KUTV/team/U7EU90J4S/)
 
 ## Contributors:
 ![Christian Seidlitz](https://avatars1.githubusercontent.com/u/1927076?s=50) [Christian Seidlitz](https://github.com/Vittel)<br />
