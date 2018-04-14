@@ -63,24 +63,23 @@
         public void CrawlerRoundtrip()
         {
             var crawler = new CrawlerV1();
-            var images  = crawler.DoCrawling(1);
+            var images  = crawler.DoCrawling(20);
 
             var tagger = new ClarifaiImageTagger();
 
             IEnumerable<string> lastMTags = null;
 
-            foreach (var crawlerImage in images)
+            foreach (var image in images)
             {
                 this.testConsole.WriteLine(
-                    crawlerImage.Shortcode + ">L" + crawlerImage.Likes + ">C" + crawlerImage.CommentCount + " >>> "
-                  + string.Join(", ", crawlerImage.HumanoidTags));
+                    image.Shortcode + ">L" + image.Likes + ">C" + image.CommentCount + " >>> "
+                  + string.Join(", ", image.HumanoidTags));
 
-                var tags = tagger.GetTagsForImageUrl(crawlerImage.Url).ToList();
+                image.MachineTags = tagger.GetTagsForImageUrl(image.Url).ToList();
+                lastMTags = image.MachineTags;
 
-                lastMTags = tags;
-
-                Console.WriteLine("Tags: " + string.Join(", ", tags));
-                db.InsertOrUpdate(crawlerImage);
+                Console.WriteLine("Tags: " + string.Join(", ", image.MachineTags));
+                db.InsertOrUpdate(image);
             }
 
             Assert.NotNull(lastMTags);
