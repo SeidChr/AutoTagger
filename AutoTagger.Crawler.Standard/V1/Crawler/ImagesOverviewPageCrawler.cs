@@ -77,25 +77,25 @@
 
             foreach (var node in nodes)
             {
-                string text = node.node.edge_media_to_caption.edges[0].node.text;
+                string text = node?.node?.edge_media_to_caption?.edges?[0]?.node?.text;
                 text = text?.Replace("\\n", "\n");
                 text = System.Web.HttpUtility.HtmlDecode(text);
                 var hashTags = ParseHashTags(text).ToList();
 
-                int likes = node.node.edge_liked_by.count;
+                int likes = node?.node?.edge_liked_by?.count;
                 if (!MeetsConditions(hashTags.Count, likes))
                 {
                     yield break;
                 }
 
-                var innerNode = node.node;
+                var innerNode = node?.node;
                 var image = new Image
                 {
                     Likes = likes,
-                    CommentCount = innerNode.edge_media_to_comment.count,
-                    Shortcode = innerNode.shortcode,
+                    CommentCount = innerNode?.edge_media_to_comment?.count,
+                    Shortcode = innerNode?.shortcode,
                     HumanoidTags = hashTags,
-                    Url = innerNode.display_url
+                    Url = innerNode?.display_url
                 };
                 yield return image;
             }

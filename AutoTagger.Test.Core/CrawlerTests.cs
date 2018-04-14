@@ -101,9 +101,9 @@
 
             foreach (var image in images)
             {
-                this.testConsole.WriteLine(
-                    "{ \"id\":\"" + image.Shortcode + "\", \"url\":\"" + image.Url + "\",\"tags\": ["
-                  + string.Join(", ", image.HumanoidTags.Select(x => "'" + x + "'")) + "]}");
+                //this.testConsole.WriteLine(
+                //    "{ \"id\":\"" + image.Shortcode + "\", \"url\":\"" + image.Url + "\",\"tags\": ["
+                //  + string.Join(", ", image.HumanoidTags.Select(x => "'" + x + "'")) + "]}");
 
                 db.InsertOrUpdate(image);
             }
