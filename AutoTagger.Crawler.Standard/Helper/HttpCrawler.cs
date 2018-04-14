@@ -11,11 +11,18 @@ namespace AutoTagger.Crawler.Standard
 
     public abstract class HttpCrawler
     {
-        protected readonly HttpClient HttpClient;
+        private static HttpClient httpClient;
 
-        protected HttpCrawler()
+        protected static HttpClient HttpClient
         {
-            this.HttpClient = new HttpClient();
+            get
+            {
+                if (httpClient == null)
+                {
+                    httpClient = new HttpClient();
+                }
+                return httpClient;
+            }
         }
 
         protected HtmlNode FetchDocument(string url)
@@ -23,7 +30,7 @@ namespace AutoTagger.Crawler.Standard
             HttpResponseMessage result;
             try
             {
-                result = this.HttpClient.GetAsync(url).Result;
+                result = HttpClient.GetAsync(url).Result;
                 var status = result.StatusCode;
                 if (status != HttpStatusCode.OK)
                 {

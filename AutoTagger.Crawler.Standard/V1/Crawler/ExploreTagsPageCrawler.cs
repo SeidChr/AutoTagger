@@ -3,6 +3,9 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Text.RegularExpressions;
+
+    using AutoTagger.Contract;
+
     using HtmlAgilityPack;
     using Newtonsoft.Json;
 
@@ -20,9 +23,8 @@
 
         //public event Action<IImage> FoundImage;
 
-        public IEnumerable<string> Parse(string hashTag)
+        public IEnumerable<IImage> Parse(string url)
         {
-            var url = $"https://www.instagram.com/explore/tags/{hashTag}/";
 
             var document = this.FetchDocument(url);
 
@@ -30,11 +32,7 @@
 
             var nodes = GetImageNodes(scriptNode);
 
-            //yield return GetImages(nodes);
-            foreach (var image in GetImages(nodes))
-            {
-                yield return image;
-            }
+            return GetImages(nodes);
         }
 
         private static dynamic GetImageNodes(HtmlNode scriptNode)
@@ -61,7 +59,7 @@
             return nodes;
         }
 
-        private static IEnumerable<string> GetImages(dynamic nodes)
+        private static IEnumerable<IImage> GetImages(dynamic nodes)
         {
             if (nodes == null)
             {
@@ -81,17 +79,18 @@
                     yield break;
                 }
 
-                //var image = new Image
-                //{
-                //    Likes        = likes,
-                //    Comments     = node.node.edge_media_to_comment.count,
-                //    ImageId      = node.node.shortcode,
-                //    HumanoidTags = hashTags,
-                //    ImageUrl     = node.node.display_url
-                //};
+                var image = new Image
+                {
+                    Likes = likes,
+                    CommentCount = node.node.edge_media_to_comment.count,
+                    ImageId = node.node.shortcode,
+                    HumanoidTags = hashTags,
+                    ImageUrl = node.node.display_url
+                };
+                yield return image;
                 //this.OnFoundImage(image);
 
-                yield return node.node.shortcode;
+                //yield return node.node.shortcode;
             }
         }
 

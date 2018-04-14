@@ -1,22 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace AutoTagger.Crawler.Standard
+﻿namespace AutoTagger.Crawler.Standard.V1
 {
+    using System;
+    using System.Collections.Generic;
     using System.Collections.Concurrent;
     using System.Linq;
-
     using AutoTagger.Contract;
 
     class HashtagQueue<T> : ConcurrentQueue<T>
     {
-        private readonly HashSet<T> processedTags;
+        private readonly HashSet<T> processed;
         private readonly ShortcodeQueue<string> shortcodeQueue;
 
         public HashtagQueue()
         {
-            this.processedTags = new HashSet<T>();
+            this.processed = new HashSet<T>();
             this.shortcodeQueue = new ShortcodeQueue<string>();
         }
 
@@ -28,47 +25,42 @@ namespace AutoTagger.Crawler.Standard
             }
         }
 
-        public IEnumerable<IImage> Start(Func<T, IEnumerable<string>> getShortcodes, Func<string, IImage> crawling)
+        public IEnumerable<IImage> Process(Func<T, IEnumerable<string>> shortcodesCrawling,
+                                           Func<string, string> imagePageCrawling,
+                                           Func<string, IEnumerable<IImage>> userPageCrawling
+            )
         {
             while (this.TryDequeue(out T currentHashTag))
             {
-                if (this.processedTags.Contains(currentHashTag))
+                if (this.processed.Contains(currentHashTag))
                 {
                     continue;
                 }
 
-                this.processedTags.Add(currentHashTag);
+                this.AddProcessed(currentHashTag);
                 
-                var shortcodes = getShortcodes(currentHashTag);
+                var shortcodes = shortcodesCrawling(currentHashTag);
                 this.shortcodeQueue.Build(shortcodes);
 
-                var images = this.shortcodeQueue.Process(crawling);
+                var images = this.shortcodeQueue.Process(imagePageCrawling, userPageCrawling);
+
                 foreach (var image in images)
                 {
-                    if (this.shortcodeQueue.IsImageProcessed(image.ImageId))
-                    {
-                        continue;
-                    }
-
                     var hTags = image.HumanoidTags;
                     foreach (var tag in hTags)
                     {
-                        var newTag = (T) Convert.ChangeType(tag, typeof(T));
+                        var newTag = (T)Convert.ChangeType(tag, typeof(T));
                         this.Enqueue(newTag);
                     }
 
-                    this.shortcodeQueue.AddImage(image.ImageId, image);
                     yield return image;
-
-                    if (this.shortcodeQueue.IsLimitReached())
-                    {
-                        yield break;
-                    }
                 }
+
+                yield break;
             }
         }
 
-        public new void Enqueue(T tag)
+        private new void Enqueue(T tag)
         {
             if (tag == null)
             {
@@ -85,9 +77,14 @@ namespace AutoTagger.Crawler.Standard
             base.Enqueue(tag);
         }
 
-        public bool IsTagProcessed(T tag)
+        private bool IsTagProcessed(T tag)
         {
-            return this.processedTags.Contains(tag);
+            return this.processed.Contains(tag);
+        }
+
+        public void AddProcessed(T value)
+        {
+            this.processed.Add(value);
         }
 
         public void SetLimit(int limit)

@@ -24,7 +24,9 @@
 
         public int Follower { get; set; }
 
-        public int Comments { get; set; }
+        public int CommentCount { get; set; }
+
+        public string User { get; set; }
 
         public override string ToString()
         {

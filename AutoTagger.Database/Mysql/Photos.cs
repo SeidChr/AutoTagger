@@ -34,9 +34,9 @@ namespace AutoTagger.Database.Mysql
                 ImgId    = image.ImageId,
                 InstaUrl = image.InstaUrl,
                 Likes    = image.Likes,
-                Comments = image.Comments,
+                Comments = image.CommentCount,
                 Follower = image.Follower,
-                User     = ""
+                User     = image.User
             };
             if (image.HumanoidTags != null)
             {

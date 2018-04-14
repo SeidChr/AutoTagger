@@ -20,6 +20,8 @@
 
         int Follower { get; set; }
 
-        int Comments { get; set; }
+        int CommentCount { get; set; }
+
+        string User { get; set; }
     }
 }

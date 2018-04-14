@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
-namespace AutoTagger.Crawler.Standard
+namespace AutoTagger.Crawler.Standard.V1
 {
     using System.Collections.Concurrent;
     using System.Linq;
@@ -11,13 +10,15 @@ namespace AutoTagger.Crawler.Standard
 
     class ShortcodeQueue<T> : ConcurrentQueue<T>
     {
-        private readonly Dictionary<T, IImage> processedImages;
+        private readonly HashSet<T> processed;
         private int limit;
+        private readonly UserQueue<string> userQueue;
 
         public ShortcodeQueue()
         {
-            this.processedImages = new Dictionary<T, IImage>();
+            this.processed = new HashSet<T>();
             this.limit = -1;
+            this.userQueue = new UserQueue<string>();
         }
 
         public void Build(IEnumerable<T> shortcodes)
@@ -28,17 +29,37 @@ namespace AutoTagger.Crawler.Standard
             }
         }
 
-        public IEnumerable<IImage> Process(Func<T, IImage> crawlingFunc)
+        public IEnumerable<IImage> Process(Func<T, string> imagePageCrawling,
+                                           Func<string, IEnumerable<IImage>> userPageCrawling
+            )
         {
             while (this.TryDequeue(out T currentShortcode))
             {
-                if (this.processedImages.ContainsKey(currentShortcode))
+                if (this.IsProcessed(currentShortcode))
                 {
                     continue;
                 }
 
-                var image = crawlingFunc(currentShortcode);
-                yield return image;
+                var userName = imagePageCrawling(currentShortcode);
+                userQueue.Enqueue(userName);
+                var images = userQueue.Process(userPageCrawling);
+
+                foreach (var image in images)
+                {
+                    var imageId = (T)Convert.ChangeType(image.ImageId, typeof(T));
+                    if (this.IsProcessed(imageId))
+                    {
+                        continue;
+                    }
+
+                    this.AddProcessed(imageId);
+                    yield return image;
+
+                    if (this.IsLimitReached())
+                    {
+                        yield break;
+                    }
+                }
             }
         }
 
@@ -48,7 +69,7 @@ namespace AutoTagger.Crawler.Standard
             {
                 return;
             }
-            if (this.IsImageProcessed(shortCode))
+            if (this.IsProcessed(shortCode))
             {
                 return;
             }
@@ -59,14 +80,14 @@ namespace AutoTagger.Crawler.Standard
             base.Enqueue(shortCode);
         }
 
-        public bool IsImageProcessed(T shortCode)
+        public bool IsProcessed(T value)
         {
-            return this.processedImages.ContainsKey(shortCode);
+            return this.processed.Contains(value);
         }
 
-        public void AddImage(T shortCode, IImage image)
+        public void AddProcessed(T value)
         {
-            this.processedImages.Add(shortCode, image);
+            this.processed.Add(value);
         }
 
         public void SetLimit(int limit)
@@ -76,7 +97,7 @@ namespace AutoTagger.Crawler.Standard
 
         public bool IsLimitReached()
         {
-            return this.processedImages.Count >= this.limit;
+            return this.processed.Count >= this.limit;
         }
 
     }

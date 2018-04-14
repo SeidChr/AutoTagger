@@ -81,7 +81,7 @@
                     new Image
                     {
                         Likes        = x.node.edge_liked_by.count,
-                        Comments     = x.node.edge_media_to_comment.count,
+                        CommentCount     = x.node.edge_media_to_comment.count,
                         ImageId      = x.node.shortcode,
                         HumanoidTags = hashTags,
                         ImageUrl     = x.node.display_url

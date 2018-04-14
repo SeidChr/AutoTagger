@@ -16,14 +16,15 @@
             var crawlerDb = new MysqlCrawlerStorage();
             var image = new Image()
             {
-                Comments = 10,
+                CommentCount = 10,
                 Follower = 200,
                 HumanoidTags = new List<string> { "catlove", "instabeach", "hamburg" },
                 MachineTags = new List<string> { "cat", "beach", "city" },
                 ImageUrl = "content.com/pic/ab12xy67",
                 ImageId = "ab12xy67",
                 InstaUrl = "instagram.com/abc123",
-                Likes = 1337
+                Likes = 1337,
+                User = "DarioDomi"
             };
 
             // Act

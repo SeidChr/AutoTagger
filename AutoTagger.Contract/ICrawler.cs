@@ -4,6 +4,6 @@
 
     public interface ICrawler
     {
-        IEnumerable<IImage> DoCrawling(int limit, params string[] hashTags);
+        //IEnumerable<string> parse(int limit, params string[] hashTags);
     }
 }

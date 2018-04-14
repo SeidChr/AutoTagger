@@ -7,6 +7,8 @@
     using AutoTagger.Clarifai.Standard;
     using AutoTagger.Contract;
     using AutoTagger.Crawler.Standard;
+    using AutoTagger.Crawler.Standard.V1;
+    using AutoTagger.Crawler.Standard.V1.Crawler;
     using AutoTagger.Database.Context.Crawler;
 
     using Xunit;
@@ -69,7 +71,7 @@
             foreach (var crawlerImage in images)
             {
                 this.testConsole.WriteLine(
-                    crawlerImage.ImageId + ">L" + crawlerImage.Likes + ">C" + crawlerImage.Comments + " >>> "
+                    crawlerImage.ImageId + ">L" + crawlerImage.Likes + ">C" + crawlerImage.CommentCount + " >>> "
                   + string.Join(", ", crawlerImage.HumanoidTags));
 
                 var tags = tagger.GetTagsForImageUrl(crawlerImage.ImageUrl).ToList();
@@ -113,15 +115,15 @@
         [Fact]
         public void RandomHashtagsTest()
         {
-            var crawler     = new CrawlingJob();
-            var hashtagEnum = crawler.GetRandomHashtags().ToList();
+            var crawler     = new RandomTagsCrawler();
+            var hashtags = crawler.Parse().ToList();
 
-            foreach (var hashtag in hashtagEnum)
+            foreach (var hashtag in hashtags)
             {
                 this.testConsole.WriteLine(hashtag);
             }
 
-            Assert.True(hashtagEnum.Count > 2, "not enough random hashtags");
+            Assert.True(hashtags.Count > 2, "not enough random hashtags");
         }
     }
 }
