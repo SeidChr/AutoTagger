@@ -5,8 +5,8 @@ namespace AutoTagger.Crawler.Standard.V1
 {
     using System.Collections.Concurrent;
     using System.Linq;
-
     using AutoTagger.Contract;
+    using static System.String;
 
     class ShortcodeQueue<T> : ConcurrentQueue<T>
     {
@@ -45,7 +45,7 @@ namespace AutoTagger.Crawler.Standard.V1
                 }
 
                 var userName = imagePageCrawling(currentShortcode);
-                if (String.IsNullOrEmpty(userName))
+                if (IsNullOrEmpty(userName))
                 {
                     continue;
                 }
@@ -54,6 +54,11 @@ namespace AutoTagger.Crawler.Standard.V1
 
                 foreach (var image in images)
                 {
+                    if (this.IsLimitReached())
+                    {
+                        yield return null;
+                    }
+
                     var shortcode = (T)Convert.ChangeType(image.Shortcode, typeof(T));
                     this.AddProcessed(shortcode);
                     yield return image;
