@@ -11,8 +11,9 @@
 
         public UserCrawler()
         {
-            this.MinHashTagCount = 5;
-            this.MinLikes        = 300;
+            this.MinHashTagCount  = 5;
+            this.MinCommentsCount = 10;
+            this.MinLikes         = 300;
         }
 
         public override IEnumerable<IImage> Parse(string url)
@@ -24,14 +25,14 @@
                 yield break;
             }
 
-            var nodes  = GetNodes(data);
+            var nodes = GetNodes(data);
             IEnumerable<IImage> images = this.GetImages(nodes);
             var imagesList = images.ToList();
 
             if (AreAllHashtagsTheSame(imagesList))
             {
-                var count = imagesList.Count;
-                var index = new Random().Next(0, count);
+                var count                  = imagesList.Count;
+                var index                  = new Random().Next(0, count);
                 imagesList[index].Follower = followerCount;
                 yield return imagesList[index];
                 yield break;
@@ -56,6 +57,7 @@
                     return false;
                 previousHashTags = hashTags;
             }
+
             return true;
         }
 

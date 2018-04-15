@@ -10,6 +10,7 @@
     {
         protected int MinHashTagCount = 0;
         protected int MinLikes = 0;
+        protected int MinCommentsCount = 0;
         protected static int MinHashtagLength = 5;
         private static readonly Regex FindHashTagsRegex = new Regex(@"#\w+", RegexOptions.Compiled);
 
@@ -39,23 +40,30 @@
                 {
                     continue;
                 }
+
                 string text = edges[0]?.node?.text;
                 text = text?.Replace("\\n", "\n");
                 text = System.Web.HttpUtility.HtmlDecode(text);
                 var hashTags = ParseHashTags(text).ToList();
 
-                int likes = node.node?.edge_liked_by?.count;
-                if (!this.MeetsConditions(hashTags.Count, likes))
+                var innerNode = node.node;
+                int likes = innerNode.edge_liked_by?.count;
+                var hashTagsCount = hashTags.Count;
+                var commentsCount = innerNode?.edge_media_to_comment?.count;
+
+                if (hashTagsCount < this.MinHashTagCount
+                    || likes < this.MinLikes
+                    || commentsCount < this.MinCommentsCount
+                    )
                 {
                     continue;
                 }
 
-                var innerNode = node.node;
                 var takenDate = GetDateTime(Convert.ToDouble(innerNode?.taken_at_timestamp.ToString()));
                 var image = new Image
                 {
                     Likes = likes,
-                    CommentCount = innerNode?.edge_media_to_comment?.count,
+                    CommentCount = commentsCount,
                     Shortcode = innerNode?.shortcode,
                     HumanoidTags = hashTags,
                     Url = innerNode?.display_url,
@@ -63,11 +71,6 @@
                 };
                 yield return image;
             }
-        }
-
-        private bool MeetsConditions(int hashTagsCount, int likes)
-        {
-            return hashTagsCount >= MinHashTagCount && likes >= MinLikes;
         }
 
         private static IEnumerable<string> ParseHashTags(string text)
