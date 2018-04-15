@@ -1,5 +1,6 @@
 ﻿namespace AutoTagger.Crawler.Standard
 {
+    using System;
     using System.Collections.Generic;
 
     using AutoTagger.Contract;
@@ -25,6 +26,8 @@
         public int CommentCount { get; set; }
 
         public string User { get; set; }
+
+        public DateTime Uploaded { get; set; }
 
         public override string ToString()
         {

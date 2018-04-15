@@ -20,6 +20,7 @@ namespace AutoTagger.Database.Mysql
         public int Comments { get; set; }
         public int Follower { get; set; }
         public string User { get; set; }
+        public DateTimeOffset? Uploaded { get; set; }
         public DateTimeOffset Created { get; set; }
 
         public ICollection<Itags> Itags { get; set; }
@@ -34,7 +35,8 @@ namespace AutoTagger.Database.Mysql
                 Likes    = image.Likes,
                 Comments = image.CommentCount,
                 Follower = image.Follower,
-                User     = image.User
+                User     = image.User,
+                Uploaded = image.Uploaded
             };
             if (image.HumanoidTags != null)
             {

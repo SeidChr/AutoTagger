@@ -124,6 +124,10 @@ namespace AutoTagger.Database
                     .HasColumnName("likes")
                     .HasColumnType("int(11)");
 
+                entity.Property(e => e.Uploaded)
+                    .HasColumnName("uploaded")
+                    .HasColumnType("timestamp");
+
                 entity.Property(e => e.User)
                     .IsRequired()
                     .HasColumnName("user")

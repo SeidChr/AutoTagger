@@ -26,4 +26,4 @@ CREATE TABLE `mtags` (
   PRIMARY KEY (`id`),
   KEY `photoId` (`photoId`),
   CONSTRAINT `mtags_ibfk_1` FOREIGN KEY (`photoId`) REFERENCES `photos` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;

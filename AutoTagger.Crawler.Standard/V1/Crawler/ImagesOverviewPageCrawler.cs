@@ -94,13 +94,15 @@
                 }
 
                 var innerNode = node?.node;
+                var takenDate = GetDateTime(Convert.ToDouble(innerNode?.taken_at_timestamp.ToString()));
                 var image = new Image
                 {
                     Likes = likes,
                     CommentCount = innerNode?.edge_media_to_comment?.count,
                     Shortcode = innerNode?.shortcode,
                     HumanoidTags = hashTags,
-                    Url = innerNode?.display_url
+                    Url = innerNode?.display_url,
+                    Uploaded = takenDate
                 };
                 yield return image;
             }
@@ -120,6 +122,12 @@
 
             return FindHashTagsRegex.Matches(text).OfType<Match>().Select(m => m?.Value.Trim(' ', '#').ToLower())
                 .Where(x => !string.IsNullOrWhiteSpace(x)).Distinct();
+        }
+
+        public static DateTime GetDateTime(double unixTimeStamp)
+        {
+            var dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+            return dtDateTime.AddSeconds(unixTimeStamp).ToLocalTime();
         }
     }
 }

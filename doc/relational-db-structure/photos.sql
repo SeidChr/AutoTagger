@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50558
 File Encoding         : 65001
 
-Date: 2018-04-14 21:26:56
+Date: 2018-04-15 17:32:38
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -27,8 +27,9 @@ CREATE TABLE `photos` (
   `comments` int(11) NOT NULL,
   `follower` int(11) NOT NULL,
   `user` varchar(50) NOT NULL,
+  `uploaded` timestamp NULL DEFAULT NULL,
   `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`,`shortcode`),
   UNIQUE KEY `id` (`id`),
   UNIQUE KEY `imgId` (`shortcode`)
-) ENGINE=InnoDB AUTO_INCREMENT=66 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;

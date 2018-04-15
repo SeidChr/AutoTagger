@@ -1,5 +1,6 @@
 ﻿namespace AutoTagger.Contract
 {
+    using System;
     using System.Collections.Generic;
 
     public interface IImage
@@ -21,5 +22,7 @@
         int CommentCount { get; set; }
 
         string User { get; set; }
+
+        DateTime Uploaded { get; set; }
     }
 }
