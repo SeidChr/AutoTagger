@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using AutoTagger.Contract;
-
-namespace AutoTagger.Crawler.Standard.V1.Crawler
+﻿namespace AutoTagger.Crawler.Standard.V1.Crawler
 {
+    using System;
+    using System.Collections.Generic;
+    using AutoTagger.Contract;
+
     class ExploreTagsCrawler : ImagesCrawler
     {
         private const int MinPostsForHashtags = 1 * 1000 * 1000;
@@ -12,7 +11,7 @@ namespace AutoTagger.Crawler.Standard.V1.Crawler
         public ExploreTagsCrawler()
         {
             this.MinHashTagCount = 0;
-            this.MinLikes        = 0;
+            this.MinLikes        = 100;
         }
 
         public override IEnumerable<IImage> Parse(string url)
@@ -22,7 +21,8 @@ namespace AutoTagger.Crawler.Standard.V1.Crawler
             {
                 yield break;
             }
-            var nodes = GetNodes(data);
+
+            var nodes  = GetNodes(data);
             var images = this.GetImages(nodes);
 
             foreach (IImage image in images)
@@ -38,8 +38,8 @@ namespace AutoTagger.Crawler.Standard.V1.Crawler
                 return false;
             }
 
-            dynamic node = data.entry_data?.TagPage?[0]?.graphql?.hashtag?.edge_hashtag_to_media;
-            var amountOfPosts = Convert.ToInt32(node?.count.ToString());
+            dynamic node          = data.entry_data?.TagPage?[0]?.graphql?.hashtag?.edge_hashtag_to_media;
+            var     amountOfPosts = Convert.ToInt32(node?.count.ToString());
             return amountOfPosts >= MinPostsForHashtags;
         }
 
