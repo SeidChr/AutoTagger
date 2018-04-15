@@ -12,7 +12,7 @@
 
     using Newtonsoft.Json;
 
-    public class ImageDetailPageCrawler : HttpCrawler
+    public class ImageDetailCrawler : HttpCrawler
     {
 
         public string Parse(string url)

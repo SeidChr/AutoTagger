@@ -10,66 +10,60 @@
         private readonly HashtagQueue<string> hashtagQueue;
 
         private readonly RandomTagsCrawler randomTagsCrawler;
-        private readonly ImagesOverviewPageCrawler exploreTagsPageCrawler;
-        private readonly ImageDetailPageCrawler imageDetailPageCrawler;
-        //private readonly UserPageCrawler userPageCrawler;
+        private readonly ExploreTagsCrawler exploreTagsPageCrawler;
+        private readonly ImageDetailCrawler imageDetailPageCrawler;
+        private readonly UserCrawler userCrawler;
 
         public CrawlerV1()
         {
             this.hashtagQueue = new HashtagQueue<string>();
 
             this.randomTagsCrawler = new RandomTagsCrawler();
-            this.exploreTagsPageCrawler = new ImagesOverviewPageCrawler();
-            this.imageDetailPageCrawler = new ImageDetailPageCrawler();
-            //this.userPageCrawler = new UserPageCrawler();
+            this.exploreTagsPageCrawler = new ExploreTagsCrawler();
+            this.imageDetailPageCrawler = new ImageDetailCrawler();
+            this.userCrawler = new UserCrawler();
         }
 
         public IEnumerable<IImage> DoCrawling(int limit, params string[] customTags)
         {
-            this.BuildQueue(customTags);
+            this.BuildTags(customTags);
             this.hashtagQueue.SetLimit(limit);
             return this.hashtagQueue.Process(
-                this.exploreTagsCrawlerFunc,
-                this.imagePageCrawlerFunc,
-                this.userCrawlerFunc
+                this.ExploreTagsCrawlerFunc,
+                this.ImagePageCrawlerFunc,
+                this.UserCrawlerFunc
                 );
         }
 
-        private void BuildQueue(string[] customTags)
+        private void BuildTags(string[] customTags)
         {
-            if (customTags.Length == 0)
-            {
-                this.hashtagQueue.Build(this.randomTagsCrawler.Parse());
-            }
-            else
-            {
-                this.hashtagQueue.Build(customTags);
-            }
+            var tags = customTags.Length == 0 ? this.randomTagsCrawler.Parse() : customTags;
+            this.hashtagQueue.Build(tags);
         }
 
-        private IEnumerable<string> exploreTagsCrawlerFunc(string hashTag)
+        private IEnumerable<string> ExploreTagsCrawlerFunc(string hashTag)
         {
             var url = $"https://www.instagram.com/explore/tags/{hashTag}/";
-            var images = this.exploreTagsPageCrawler.Parse(url, ImagesOverviewPageCrawler.PageType.ExploreTags);
+            var images = this.exploreTagsPageCrawler.Parse(url);
             foreach (var image in images)
             {
                 yield return image.Shortcode;
             }
         }
 
-        private string imagePageCrawlerFunc(string shortcode)
+        private string ImagePageCrawlerFunc(string shortcode)
         {
             var url = $"https://www.instagram.com/p/{shortcode}/?hl=en";
             return this.imageDetailPageCrawler.Parse(url);
         }
 
-        private IEnumerable<IImage> userCrawlerFunc(string userName)
+        private IEnumerable<IImage> UserCrawlerFunc(string user)
         {
-            var url = $"https://www.instagram.com/{userName}/?hl=en";
-            var images = this.exploreTagsPageCrawler.Parse(url, ImagesOverviewPageCrawler.PageType.Profile);
+            var url = $"https://www.instagram.com/{user}/?hl=en";
+            var images = this.userCrawler.Parse(url);
             foreach (var image in images)
             {
-                image.User = userName;
+                image.User = user;
                 yield return image;
             }
         }
