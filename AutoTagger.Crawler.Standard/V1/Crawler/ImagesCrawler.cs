@@ -10,6 +10,7 @@
     {
         protected int MinHashTagCount = 0;
         protected int MinLikes = 0;
+        protected static int MinHashtagLength = 5;
         private static readonly Regex FindHashTagsRegex = new Regex(@"#\w+", RegexOptions.Compiled);
 
         public abstract IEnumerable<IImage> Parse(string url);
@@ -77,13 +78,28 @@
             }
 
             return FindHashTagsRegex.Matches(text).OfType<Match>().Select(m => m?.Value.Trim(' ', '#').ToLower())
-                .Where(x => !string.IsNullOrWhiteSpace(x)).Distinct();
+                .Where(HashtagIsAllowed).Distinct();
+        }
+
+        private static bool HashtagIsAllowed(string value)
+        {
+            return !string.IsNullOrWhiteSpace(value) && value.Length >= MinHashtagLength && !IsDigitsOnly(value);
         }
 
         public static DateTime GetDateTime(double unixTimeStamp)
         {
             var dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
             return dtDateTime.AddSeconds(unixTimeStamp).ToLocalTime();
+        }
+
+        static bool IsDigitsOnly(string str)
+        {
+            foreach (var c in str)
+            {
+                if (c < '0' || c > '9')
+                    return false;
+            }
+            return true;
         }
     }
 }
