@@ -1,13 +1,9 @@
 ﻿namespace AutoTagger.Database.Context.Crawler
 {
-    using System.Collections.Generic;
     using System.Linq;
-    using System.Runtime.InteropServices;
-
     using global::AutoTagger.Contract;
     using global::AutoTagger.Database.Context;
     using global::AutoTagger.Database.Mysql;
-
     using MySql.Data.MySqlClient;
 
     public class MysqlCrawlerStorage : MysqlStorage, ICrawlerStorage
@@ -20,8 +16,24 @@
 
             var photo = Photos.FromImage(image);
             this.db.Photos.Add(photo);
-            this.db.SaveChanges();
+            this.Save(image);
             image.Shortcode = photo.Id.ToString();
+        }
+
+        private void Save(IImage image)
+        {
+            try
+            {
+                this.db.SaveChanges();
+            }
+            catch (MySqlException e)
+            {
+                if (e.Message.Contains("Timeout"))
+                {
+                    this.Reconnect();
+                    this.InsertOrUpdate(image);
+                }
+            }
         }
 
         private void RemoveIfExisting(IImage image)

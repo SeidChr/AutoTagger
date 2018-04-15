@@ -1,20 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace AutoTagger.Database.Context
+﻿namespace AutoTagger.Database.Context
 {
-    using global::AutoTagger.Database.Mysql;
+    using Microsoft.EntityFrameworkCore;
 
-    using MySql.Data.MySqlClient;
-
-    public class MysqlStorage
+    public abstract class MysqlStorage
     {
         protected InstataggerContext db;
 
-        public MysqlStorage()
+        protected MysqlStorage()
         {
             db = new InstataggerContext();
+        }
+
+        public void Reconnect()
+        {
+            this.db.Database.CloseConnection();
+            this.db.Database.OpenConnection();
         }
     }
 
