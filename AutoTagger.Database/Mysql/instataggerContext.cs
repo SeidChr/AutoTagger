@@ -16,7 +16,8 @@ namespace AutoTagger.Database
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseMySql("Server=78.46.178.185;User Id=InstaTagger;Password=ovI5Aq3J0xOjjwXn;Database=instatagger");
+                var pw = "";
+                optionsBuilder.UseMySql($"Server=78.46.178.185;User Id=InstaTagger;Password={pw};Database=instatagger");
             }
         }
 

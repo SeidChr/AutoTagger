@@ -28,5 +28,5 @@ dotnet restore
 
 following file generates the database-first models:
 ```
-dotnet ef dbcontext scaffold "Server=78.46.178.185;User Id=InstaTagger;Password=ovI5Aq3J0xOjjwXn;Database=instatagger" "Pomelo.EntityFrameworkCore.MySql"
+dotnet ef dbcontext scaffold "Server=78.46.178.185;User Id=InstaTagger;Password=PASSWORD;Database=instatagger" "Pomelo.EntityFrameworkCore.MySql"
 ```
