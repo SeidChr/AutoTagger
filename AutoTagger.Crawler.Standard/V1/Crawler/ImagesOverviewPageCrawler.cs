@@ -18,12 +18,19 @@
         private const int MinHashTagCount = 5;
         private const int MinLikes = 100;
         private const int MinFollowerCount = 500;
+        private const int MinPostsForHashtags = 1000000;
         private static readonly Regex FindHashTagsRegex = new Regex(@"#\w+", RegexOptions.Compiled);
 
         public IEnumerable<IImage> Parse(string url, PageType currentPageType)
         {
             var document = this.FetchDocument(url);
             var data = GetScriptNodeData(document);
+
+            if (currentPageType == PageType.ExploreTags && !HashtagHasEnoughPosts(data))
+            {
+                yield break;
+            }
+
             var nodes = GetImageNodes(data, currentPageType);
             var images = GetImages(nodes);
 
@@ -40,6 +47,23 @@
                 }
                 yield return image;
             }
+        }
+
+        private static bool HashtagHasEnoughPosts(dynamic data)
+        {
+            if (data == null)
+            {
+                return false;
+            }
+
+            dynamic node = data.entry_data?.TagPage?[0]?.graphql?.hashtag?.edge_hashtag_to_media;
+            var amountOfPosts = Convert.ToInt32(node?.count.ToString());
+            if (amountOfPosts < MinPostsForHashtags)
+            {
+                return false;
+            }
+
+            return true;
         }
 
         private static dynamic GetImageNodes(dynamic data, PageType currentPageType)
