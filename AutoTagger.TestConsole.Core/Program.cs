@@ -5,7 +5,9 @@
     using System.IO;
     using System.Linq;
     using AutoTagger.Clarifai.Standard;
+    using AutoTagger.Crawler.Standard.V1;
     using AutoTagger.Database.Context.AutoTagger;
+    using AutoTagger.Database.Context.Crawler;
 
     internal class Program
     {
@@ -88,7 +90,8 @@
             Console.WriteLine("1: Database Insert \n" +
                               "2: Database Read\n" +
                               "3: Clarifai Tagger\n" +
-                              "4: Import Testdata from File"
+                              "4: Import Testdata from File\n" +
+                              "5: Start Crawler"
                               );
             while(true)
             {
@@ -107,13 +110,31 @@
                         ClarifaiTest();
                         break;
 
-                    case '4':
-                        ImportInstagramTags();
+                    case '5':
+                        StartCrawler();
                         break;
                 }
                 Console.WriteLine("------------");
             }
             
+        }
+
+        private static void StartCrawler()
+        {
+            var crawler = new CrawlerV1();
+            var db = new MysqlCrawlerStorage();
+
+            var images = crawler.DoCrawling(0);
+
+            foreach (var image in images)
+            {
+                Console.WriteLine(
+                    "{ \"shortcode\":\"" + image.Shortcode + "\", \"from\":\"" + image.User + "\", \"tags\": ["
+                  + string.Join(", ", image.HumanoidTags.Select(x => "'" + x + "'")) + "], \"uploaded\":\"" + image.Uploaded + "\", "
+                  + "\"likes\":\"" + image.Likes + "\", \"comments\":\"" + image.Follower + "\", \"follower\":\"" + image.CommentCount + "\", }");
+
+                db.InsertOrUpdate(image);
+            }
         }
     }
 }
