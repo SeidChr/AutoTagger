@@ -63,10 +63,10 @@
                 var image = new Image
                 {
                     Likes = likes,
-                    CommentCount = commentsCount,
+                    Comments = commentsCount,
                     Shortcode = innerNode?.shortcode,
                     HumanoidTags = hashTags,
-                    Url = innerNode?.display_url,
+                    LargeUrl = innerNode?.display_url,
                     Uploaded = takenDate
                 };
                 yield return image;

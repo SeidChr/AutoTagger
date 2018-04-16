@@ -81,10 +81,11 @@
                     new Image
                     {
                         Likes        = x.node.edge_liked_by.count,
-                        CommentCount     = x.node.edge_media_to_comment.count,
+                        Comments     = x.node.edge_media_to_comment.count,
                         Shortcode      = x.node.shortcode,
                         HumanoidTags = hashTags,
-                        Url     = x.node.display_url
+                        LargeUrl     = x.node.display_url,
+                        ThumbUrl     = x.node.thumbnail_src
                     });
             }
         }

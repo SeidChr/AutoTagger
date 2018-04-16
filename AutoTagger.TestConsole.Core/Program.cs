@@ -131,7 +131,7 @@
                 Console.WriteLine(
                     "{ \"shortcode\":\"" + image.Shortcode + "\", \"from\":\"" + image.User + "\", \"tags\": ["
                   + string.Join(", ", image.HumanoidTags.Select(x => "'" + x + "'")) + "], \"uploaded\":\"" + image.Uploaded + "\", "
-                  + "\"likes\":\"" + image.Likes + "\", \"comments\":\"" + image.Follower + "\", \"follower\":\"" + image.CommentCount + "\", }");
+                  + "\"likes\":\"" + image.Likes + "\", \"comments\":\"" + image.Follower + "\", \"follower\":\"" + image.Comments + "\", }");
 
                 db.InsertOrUpdate(image);
             }

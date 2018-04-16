@@ -13,13 +13,13 @@
 
         string Shortcode { get; set; }
 
-        string Url { get; set; }
+        string LargeUrl { get; set; }
 
         int Likes { get; set; }
 
         int Follower { get; set; }
 
-        int CommentCount { get; set; }
+        int Comments { get; set; }
 
         string User { get; set; }
 

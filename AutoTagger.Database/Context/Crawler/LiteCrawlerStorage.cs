@@ -18,7 +18,7 @@
                 return new BsonDocument
                 {
                     ["_id"]  = image.Shortcode,
-                    ["url"]  = image.Url,
+                    ["url"]  = image.LargeUrl,
                     ["tags"] = new BsonArray(image.HumanoidTags.Select(t => new BsonValue(t)))
                 };
             }
@@ -29,7 +29,7 @@
                 return new Image
                 {
                     Shortcode      = doc["_id"],
-                    Url     = doc["url"],
+                    LargeUrl     = doc["url"],
                     HumanoidTags = doc["tags"].AsArray.Select(t => t.AsString)
                 };
             }

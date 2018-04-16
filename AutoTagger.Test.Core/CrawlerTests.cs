@@ -72,10 +72,10 @@
             foreach (var image in images)
             {
                 this.testConsole.WriteLine(
-                    image.Shortcode + ">L" + image.Likes + ">C" + image.CommentCount + " >>> "
+                    image.Shortcode + ">L" + image.Likes + ">C" + image.Comments + " >>> "
                   + string.Join(", ", image.HumanoidTags));
 
-                image.MachineTags = tagger.GetTagsForImageUrl(image.Url).ToList();
+                image.MachineTags = tagger.GetTagsForImageUrl(image.LargeUrl).ToList();
                 lastMTags = image.MachineTags;
 
                 Console.WriteLine("Tags: " + string.Join(", ", image.MachineTags));
@@ -97,12 +97,12 @@
             var crawler = new CrawlerV1();
 
             var images = crawler.DoCrawling(3, "travel");
-            //var images = crawler.DoCrawling(0);  
+            //var images = crawler.DoCrawling(0);
 
             foreach (var image in images)
             {
                 //this.testConsole.WriteLine(
-                //    "{ \"id\":\"" + image.Shortcode + "\", \"url\":\"" + image.Url + "\",\"tags\": ["
+                //    "{ \"id\":\"" + image.Shortcode + "\", \"url\":\"" + image.LargeUrl + "\",\"tags\": ["
                 //  + string.Join(", ", image.HumanoidTags.Select(x => "'" + x + "'")) + "]}");
 
                 db.InsertOrUpdate(image);

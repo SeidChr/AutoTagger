@@ -16,11 +16,11 @@
             var crawlerDb = new MysqlCrawlerStorage();
             var image = new Image()
             {
-                CommentCount = 10,
+                Comments = 10,
                 Follower = 200,
                 HumanoidTags = new List<string> { "catlove", "instabeach", "hamburg" },
                 MachineTags = new List<string> { "cat", "beach", "city" },
-                Url = "content.com/pic/ab12xy67",
+                LargeUrl = "content.com/pic/ab12xy67",
                 Shortcode = "ab12xy67",
                 Likes = 1337,
                 User = "DarioDomi"
