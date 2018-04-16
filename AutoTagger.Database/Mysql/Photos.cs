@@ -3,6 +3,8 @@ using System.Collections.Generic;
 
 namespace AutoTagger.Database.Mysql
 {
+    using AutoTagger.Contract;
+
     public partial class Photos
     {
         public Photos()
@@ -26,6 +28,42 @@ namespace AutoTagger.Database.Mysql
 
         public ICollection<Mtags> Mtags { get; set; }
         public ICollection<PhotoItagRel> PhotoItagRel { get; set; }
+
+        public static Photos FromImage(IImage image)
+        {
+            var photo = new Photos
+            {
+                LargeUrl       = image.LargeUrl,
+                ThumbUrl       = image.ThumbUrl,
+                Shortcode = image.Shortcode,
+                Likes     = image.Likes,
+                Comments  = image.Comments,
+                User      = image.User,
+                Follower = image.Follower,
+                Following  = image.Following,
+                Posts  = image.Posts,
+                Uploaded  = image.Uploaded
+            };
+            if (image.HumanoidTags != null)
+            {
+                foreach (var itagName in image.HumanoidTags)
+                {
+                    var itag = new Itags { Name = itagName };
+                    var rel = new PhotoItagRel { Itag = itag, Photo = photo };
+                    photo.PhotoItagRel.Add(rel);
+                }
+            }
+
+            if (image.MachineTags != null)
+            {
+                foreach (var mtagName in image.MachineTags)
+                {
+                    photo.Mtags.Add(new Mtags { Name = mtagName });
+                }
+            }
+
+            return photo;
+        }
 
         public IEnumerable<Itags> Itags
         {

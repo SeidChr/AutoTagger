@@ -41,7 +41,8 @@
             var existingPhoto = this.db.Photos.FirstOrDefault(x => x.Shortcode == image.Shortcode);
             if (existingPhoto != null)
             {
-                this.db.Itags.RemoveRange(this.db.Itags.Where(x => x.PhotoId == existingPhoto.Id));
+                // TODO check
+                //this.db.Itags.RemoveRange(this.db.Itags.Where(x => x.PhotoId == existingPhoto.Id));
                 this.db.Mtags.RemoveRange(this.db.Mtags.Where(x => x.PhotoId == existingPhoto.Id));
                 this.db.Photos.Remove(existingPhoto);
                 this.db.SaveChanges();

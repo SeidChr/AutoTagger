@@ -1,5 +1,6 @@
 ﻿namespace AutoTagger.Database.Context
 {
+    using global::AutoTagger.Database.Mysql;
     using Microsoft.EntityFrameworkCore;
 
     public abstract class MysqlStorage
