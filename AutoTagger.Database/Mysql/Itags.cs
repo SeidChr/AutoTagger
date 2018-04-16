@@ -16,5 +16,16 @@ namespace AutoTagger.Database.Mysql
         public DateTimeOffset Updated { get; set; }
 
         public ICollection<PhotoItagRel> PhotoItagRel { get; set; }
+
+        public IEnumerable<Photos> Photos
+        {
+            get
+            {
+                foreach (var photoItagRel in PhotoItagRel)
+                {
+                    yield return photoItagRel.Photo;
+                }
+            }
+        }
     }
 }

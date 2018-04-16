@@ -26,5 +26,16 @@ namespace AutoTagger.Database.Mysql
 
         public ICollection<Mtags> Mtags { get; set; }
         public ICollection<PhotoItagRel> PhotoItagRel { get; set; }
+
+        public IEnumerable<Itags> Itags
+        {
+            get
+            {
+                foreach (var photoItagRel in PhotoItagRel)
+                {
+                    yield return photoItagRel.Itag;
+                }
+            }
+        }
     }
 }
