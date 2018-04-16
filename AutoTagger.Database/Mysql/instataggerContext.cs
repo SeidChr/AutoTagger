@@ -2,14 +2,13 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace AutoTagger.Database
+namespace AutoTagger.Database.Mysql
 {
-    using AutoTagger.Database.Mysql;
-
     public partial class InstataggerContext : DbContext
     {
         public virtual DbSet<Itags> Itags { get; set; }
         public virtual DbSet<Mtags> Mtags { get; set; }
+        public virtual DbSet<PhotoItagRel> PhotoItagRel { get; set; }
         public virtual DbSet<Photos> Photos { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -27,34 +26,36 @@ namespace AutoTagger.Database
             {
                 entity.ToTable("itags");
 
-                entity.HasIndex(e => e.PhotoId)
-                    .HasName("photoId");
+                entity.HasIndex(e => e.Id)
+                    .HasName("id");
 
                 entity.Property(e => e.Id)
                     .HasColumnName("id")
                     .HasColumnType("int(11)");
 
-                entity.Property(e => e.PhotoId)
-                    .HasColumnName("photoId")
-                    .HasColumnType("int(11)");
-
-                entity.Property(e => e.Value)
+                entity.Property(e => e.Name)
                     .IsRequired()
-                    .HasColumnName("value")
+                    .HasColumnName("name")
                     .HasMaxLength(30);
 
-                entity.HasOne(d => d.Photo)
-                    .WithMany(p => p.Itags)
-                    .HasPrincipalKey(p => p.Id)
-                    .HasForeignKey(d => d.PhotoId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("itags_ibfk_1");
+                entity.Property(e => e.Posts)
+                    .HasColumnName("posts")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.Updated)
+                    .HasColumnName("updated")
+                    .HasColumnType("timestamp")
+                    .HasDefaultValueSql("'CURRENT_TIMESTAMP'")
+                    .ValueGeneratedOnAddOrUpdate();
             });
 
             modelBuilder.Entity<Mtags>(entity =>
             {
                 entity.ToTable("mtags");
 
+                entity.HasIndex(e => e.Id)
+                    .HasName("id");
+
                 entity.HasIndex(e => e.PhotoId)
                     .HasName("photoId");
 
@@ -62,14 +63,14 @@ namespace AutoTagger.Database
                     .HasColumnName("id")
                     .HasColumnType("int(11)");
 
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasColumnName("name")
+                    .HasMaxLength(30);
+
                 entity.Property(e => e.PhotoId)
                     .HasColumnName("photoId")
                     .HasColumnType("int(11)");
-
-                entity.Property(e => e.Value)
-                    .IsRequired()
-                    .HasColumnName("value")
-                    .HasMaxLength(30);
 
                 entity.HasOne(d => d.Photo)
                     .WithMany(p => p.Mtags)
@@ -77,6 +78,42 @@ namespace AutoTagger.Database
                     .HasForeignKey(d => d.PhotoId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("mtags_ibfk_1");
+            });
+
+            modelBuilder.Entity<PhotoItagRel>(entity =>
+            {
+                entity.ToTable("photo_itag_rel");
+
+                entity.HasIndex(e => e.ItagId)
+                    .HasName("itagId");
+
+                entity.HasIndex(e => e.PhotoId)
+                    .HasName("photoId");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("id")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.ItagId)
+                    .HasColumnName("itagId")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.PhotoId)
+                    .HasColumnName("photoId")
+                    .HasColumnType("int(11)");
+
+                entity.HasOne(d => d.Itag)
+                    .WithMany(p => p.PhotoItagRel)
+                    .HasForeignKey(d => d.ItagId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("photo_itag_rel_ibfk_2");
+
+                entity.HasOne(d => d.Photo)
+                    .WithMany(p => p.PhotoItagRel)
+                    .HasPrincipalKey(p => p.Id)
+                    .HasForeignKey(d => d.PhotoId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("photo_itag_rel_ibfk_1");
             });
 
             modelBuilder.Entity<Photos>(entity =>
@@ -116,14 +153,27 @@ namespace AutoTagger.Database
                     .HasColumnName("follower")
                     .HasColumnType("int(11)");
 
-                entity.Property(e => e.Url)
+                entity.Property(e => e.Following)
+                    .HasColumnName("following")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.LargeUrl)
                     .IsRequired()
-                    .HasColumnName("url")
+                    .HasColumnName("largeUrl")
                     .HasColumnType("text");
 
                 entity.Property(e => e.Likes)
                     .HasColumnName("likes")
                     .HasColumnType("int(11)");
+
+                entity.Property(e => e.Posts)
+                    .HasColumnName("posts")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.ThumbUrl)
+                    .IsRequired()
+                    .HasColumnName("thumbUrl")
+                    .HasColumnType("text");
 
                 entity.Property(e => e.Uploaded)
                     .HasColumnName("uploaded")

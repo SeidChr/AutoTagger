@@ -5,10 +5,16 @@ namespace AutoTagger.Database.Mysql
 {
     public partial class Itags
     {
-        public int Id { get; set; }
-        public int PhotoId { get; set; }
-        public string Value { get; set; }
+        public Itags()
+        {
+            PhotoItagRel = new HashSet<PhotoItagRel>();
+        }
 
-        public Photos Photo { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public int Posts { get; set; }
+        public DateTimeOffset Updated { get; set; }
+
+        public ICollection<PhotoItagRel> PhotoItagRel { get; set; }
     }
 }
