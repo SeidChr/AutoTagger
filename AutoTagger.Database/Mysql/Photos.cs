@@ -44,15 +44,6 @@ namespace AutoTagger.Database.Mysql
                 Posts  = image.Posts,
                 Uploaded  = image.Uploaded
             };
-            if (image.HumanoidTags != null)
-            {
-                foreach (var itagName in image.HumanoidTags)
-                {
-                    var itag = new Itags { Name = itagName };
-                    var rel = new PhotoItagRel { Itag = itag, Photo = photo };
-                    photo.PhotoItagRel.Add(rel);
-                }
-            }
 
             if (image.MachineTags != null)
             {

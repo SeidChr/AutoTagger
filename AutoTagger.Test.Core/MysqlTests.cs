@@ -10,23 +10,29 @@
     public class MysqlTests
     {
         [Fact]
-        public void WhenCrawlerInsert()
+        public void MysqlInsert()
         {
             // Arrange
             var crawlerDb = new MysqlCrawlerStorage();
-            var image = new Image()
+            var image = new Image
             {
                 Comments = 10,
-                Follower = 200,
+                Follower = 99,
+                Following = 150,
+                Posts = 42,
                 HumanoidTags = new List<string> { "catlove", "instabeach", "hamburg" },
                 MachineTags = new List<string> { "cat", "beach", "city" },
-                LargeUrl = "content.com/pic/ab12xy67",
+                LargeUrl = "content.com/pic/ab12xy67laaaarge",
+                ThumbUrl = "content.com/pic/ab12xthump",
                 Shortcode = "ab12xy67",
                 Likes = 1337,
-                User = "DarioDomi"
+                User = "DarioDomi",
+                Uploaded = DateTime.Now
             };
 
             // Act
+            var allITags = crawlerDb.GetAllITags();
+
             crawlerDb.InsertOrUpdate(image);
 
             // Assert

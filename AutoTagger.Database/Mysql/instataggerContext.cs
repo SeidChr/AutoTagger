@@ -24,17 +24,24 @@ namespace AutoTagger.Database.Mysql
         {
             modelBuilder.Entity<Itags>(entity =>
             {
+                entity.HasKey(e => new { e.Id, e.Name });
+
                 entity.ToTable("itags");
 
                 entity.HasIndex(e => e.Id)
-                    .HasName("id");
+                    .HasName("id")
+                    .IsUnique();
+
+                entity.HasIndex(e => e.Name)
+                    .HasName("name")
+                    .IsUnique();
 
                 entity.Property(e => e.Id)
                     .HasColumnName("id")
-                    .HasColumnType("int(11)");
+                    .HasColumnType("int(11)")
+                    .ValueGeneratedOnAdd();
 
                 entity.Property(e => e.Name)
-                    .IsRequired()
                     .HasColumnName("name")
                     .HasMaxLength(30);
 
@@ -54,7 +61,8 @@ namespace AutoTagger.Database.Mysql
                 entity.ToTable("mtags");
 
                 entity.HasIndex(e => e.Id)
-                    .HasName("id");
+                    .HasName("id")
+                    .IsUnique();
 
                 entity.HasIndex(e => e.PhotoId)
                     .HasName("photoId");
@@ -104,6 +112,7 @@ namespace AutoTagger.Database.Mysql
 
                 entity.HasOne(d => d.Itag)
                     .WithMany(p => p.PhotoItagRel)
+                    .HasPrincipalKey(p => p.Id)
                     .HasForeignKey(d => d.ItagId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("photo_itag_rel_ibfk_2");
