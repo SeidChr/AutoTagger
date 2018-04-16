@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50558
 File Encoding         : 65001
 
-Date: 2018-03-28 18:40:27
+Date: 2018-04-16 23:04:50
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -20,10 +20,9 @@ SET FOREIGN_KEY_CHECKS=0;
 -- ----------------------------
 DROP TABLE IF EXISTS `itags`;
 CREATE TABLE `itags` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `photoId` int(11) NOT NULL,
-  `value` varchar(30) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `photoId` (`photoId`),
-  CONSTRAINT `itags_ibfk_1` FOREIGN KEY (`photoId`) REFERENCES `photos` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+  `id` int(11) NOT NULL,
+  `name` varchar(30) NOT NULL,
+  `posts` int(11) NOT NULL,
+  `updated` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
