@@ -121,8 +121,9 @@
 
         private static void StartCrawler()
         {
-            var crawler = new CrawlerV1();
             var db = new MysqlCrawlerStorage();
+            var allHTag = db.GetAllHumanoidTags();
+            var crawler = new CrawlerV1(allHTag);
 
             var images = crawler.DoCrawling(0);
 

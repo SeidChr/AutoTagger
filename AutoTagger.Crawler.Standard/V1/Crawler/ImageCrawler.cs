@@ -14,8 +14,6 @@
         protected static int MinHashtagLength = 5;
         private static readonly Regex FindHashTagsRegex = new Regex(@"#\w+", RegexOptions.Compiled);
 
-        public abstract IEnumerable<IImage> Parse(string url);
-
         protected dynamic GetData(string url)
         {
             var document = this.FetchDocument(url);

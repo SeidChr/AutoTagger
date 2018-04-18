@@ -4,6 +4,8 @@
     using System.Collections.Generic;
     using System.Collections.Concurrent;
     using System.Linq;
+    using System.Reflection;
+
     using AutoTagger.Contract;
 
     class HashtagQueue<T> : ConcurrentQueue<T>
@@ -25,21 +27,23 @@
             }
         }
 
-        public IEnumerable<IImage> Process(Func<T, IEnumerable<string>> shortcodesCrawling,
+        public IEnumerable<IImage> Process(Func<T, (int, List<string>)> shortcodesCrawling,
                                            Func<string, string> imagePageCrawling,
                                            Func<string, IEnumerable<IImage>> userPageCrawling
             )
         {
-            while (this.TryDequeue(out T currentHashTag))
+            while (this.TryDequeue(out T currentTag))
             {
-                if (this.IsTagProcessed(currentHashTag))
+                if (this.IsTagProcessed(currentTag))
                 {
                     continue;
                 }
 
-                this.AddProcessed(currentHashTag);
-                
-                var shortcodes = shortcodesCrawling(currentHashTag);
+                var (amountPosts, shortcodes) = shortcodesCrawling(currentTag);
+
+                SetAmountOfPosts(currentTag, amountPosts);
+                this.AddProcessed(currentTag);
+
                 this.shortcodeQueue.Build(shortcodes);
 
                 var images = this.shortcodeQueue.Process(imagePageCrawling, userPageCrawling);
@@ -64,6 +68,13 @@
                     yield return image;
                 }
             }
+        }
+
+        private static void SetAmountOfPosts(T currentTag, int amountPosts)
+        {
+            Type         hTagType = currentTag.GetType();
+            PropertyInfo pinfo    = hTagType.GetProperty("Posts");
+            pinfo.SetValue(currentTag, amountPosts, null);
         }
 
         private new void Enqueue(T tag)

@@ -1,5 +1,6 @@
 ﻿namespace AutoTagger.Crawler.Standard.V1
 {
+    using System;
     using System.Collections.Generic;
     using AutoTagger.Contract;
     using AutoTagger.Crawler.Standard.V1;
@@ -50,14 +51,19 @@
             this.hashtagQueue.Build(hTags);
         }
 
-        private IEnumerable<string> ExploreTagsCrawlerFunc(IHumanoidTag tag)
+        private (int, List<string>) ExploreTagsCrawlerFunc(IHumanoidTag tag)
         {
             var url = $"https://www.instagram.com/explore/tags/{tag.Name}/";
-            var images = this.exploreTagsPageCrawler.Parse(url);
-            foreach (var image in images)
+            (var amountPosts, var images) = this.exploreTagsPageCrawler.Parse(url);
+            var shortcodes = new List<string>();
+            if (images != null)
             {
-                yield return image.Shortcode;
+                foreach (var image in images)
+                {
+                    shortcodes.Add(image.Shortcode);
+                }
             }
+            return (amountPosts, shortcodes);
         }
 
         private string ImagePageCrawlerFunc(string shortcode)

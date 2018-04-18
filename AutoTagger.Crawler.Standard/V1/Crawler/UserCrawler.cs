@@ -16,7 +16,7 @@
             this.MinLikes         = 300;
         }
 
-        public override IEnumerable<IImage> Parse(string url)
+        public IEnumerable<IImage> Parse(string url)
         {
             var data = this.GetData(url);
 

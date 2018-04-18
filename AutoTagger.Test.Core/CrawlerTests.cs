@@ -97,25 +97,13 @@
         {
             List<IHumanoidTag> allHumanoidTags = this.db.GetAllHumanoidTags().ToList();
             var crawler = new CrawlerV1(allHumanoidTags);
-
+                
             //var images = crawler.DoCrawling(1, "travel", "travel");
             var images = crawler.DoCrawling(1);
             //var images = crawler.DoCrawling(0);
 
             foreach (var image in images)
             {
-                //this.testConsole.WriteLine(
-                //    "{ \"id\":\"" + image.Shortcode + "\", \"url\":\"" + image.LargeUrl + "\",\"tags\": ["
-                //  + string.Join(", ", image.HumanoidTags.Select(x => "'" + x + "'")) + "]}");
-
-                //var exists = false;
-                //foreach (var iTag in allITags)
-                //{
-                //    if (iTag.Name == name.ToLower() && iTag.Posts == posts)
-                //    {
-                //        exists = true;
-                //    }
-                //}
                 foreach (var hTagName in image.HumanoidTags)
                 {
                     var exists = allHumanoidTags.FirstOrDefault(htag => htag.Name == hTagName);
@@ -125,7 +113,6 @@
                     this.db.InsertOrUpdateHumaniodTag(newHTag);
                     allHumanoidTags.Add(newHTag);
                 }
-
                 this.db.InsertOrUpdate(image);
             }
         }
