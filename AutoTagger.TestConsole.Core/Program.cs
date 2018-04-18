@@ -122,20 +122,18 @@
         private static void StartCrawler()
         {
             var db = new MysqlCrawlerStorage();
-            var allHTag = db.GetAllHumanoidTags();
-            var crawler = new CrawlerV1(allHTag);
+            var crawler = new CrawlerV1(db);
 
-            var images = crawler.DoCrawling(0);
-
-            foreach (var image in images)
+            crawler.OnImageSaved += image =>
             {
                 Console.WriteLine(
                     "{ \"shortcode\":\"" + image.Shortcode + "\", \"from\":\"" + image.User + "\", \"tags\": ["
-                  + string.Join(", ", image.HumanoidTags.Select(x => "'" + x + "'")) + "], \"uploaded\":\"" + image.Uploaded + "\", "
-                  + "\"likes\":\"" + image.Likes + "\", \"comments\":\"" + image.Follower + "\", \"follower\":\"" + image.Comments + "\", }");
+                  + string.Join(", ", image.HumanoidTags.Select(x => "'" + x + "'")) + "], \"uploaded\":\""
+                  + image.Uploaded + "\", " + "\"likes\":\"" + image.Likes + "\", \"comments\":\"" + image.Follower
+                  + "\", \"follower\":\"" + image.Comments + "\", }");
+            };
+            crawler.DoCrawling(0);
 
-                db.InsertOrUpdate(image);
-            }
         }
     }
 }

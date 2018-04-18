@@ -16,7 +16,9 @@
         private readonly ImageDetailCrawler imageDetailPageCrawler;
         private readonly UserCrawler userCrawler;
         private readonly ICrawlerStorage db;
-        private List<IHumanoidTag> allTags;
+        private List<IHumanoidTag> allHTags;
+
+        public event Action<IImage> OnImageSaved;
 
         public CrawlerV1(ICrawlerStorage db)
         {
@@ -28,7 +30,7 @@
             this.userCrawler            = new UserCrawler();
 
             List<IHumanoidTag> preexistingHTags = db.GetAllHumanoidTags().ToList();
-            this.allTags = preexistingHTags;
+            this.allHTags = preexistingHTags;
             this.hashtagQueue.AddProcessed(preexistingHTags);
         }
 
@@ -47,21 +49,24 @@
             {
                 foreach (var hTagName in image.HumanoidTags)
                 {
-                    var exists = allTags.FirstOrDefault(htag => htag.Name == hTagName);
+                    var exists = this.allHTags.FirstOrDefault(htag => htag.Name == hTagName);
                     if (exists != null)
                         continue;
                     var newHTag = new HumanoidTag { Name = hTagName };
                     this.db.InsertOrUpdateHumaniodTag(newHTag);
-                    allTags.Add(newHTag);
+                    this.allHTags.Add(newHTag);
                 }
                 this.db.InsertOrUpdate(image);
+                this.ImageFound(image);
             }
         }
 
         private void OnHashtagFound(IHumanoidTag hTag)
         {
             this.db.InsertOrUpdateHumaniodTag(hTag);
-            allTags.Add(hTag);
+            var exists = this.allHTags.FirstOrDefault(htag => htag.Name == hTag.Name);
+            if (exists == null)
+                this.allHTags.Add(hTag);
         }
 
         private void BuildTags(string[] customTags)
@@ -105,6 +110,11 @@
                 image.User = user;
                 yield return image;
             }
+        }
+
+        private void ImageFound(IImage image)
+        {
+            this.OnImageSaved?.Invoke(image);
         }
     }
 }

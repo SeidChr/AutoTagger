@@ -96,9 +96,9 @@
         {
             var crawler = new CrawlerV1(this.db);
 
-            //var images = crawler.DoCrawling(1, "travel", "travel");
-            crawler.DoCrawling(1);
-            //var images = crawler.DoCrawling(0);
+            //varcrawler.DoCrawling(1, "travel", "travel");
+            //crawler.DoCrawling(1);
+           crawler.DoCrawling(0);
         }
 
         [Fact]

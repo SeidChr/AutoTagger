@@ -73,7 +73,7 @@
             }
         }
 
-        protected virtual void HashtagFound(T tag)
+        private void HashtagFound(T tag)
         {
             this.OnHashtagFound?.Invoke(tag);
         }
