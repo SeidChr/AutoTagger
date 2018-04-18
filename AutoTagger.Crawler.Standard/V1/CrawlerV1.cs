@@ -7,16 +7,20 @@
 
     public class CrawlerV1 : ICrawler
     {
-        private readonly HashtagQueue<string> hashtagQueue;
+        private readonly HashtagQueue<IHumanoidTag> hashtagQueue;
 
         private readonly RandomTagsCrawler randomTagsCrawler;
         private readonly ExploreTagsCrawler exploreTagsPageCrawler;
         private readonly ImageDetailCrawler imageDetailPageCrawler;
         private readonly UserCrawler userCrawler;
 
-        public CrawlerV1()
+        private IEnumerable<IHumanoidTag> allTags;
+
+        public CrawlerV1(IEnumerable<IHumanoidTag> preexistingTags)
         {
-            this.hashtagQueue = new HashtagQueue<string>();
+            this.allTags = preexistingTags;
+            this.hashtagQueue = new HashtagQueue<IHumanoidTag>();
+            this.hashtagQueue.AddProcessed(preexistingTags);
 
             this.randomTagsCrawler = new RandomTagsCrawler();
             this.exploreTagsPageCrawler = new ExploreTagsCrawler();
@@ -38,12 +42,17 @@
         private void BuildTags(string[] customTags)
         {
             var tags = customTags.Length == 0 ? this.randomTagsCrawler.Parse() : customTags;
-            this.hashtagQueue.Build(tags);
+            var hTags = new List<IHumanoidTag>();
+            foreach (var name in tags)
+            {
+                hTags.Add(new HumanoidTag { Name = name });
+            }
+            this.hashtagQueue.Build(hTags);
         }
 
-        private IEnumerable<string> ExploreTagsCrawlerFunc(string hashTag)
+        private IEnumerable<string> ExploreTagsCrawlerFunc(IHumanoidTag tag)
         {
-            var url = $"https://www.instagram.com/explore/tags/{hashTag}/";
+            var url = $"https://www.instagram.com/explore/tags/{tag.Name}/";
             var images = this.exploreTagsPageCrawler.Parse(url);
             foreach (var image in images)
             {

@@ -5,6 +5,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using global::AutoTagger.Contract;
+    using global::AutoTagger.Crawler.Standard;
     using global::AutoTagger.Database.Context;
     using global::AutoTagger.Database.Mysql;
     using MySql.Data.MySqlClient;
@@ -25,7 +26,7 @@
                     var itag = this.allITags.SingleOrDefault(x => x.Name == iTagName);
                     if(itag == null)
                     {
-                        itag = new Itags { Name = iTagName };
+                        throw new InvalidOperationException("ITag must exists in DB");
                     }
                     var rel = new PhotoItagRel { Itag = itag, Photo = photo };
                     photo.PhotoItagRel.Add(rel);
@@ -70,30 +71,36 @@
             }
         }
 
-        public List<Itags> GetAllITags()
+        public IEnumerable<IHumanoidTag> GetAllHumanoidTags()
         {
-            return this.allITags = this.db.Itags.ToList();
+            this.allITags = this.db.Itags.ToList();
+            var hTags = new List<HumanoidTag>();
+            foreach (var iTag in this.allITags)
+            {
+                hTags.Add(new HumanoidTag{Name = iTag.Name, Posts = iTag.Posts});
+            }
+            return hTags;
         }
 
-        public void InsertOrUpdateITag(string name, int posts)
+        public void InsertOrUpdateITag(IHumanoidTag iTag)
         {
-            name = name.ToLower();
+            iTag.Name = iTag.Name.ToLower();
 
-            var existingITag = this.db.Itags.FirstOrDefault(x => x.Name == name);
+            var existingITag = this.db.Itags.FirstOrDefault(x => x.Name == iTag.Name);
             if (existingITag != null)
             {
-                if (existingITag.Posts == posts)
+                if (existingITag.Posts == iTag.Posts)
                     return;
 
-                existingITag.Posts = posts;
+                existingITag.Posts = iTag.Posts;
                 this.db.Itags.Update(existingITag);
-                this.Save(() => this.InsertOrUpdateITag(name, posts));
+                this.Save(() => this.InsertOrUpdateITag(iTag));
             }
             else
             {
-                var itag = new Itags { Name = name, Posts = posts };
+                var itag = new Itags { Name = iTag.Name, Posts = iTag.Posts };
                 this.db.Itags.Add(itag);
-                if (this.Save(() => this.InsertOrUpdateITag(name, posts)))
+                if (this.Save(() => this.InsertOrUpdateITag(iTag)))
                 {
                     this.allITags.Add(itag);
                 }

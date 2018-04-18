@@ -32,7 +32,7 @@
         {
             while (this.TryDequeue(out T currentHashTag))
             {
-                if (this.processed.Contains(currentHashTag))
+                if (this.IsTagProcessed(currentHashTag))
                 {
                     continue;
                 }
@@ -52,11 +52,13 @@
                         yield break;
                     }
 
-                    var hTags = image.HumanoidTags;
-                    foreach (var tag in hTags)
+                    var hTagNames = image.HumanoidTags;
+                    foreach (var hTagname in hTagNames)
                     {
-                        var newTag = (T)Convert.ChangeType(tag, typeof(T));
-                        this.Enqueue(newTag);
+                        var newHTag = new HumanoidTag();
+                        newHTag.Name = hTagname;
+                        var newHTagAsT = (T)Convert.ChangeType(newHTag, typeof(HumanoidTag));
+                        this.Enqueue(newHTagAsT);
                     }
 
                     yield return image;
@@ -81,14 +83,34 @@
             base.Enqueue(tag);
         }
 
-        private bool IsTagProcessed(T tag)
+        private bool IsTagProcessed(T checkingTag)
         {
-            return this.processed.Contains(tag);
+            var checkingHTag = (HumanoidTag)Convert.ChangeType(checkingTag, typeof(HumanoidTag));
+            var query = from htag in this.processed
+                        where ((HumanoidTag)Convert.ChangeType(htag, typeof(HumanoidTag))).Name == checkingHTag.Name
+                        select htag;
+            var exists = query.FirstOrDefault();
+            return exists != null;
         }
 
-        private void AddProcessed(T value)
+        private bool Contains(T checkingTag)
         {
-            this.processed.Add(value);
+            var checkingHTag = (HumanoidTag)Convert.ChangeType(checkingTag, typeof(HumanoidTag));
+            var exists = this.FirstOrDefault(htag => ((HumanoidTag)Convert.ChangeType(htag, typeof(HumanoidTag))).Name == checkingHTag.Name);
+            return exists != null;
+        }
+
+        public void AddProcessed(IEnumerable<T> tags)
+        {
+            foreach (var tag in tags)
+            {
+                this.processed.Add(tag);
+            }
+        }
+
+        private void AddProcessed(T tag)
+        {
+            this.processed.Add(tag);
         }
 
         public void SetLimit(int limit)

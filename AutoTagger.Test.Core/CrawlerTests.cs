@@ -62,7 +62,8 @@
         [Fact]
         public void CrawlerRoundtrip()
         {
-            var crawler = new CrawlerV1();
+            var preexistingTags = this.db.GetAllHumanoidTags();
+            var crawler = new CrawlerV1(preexistingTags);
             var images  = crawler.DoCrawling(20);
 
             var tagger = new ClarifaiImageTagger();
@@ -94,9 +95,10 @@
         [Fact]
         public void CrawlerTest()
         {
-            var crawler = new CrawlerV1();
+            var preexistingTags = this.db.GetAllHumanoidTags();
+            var crawler = new CrawlerV1(preexistingTags);
 
-            var images = crawler.DoCrawling(1, "travel");
+            var images = crawler.DoCrawling(1, "travel", "travel");
             //var images = crawler.DoCrawling(0);
 
             foreach (var image in images)
@@ -105,7 +107,7 @@
                 //    "{ \"id\":\"" + image.Shortcode + "\", \"url\":\"" + image.LargeUrl + "\",\"tags\": ["
                 //  + string.Join(", ", image.HumanoidTags.Select(x => "'" + x + "'")) + "]}");
 
-                db.InsertOrUpdate(image);
+                this.db.InsertOrUpdate(image);
             }
         }
 

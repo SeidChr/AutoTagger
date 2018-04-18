@@ -60,5 +60,10 @@
         {
             this.images.Upsert(crawlerImage);
         }
+
+        public IEnumerable<IHumanoidTag> GetAllHumanoidTags()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

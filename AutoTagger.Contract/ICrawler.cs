@@ -4,6 +4,5 @@
 
     public interface ICrawler
     {
-        //IEnumerable<string> parse(int limit, params string[] hashTags);
     }
 }
