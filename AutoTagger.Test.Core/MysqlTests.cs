@@ -2,6 +2,8 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
+
     using AutoTagger.Crawler.Standard;
     using AutoTagger.Database.Context.AutoTagger;
     using AutoTagger.Database.Context.Crawler;
@@ -10,10 +12,11 @@
     public class MysqlTests
     {
         [Fact]
-        public void MysqlInsert()
+        public void MysqlInsertPhoto()
         {
             // Arrange
             var crawlerDb = new MysqlCrawlerStorage();
+            crawlerDb.GetAllITags();
             var image = new Image
             {
                 Comments = 10,
@@ -31,12 +34,34 @@
             };
 
             // Act
-            var allITags = crawlerDb.GetAllITags();
 
             crawlerDb.InsertOrUpdate(image);
 
             // Assert
             Assert.NotEmpty(image.Shortcode);
+        }
+        [Fact]
+        public void MysqlInsertITag()
+        {
+            // Arrange
+            var crawlerDb = new MysqlCrawlerStorage();
+            var allITags = crawlerDb.GetAllITags();
+            var name = "Altona";
+            var posts = 14;
+
+            // Act
+            crawlerDb.InsertOrUpdateITag(name, posts);
+
+            // Assert
+            var exists = false;
+            foreach (var iTag in allITags)
+            {
+                if (iTag.Name == name.ToLower() && iTag.Posts == posts)
+                {
+                    exists = true;
+                }
+            }
+            Assert.True(exists);
         }
 
         [Fact]

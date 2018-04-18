@@ -1,5 +1,6 @@
 ﻿namespace AutoTagger.Database.Context.Crawler
 {
+    using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
@@ -32,23 +33,28 @@
             }
 
             this.db.Photos.Add(photo);
-            this.Save(image);
-            image.Shortcode = photo.Id.ToString();
+            if(this.Save(() => this.InsertOrUpdate(image)))
+            {
+                image.Shortcode = photo.Id.ToString();
+            }
         }
 
-        private void Save(IImage image)
+        private bool Save(Action reconnectFunc)
         {
             try
             {
                 this.db.SaveChanges();
+                return true;
             }
             catch (MySqlException e)
             {
                 if (e.Message.Contains("Timeout"))
                 {
                     this.Reconnect();
-                    this.InsertOrUpdate(image);
+                    reconnectFunc();
                 }
+
+                return false;
             }
         }
 
@@ -67,6 +73,31 @@
         public List<Itags> GetAllITags()
         {
             return this.allITags = this.db.Itags.ToList();
+        }
+
+        public void InsertOrUpdateITag(string name, int posts)
+        {
+            name = name.ToLower();
+
+            var existingITag = this.db.Itags.FirstOrDefault(x => x.Name == name);
+            if (existingITag != null)
+            {
+                if (existingITag.Posts == posts)
+                    return;
+
+                existingITag.Posts = posts;
+                this.db.Itags.Update(existingITag);
+                this.Save(() => this.InsertOrUpdateITag(name, posts));
+            }
+            else
+            {
+                var itag = new Itags { Name = name, Posts = posts };
+                this.db.Itags.Add(itag);
+                if (this.Save(() => this.InsertOrUpdateITag(name, posts)))
+                {
+                    this.allITags.Add(itag);
+                }
+            }
         }
     }
 }
