@@ -13,6 +13,8 @@
         private readonly HashSet<T> processed;
         private readonly ShortcodeQueue<string> shortcodeQueue;
 
+        public event Action<T> OnHashtagFound;
+
         public HashtagQueue()
         {
             this.processed = new HashSet<T>();
@@ -43,6 +45,7 @@
 
                 SetAmountOfPosts(currentTag, amountPosts);
                 this.AddProcessed(currentTag);
+                this.HashtagFound(currentTag);
 
                 this.shortcodeQueue.Build(shortcodes);
 
@@ -68,6 +71,11 @@
                     yield return image;
                 }
             }
+        }
+
+        protected virtual void HashtagFound(T tag)
+        {
+            this.OnHashtagFound?.Invoke(tag);
         }
 
         private static void SetAmountOfPosts(T currentTag, int amountPosts)

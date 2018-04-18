@@ -59,62 +59,46 @@
             this.testConsole.WriteLine("Remained Queue: " + string.Join(", ", queue));
         }
 
-        [Fact]
-        public void CrawlerRoundtrip()
-        {
-            var preexistingTags = this.db.GetAllHumanoidTags();
-            var crawler = new CrawlerV1(preexistingTags);
-            var images  = crawler.DoCrawling(20);
+        //[Fact]
+        //public void CrawlerRoundtrip()
+        //{
+            //var crawler = new CrawlerV1(this.db);
+            //var images  = crawler.DoCrawling(20);
 
-            var tagger = new ClarifaiImageTagger();
+            //var tagger = new ClarifaiImageTagger();
 
-            IEnumerable<string> lastMTags = null;
+            //IEnumerable<string> lastMTags = null;
 
-            foreach (var image in images)
-            {
-                this.testConsole.WriteLine(
-                    image.Shortcode + ">L" + image.Likes + ">C" + image.Comments + " >>> "
-                  + string.Join(", ", image.HumanoidTags));
+            //foreach (var image in images)
+            //{
+            //    this.testConsole.WriteLine(
+            //        image.Shortcode + ">L" + image.Likes + ">C" + image.Comments + " >>> "
+            //      + string.Join(", ", image.HumanoidTags));
 
-                image.MachineTags = tagger.GetTagsForImageUrl(image.LargeUrl).ToList();
-                lastMTags = image.MachineTags;
+            //    image.MachineTags = tagger.GetTagsForImageUrl(image.LargeUrl).ToList();
+            //    lastMTags = image.MachineTags;
 
-                Console.WriteLine("Tags: " + string.Join(", ", image.MachineTags));
-                db.InsertOrUpdate(image);
-            }
+            //    Console.WriteLine("Tags: " + string.Join(", ", image.MachineTags));
+            //    db.InsertOrUpdate(image);
+            //}
 
-            Assert.NotNull(lastMTags);
+            //Assert.NotNull(lastMTags);
             //var foundHTags = db.FindHumanoidTags(lastMTags).ToList();
             //this.testConsole.WriteLine(string.Join(", ", lastMTags) + " >>> " + string.Join(", ", foundHTags));
 
             // var similar    = lastHTags.Count(lastHTag => foundHTags.Contains(lastHTag));
 
             // Assert.True(similar > 2, "not enough similar tags");
-        }
+        //}
 
         [Fact]
         public void CrawlerTest()
         {
-            List<IHumanoidTag> allHumanoidTags = this.db.GetAllHumanoidTags().ToList();
-            var crawler = new CrawlerV1(allHumanoidTags);
-                
-            //var images = crawler.DoCrawling(1, "travel", "travel");
-            var images = crawler.DoCrawling(1);
-            //var images = crawler.DoCrawling(0);
+            var crawler = new CrawlerV1(this.db);
 
-            foreach (var image in images)
-            {
-                foreach (var hTagName in image.HumanoidTags)
-                {
-                    var exists = allHumanoidTags.FirstOrDefault(htag => htag.Name == hTagName);
-                    if (exists != null)
-                        continue;
-                    var newHTag = new HumanoidTag { Name = hTagName };
-                    this.db.InsertOrUpdateHumaniodTag(newHTag);
-                    allHumanoidTags.Add(newHTag);
-                }
-                this.db.InsertOrUpdate(image);
-            }
+            //var images = crawler.DoCrawling(1, "travel", "travel");
+            crawler.DoCrawling(1);
+            //var images = crawler.DoCrawling(0);
         }
 
         [Fact]
