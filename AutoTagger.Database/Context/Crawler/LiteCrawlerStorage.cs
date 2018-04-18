@@ -65,5 +65,10 @@
         {
             throw new System.NotImplementedException();
         }
+
+        public void InsertOrUpdateHumaniodTag(IHumanoidTag hTag)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

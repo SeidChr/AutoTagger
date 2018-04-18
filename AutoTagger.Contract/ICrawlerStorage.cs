@@ -7,5 +7,6 @@
     {
         void InsertOrUpdate(IImage image);
         IEnumerable<IHumanoidTag> GetAllHumanoidTags();
+        void InsertOrUpdateHumaniodTag(IHumanoidTag hTag);
     }
 }

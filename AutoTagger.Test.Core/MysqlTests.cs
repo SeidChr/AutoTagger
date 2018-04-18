@@ -52,7 +52,7 @@
             var humanoidTag = new HumanoidTag {Name = name, Posts = posts};
 
             // Act
-            crawlerDb.InsertOrUpdateITag(humanoidTag);
+            crawlerDb.InsertOrUpdateHumaniodTag(humanoidTag);
 
             // Assert
             Assert.True(true);

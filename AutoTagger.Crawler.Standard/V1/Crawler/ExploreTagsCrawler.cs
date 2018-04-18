@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using AutoTagger.Contract;
 
-    class ExploreTagsCrawler : ImagesCrawler
+    class ExploreTagsCrawler : ImageCrawler
     {
         private const int MinPostsForHashtags = 1 * 1000 * 1000;
 

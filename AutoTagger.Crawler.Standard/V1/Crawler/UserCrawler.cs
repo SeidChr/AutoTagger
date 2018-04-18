@@ -5,7 +5,7 @@
     using System.Linq;
     using AutoTagger.Contract;
 
-    class UserCrawler : ImagesCrawler
+    class UserCrawler : ImageCrawler
     {
         private const int MinFollowerCount = 1000;
 

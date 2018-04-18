@@ -6,7 +6,7 @@
     using System.Text.RegularExpressions;
     using AutoTagger.Contract;
 
-    abstract class ImagesCrawler : HttpCrawler
+    abstract class ImageCrawler : HttpCrawler
     {
         protected int MinHashTagCount = 0;
         protected int MinLikes = 0;
@@ -67,6 +67,7 @@
                     Shortcode = innerNode?.shortcode,
                     HumanoidTags = hashTags,
                     LargeUrl = innerNode?.display_url,
+                    ThumbUrl = innerNode?.thumbnail_src,
                     Uploaded = takenDate
                 };
                 yield return image;
