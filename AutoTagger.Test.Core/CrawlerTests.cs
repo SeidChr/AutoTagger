@@ -5,6 +5,8 @@
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
+    using System.Text;
+
     using AutoTagger.Clarifai.Standard;
     using AutoTagger.Contract;
     using AutoTagger.Crawler.Standard;
@@ -96,9 +98,9 @@
         {
             var crawler = new CrawlerV1(this.db);
 
-            //varcrawler.DoCrawling(1, "travel", "travel");
+            //crawler.DoCrawling(1, "gratidão");
             //crawler.DoCrawling(1);
-           crawler.DoCrawling(0);
+            crawler.DoCrawling(0);
         }
 
         [Fact]

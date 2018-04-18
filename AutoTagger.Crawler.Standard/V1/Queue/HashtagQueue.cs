@@ -105,11 +105,15 @@
         private bool IsTagProcessed(T checkingTag)
         {
             var checkingHTag = (HumanoidTag)Convert.ChangeType(checkingTag, typeof(HumanoidTag));
-            var query = from htag in this.processed
-                        where ((HumanoidTag)Convert.ChangeType(htag, typeof(HumanoidTag))).Name == checkingHTag.Name
-                        select htag;
-            var exists = query.FirstOrDefault();
-            return exists != null;
+            foreach (var htag in this.processed)
+            {
+                var newHTag = ((HumanoidTag) Convert.ChangeType(htag, typeof(HumanoidTag)));
+                if (newHTag.Name == checkingHTag.Name && newHTag.Posts != 0)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         private bool Contains(T checkingTag)
