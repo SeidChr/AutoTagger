@@ -1,17 +1,5 @@
 ﻿namespace AutoTagger.Crawler.Standard.V1.Crawler
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text.RegularExpressions;
-
-    using AutoTagger.Contract;
-    using AutoTagger.Crawler.Standard.V1;
-
-    using HtmlAgilityPack;
-
-    using Newtonsoft.Json;
-
     public class ImageDetailCrawler : HttpCrawler
     {
 

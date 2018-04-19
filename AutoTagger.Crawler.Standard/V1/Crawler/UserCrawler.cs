@@ -36,34 +36,28 @@
                 image.Posts = postsCount;
             }
 
-            if (AreAllHashtagsTheSame(imagesList))
-            {
-                var count                  = imagesList.Count;
-                var index                  = new Random().Next(0, count);
-                yield return imagesList[index];
-                yield break;
-            }
+            images = RemoveImagesWithDuplicateHashtags(imagesList);
 
-            foreach (IImage image in imagesList)
+            foreach (IImage image in images)
             {
                 yield return image;
             }
         }
 
-        private static bool AreAllHashtagsTheSame(IEnumerable<IImage> images)
+        private IEnumerable<IImage> RemoveImagesWithDuplicateHashtags(List<IImage> images)
         {
-            if (!images.Any())
-                return false;
-            var previousHashTags = "";
-            foreach (IImage image in images)
+            var newImages = new Dictionary<string, IImage>();
+            for (int i = images.Count-1; i >= 0; i--)
             {
+                var image = images[i];
                 var hashTags = string.Join("", image.HumanoidTags);
-                if (previousHashTags != "" && hashTags != previousHashTags)
-                    return false;
-                previousHashTags = hashTags;
+                if (!newImages.ContainsKey(hashTags))
+                    newImages.Add(hashTags, image);
             }
-
-            return true;
+            foreach (var newImage in newImages)
+            {
+                yield return newImage.Value;
+            }
         }
 
         private static bool HasUserEnoughFollower(dynamic data, out int followerCount, out int followingCount, out int postsCount)
