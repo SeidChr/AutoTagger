@@ -5,7 +5,7 @@ namespace AutoTagger.Database.Mysql
 {
     using AutoTagger.Contract;
 
-    public partial class Photos
+    public class Photos
     {
         public Photos()
         {

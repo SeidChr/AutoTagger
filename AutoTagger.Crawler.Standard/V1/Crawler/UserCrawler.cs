@@ -20,7 +20,7 @@
         {
             var data = this.GetData(url);
 
-            if (!HasUserEnoughFollower(data, out int followerCount))
+            if (!HasUserEnoughFollower(data, out int followerCount, out int followingCount, out int postsCount))
             {
                 yield break;
             }
@@ -29,18 +29,23 @@
             IEnumerable<IImage> images = this.GetImages(nodes);
             var imagesList = images.ToList();
 
+            foreach (IImage image in imagesList)
+            {
+                image.Follower  = followerCount;
+                image.Following = followingCount;
+                image.Posts = postsCount;
+            }
+
             if (AreAllHashtagsTheSame(imagesList))
             {
                 var count                  = imagesList.Count;
                 var index                  = new Random().Next(0, count);
-                imagesList[index].Follower = followerCount;
                 yield return imagesList[index];
                 yield break;
             }
 
             foreach (IImage image in imagesList)
             {
-                image.Follower = followerCount;
                 yield return image;
             }
         }
@@ -61,10 +66,12 @@
             return true;
         }
 
-        private static bool HasUserEnoughFollower(dynamic data, out int followerCount)
+        private static bool HasUserEnoughFollower(dynamic data, out int followerCount, out int followingCount, out int postsCount)
         {
-            var node      = data?.entry_data?.ProfilePage?[0]?.graphql?.user?.edge_followed_by;
-            followerCount = Convert.ToInt32(node?.count.ToString());
+            var node      = data?.entry_data?.ProfilePage?[0]?.graphql?.user;
+            followerCount = Convert.ToInt32(node?.edge_followed_by?.count.ToString());
+            followingCount = Convert.ToInt32(node?.edge_follow?.count.ToString());
+            postsCount = Convert.ToInt32(node?.edge_owner_to_timeline_media?.count.ToString());
             return followerCount >= MinFollowerCount;
         }
 
