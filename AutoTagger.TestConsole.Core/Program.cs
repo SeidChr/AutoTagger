@@ -5,6 +5,7 @@
     using System.IO;
     using System.Linq;
     using AutoTagger.Clarifai.Standard;
+    using AutoTagger.Crawler.Standard;
     using AutoTagger.Crawler.Standard.V1;
     using AutoTagger.Database.Context.AutoTagger;
     using AutoTagger.Database.Context.Crawler;
@@ -122,7 +123,7 @@
         private static void StartCrawler()
         {
             var db = new MysqlCrawlerStorage();
-            var crawler = new CrawlerV1(db);
+            var crawler = new CrawlerApp(db, new CrawlerV1());
 
             crawler.OnImageSaved += image =>
             {

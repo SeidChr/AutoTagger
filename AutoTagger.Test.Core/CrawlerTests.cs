@@ -96,7 +96,7 @@
         [Fact]
         public void CrawlerTest()
         {
-            var crawler = new CrawlerV1(this.db);
+            var crawler = new CrawlerApp(this.db, new CrawlerV1());
 
             //crawler.DoCrawling(1, "gratidão");
             //crawler.DoCrawling(1);

@@ -15,58 +15,42 @@
         private readonly ExploreTagsCrawler exploreTagsPageCrawler;
         private readonly ImageDetailCrawler imageDetailPageCrawler;
         private readonly UserCrawler userCrawler;
-        private readonly ICrawlerStorage db;
-        private List<IHumanoidTag> allHTags;
 
-        public event Action<IImage> OnImageSaved;
+        public event Action<IHumanoidTag> OnHashtagFound;
 
-        public CrawlerV1(ICrawlerStorage db)
+        public CrawlerV1()
         {
-            this.db = db;
             this.hashtagQueue = new HashtagQueue<IHumanoidTag>();
             this.randomTagsCrawler      = new RandomTagsCrawler();
             this.exploreTagsPageCrawler = new ExploreTagsCrawler();
             this.imageDetailPageCrawler = new ImageDetailCrawler();
             this.userCrawler            = new UserCrawler();
-
-            List<IHumanoidTag> preexistingHTags = db.GetAllHumanoidTags().ToList();
-            this.allHTags = preexistingHTags;
-            this.hashtagQueue.AddProcessed(preexistingHTags);
         }
 
-        public void DoCrawling(int limit, params string[] customTags)
+        public void AddHTags(List<IHumanoidTag> preexistingHTags)
+        {
+            if (this.hashtagQueue == null)
+                throw new Exception("hashTagQueue not set");
+
+            this.hashtagQueue.AddProcessed(preexistingHTags);
+
+        }
+
+        public IEnumerable<IImage> DoCrawling(int limit, params string[] customTags)
         {
             this.BuildTags(customTags);
             this.hashtagQueue.SetLimit(limit);
-            this.hashtagQueue.OnHashtagFound += OnHashtagFound;
-            var images = this.hashtagQueue.Process(
+            this.hashtagQueue.OnHashtagFound += HashtagFound;
+            return this.hashtagQueue.Process(
                 this.ExploreTagsCrawlerFunc,
                 this.ImagePageCrawlerFunc,
                 this.UserCrawlerFunc
                 );
-
-            foreach (var image in images)
-            {
-                foreach (var hTagName in image.HumanoidTags)
-                {
-                    var exists = this.allHTags.FirstOrDefault(htag => htag.Name == hTagName);
-                    if (exists != null)
-                        continue;
-                    var newHTag = new HumanoidTag { Name = hTagName };
-                    this.db.InsertOrUpdateHumaniodTag(newHTag);
-                    this.allHTags.Add(newHTag);
-                }
-                this.db.InsertOrUpdate(image);
-                this.ImageFound(image);
-            }
         }
 
-        private void OnHashtagFound(IHumanoidTag hTag)
+        private void HashtagFound(IHumanoidTag tag)
         {
-            this.db.InsertOrUpdateHumaniodTag(hTag);
-            var exists = this.allHTags.FirstOrDefault(htag => htag.Name == hTag.Name);
-            if (exists == null)
-                this.allHTags.Add(hTag);
+            this.OnHashtagFound?.Invoke(tag);
         }
 
         private void BuildTags(string[] customTags)
@@ -110,11 +94,6 @@
                 image.User = user;
                 yield return image;
             }
-        }
-
-        private void ImageFound(IImage image)
-        {
-            this.OnImageSaved?.Invoke(image);
         }
     }
 }
