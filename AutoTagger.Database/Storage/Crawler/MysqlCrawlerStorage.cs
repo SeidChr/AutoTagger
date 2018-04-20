@@ -1,4 +1,4 @@
-﻿namespace AutoTagger.Database.Context.Crawler
+﻿namespace AutoTagger.Database.Storage.Crawler
 {
     using System;
     using System.Collections;
@@ -6,7 +6,7 @@
     using System.Linq;
     using global::AutoTagger.Contract;
     using global::AutoTagger.Crawler.Standard;
-    using global::AutoTagger.Database.Context;
+    using global::AutoTagger.Database.Storage;
     using global::AutoTagger.Database.Mysql;
     using MySql.Data.MySqlClient;
 
@@ -106,5 +106,16 @@
                 }
             }
         }
+
+        public IEnumerable<IImage> GetImagesWithoutMTags()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void InsertMachineTags(Image image)
+        {
+
+        }
+
     }
 }

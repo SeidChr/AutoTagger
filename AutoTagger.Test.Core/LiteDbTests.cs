@@ -1,7 +1,7 @@
 namespace AutoTagger.Test.Core
 {
     using System.Linq;
-    using AutoTagger.Database.Context.AutoTagger;
+    using AutoTagger.Database.Storage.AutoTagger;
     using LiteDB;
     using Xunit;
 

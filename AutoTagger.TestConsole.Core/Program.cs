@@ -7,8 +7,8 @@
     using AutoTagger.Clarifai.Standard;
     using AutoTagger.Crawler.Standard;
     using AutoTagger.Crawler.Standard.V1;
-    using AutoTagger.Database.Context.AutoTagger;
-    using AutoTagger.Database.Context.Crawler;
+    using AutoTagger.Database.Storage.AutoTagger;
+    using AutoTagger.Database.Storage.Crawler;
 
     internal class Program
     {

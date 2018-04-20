@@ -77,6 +77,5 @@ namespace AutoTagger.Database.Context.AutoTagger
 
             return query;
         }
-
     }
 }

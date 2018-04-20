@@ -6,8 +6,8 @@
 
     using AutoTagger.Contract;
     using AutoTagger.Crawler.Standard;
-    using AutoTagger.Database.Context.AutoTagger;
-    using AutoTagger.Database.Context.Crawler;
+    using AutoTagger.Database.Storage.AutoTagger;
+    using AutoTagger.Database.Storage.Crawler;
     using Xunit;
 
     public class MysqlTests

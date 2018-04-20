@@ -1,4 +1,4 @@
-﻿namespace AutoTagger.Database.Context.Crawler
+﻿namespace AutoTagger.Database.Storage.Crawler
 {
     using System.Collections.Generic;
     using System.Linq;

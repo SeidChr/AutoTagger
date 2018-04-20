@@ -1,4 +1,4 @@
-﻿namespace AutoTagger.Database.Context
+﻿namespace AutoTagger.Database.Storage
 {
     using global::AutoTagger.Database.Mysql;
     using Microsoft.EntityFrameworkCore;
