@@ -9,6 +9,7 @@
     using AutoTagger.Crawler.Standard.V1;
     using AutoTagger.Database.Storage.AutoTagger;
     using AutoTagger.Database.Storage.Crawler;
+    using AutoTagger.Database.Storage.Mysql;
 
     internal class Program
     {
@@ -92,7 +93,9 @@
                               "2: Database Read\n" +
                               "3: Clarifai Tagger\n" +
                               "4: Import Testdata from File\n" +
-                              "5: Start Crawler"
+                              "5: Start Crawler\n" +
+                              "6: Start ImageProcessor\n" +
+                              ""
                               );
             while(true)
             {
@@ -114,6 +117,10 @@
                     case '5':
                         StartCrawler();
                         break;
+
+                    case '6':
+                        StartImageProcessor();
+                        break;
                 }
                 Console.WriteLine("------------");
             }
@@ -134,7 +141,26 @@
                   + "\", \"follower\":\"" + image.Comments + "\", }");
             };
             crawler.DoCrawling(0);
+        }
 
+        private static void StartImageProcessor()
+        {
+            var db = new MysqlImageProcessorStorage();
+            var images = db.GetImagesWithoutMáchineTags(10);
+
+            var imageProcessor = new ClarifaiImageTagger();
+
+            foreach (var image in images)
+            {
+                Console.WriteLine(
+                    image.Shortcode + " >>> "
+                  + string.Join(", ", image.HumanoidTags));
+
+                image.MachineTags = imageProcessor.GetTagsForImageUrl(image.LargeUrl).ToList();
+
+                Console.WriteLine("Tags: " + string.Join(", ", image.MachineTags));
+                db.InsertMachineTags(image);
+            }
         }
     }
 }

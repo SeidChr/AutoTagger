@@ -36,26 +36,7 @@
             this.db.Photos.Add(photo);
             if(this.Save(() => this.InsertOrUpdate(image)))
             {
-                image.Shortcode = photo.Id.ToString();
-            }
-        }
-
-        private bool Save(Action reconnectFunc)
-        {
-            try
-            {
-                this.db.SaveChanges();
-                return true;
-            }
-            catch (MySqlException e)
-            {
-                if (e.Message.Contains("Timeout"))
-                {
-                    this.Reconnect();
-                    reconnectFunc();
-                }
-
-                return false;
+                //image.Shortcode = photo.Id.ToString();
             }
         }
 
