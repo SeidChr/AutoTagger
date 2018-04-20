@@ -62,7 +62,7 @@
         public void WhenGettingAllPhotos()
         {
             // Arrange
-            var mysql = new MysqlAutoTaggerStorage();
+            var mysql = new MysqlUIStorage();
 
             // Act
             var photos = mysql.GetAllPhotos();

@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AutoTagger.Database.Context.AutoTagger
+namespace AutoTagger.Database.Storage.AutoTagger
 {
     using System.Linq;
 
     using global::AutoTagger.Contract;
     using global::AutoTagger.Database.Mysql;
 
-    public class MysqlAutoTaggerStorage : MysqlStorage, IAutoTaggerStorage
+    public class MysqlUIStorage : MysqlBaseStorage, IAutoTaggerStorage
     {
         public IEnumerable<string> FindHumanoidTags(IEnumerable<string> machineTags)
         {

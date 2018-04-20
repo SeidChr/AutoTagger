@@ -10,7 +10,7 @@
     using global::AutoTagger.Database.Mysql;
     using MySql.Data.MySqlClient;
 
-    public class MysqlCrawlerStorage : MysqlStorage, ICrawlerStorage
+    public class MysqlCrawlerStorage : MysqlBaseStorage, ICrawlerStorage
     {
         private List<Itags> allITags;
 
@@ -105,16 +105,6 @@
                     this.allITags.Add(itag);
                 }
             }
-        }
-
-        public IEnumerable<IImage> GetImagesWithoutMTags()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void InsertMachineTags(Image image)
-        {
-
         }
 
     }

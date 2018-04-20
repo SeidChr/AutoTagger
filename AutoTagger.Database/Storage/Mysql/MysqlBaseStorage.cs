@@ -3,11 +3,11 @@
     using global::AutoTagger.Database.Mysql;
     using Microsoft.EntityFrameworkCore;
 
-    public abstract class MysqlStorage
+    public abstract class MysqlBaseStorage
     {
         protected InstataggerContext db;
 
-        protected MysqlStorage()
+        protected MysqlBaseStorage()
         {
             db = new InstataggerContext();
         }
