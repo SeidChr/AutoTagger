@@ -10,14 +10,10 @@
     {
         public IEnumerable<IImage> GetImagesWithoutMáchineTags(int limit)
         {
-            var query = (from p in this.db.Photos
+           var query = (from p in this.db.Photos
                          where p.Mtags.Count == 0
                          select p).Take(limit);
-            foreach (var photo in query)
-            {
-                var image = photo.ToImage();
-                yield return image;
-            }
+            return query.ToList().Select(x => x.ToImage());
         }
 
         public void InsertMachineTags(IImage image)
