@@ -5,6 +5,7 @@
     using System.IO;
     using System.Linq;
     using AutoTagger.Clarifai.Standard;
+    using AutoTagger.Contract;
     using AutoTagger.Crawler.Standard;
     using AutoTagger.Crawler.Standard.V1;
     using AutoTagger.Database.Storage.AutoTagger;
@@ -94,12 +95,12 @@
                               "3: Clarifai Tagger\n" +
                               "4: Import Testdata from File\n" +
                               "5: Start Crawler\n" +
-                              "6: Start ImageProcessor\n" +
-                              ""
+                              "6: Start ImageProcessor"
                               );
             while(true)
             {
                 var key = Console.ReadKey();
+                Console.WriteLine("");
                 switch (key.KeyChar)
                 {
                     case '1':
@@ -146,21 +147,22 @@
         private static void StartImageProcessor()
         {
             var db = new MysqlImageProcessorStorage();
-            var images = db.GetImagesWithoutMáchineTags(10);
-
             var imageProcessor = new ClarifaiImageTagger();
+            var limit = 10;
 
-            foreach (var image in images)
+            IEnumerable<IImage> images;
+            while((images = db.GetImagesWithoutMáchineTags(limit)).Count() != 0)
             {
-                Console.WriteLine(
-                    image.Shortcode + " >>> "
-                  + string.Join(", ", image.HumanoidTags));
-
-                image.MachineTags = imageProcessor.GetTagsForImageUrl(image.LargeUrl).ToList();
-
-                Console.WriteLine("Tags: " + string.Join(", ", image.MachineTags));
-                db.InsertMachineTags(image);
+                foreach (var image in images)
+                {
+                    Console.WriteLine("SHORTCODE: " + image.Shortcode + "(id: " + image.Id + ")");
+                    image.MachineTags = imageProcessor.GetTagsForImageUrl(image.LargeUrl).ToList();
+                    Console.WriteLine("MACHINETAGS: " + string.Join(", ", image.MachineTags));
+                    db.InsertMachineTags(image);
+                    Console.WriteLine("----------");
+                }
             }
+
         }
     }
 }
