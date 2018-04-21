@@ -1,10 +1,8 @@
 ﻿namespace AutoTagger.Database.Storage
 {
     using System;
-
     using global::AutoTagger.Database.Mysql;
     using Microsoft.EntityFrameworkCore;
-
     using MySql.Data.MySqlClient;
 
     public abstract class MysqlBaseStorage

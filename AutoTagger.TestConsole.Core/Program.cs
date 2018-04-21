@@ -147,21 +147,25 @@
         private static void StartImageProcessor()
         {
             var db = new MysqlImageProcessorStorage();
-            var imageProcessor = new ClarifaiImageTagger();
-            var limit = 3;
-
-            IEnumerable<IImage> images;
-            while((images = db.GetImagesWithoutMáchineTags(limit)).Count() != 0)
+            var imageProcessor = new ImageProcessorApp(db);
+            ImageProcessorApp.OnLookingForTags += image =>
             {
-                foreach (var image in images)
-                {
-                    Console.WriteLine("SHORTCODE: " + image.Shortcode + "(id: " + image.Id + ")");
-                    image.MachineTags = imageProcessor.GetTagsForImageUrl(image.LargeUrl).ToList();
-                    Console.WriteLine("MACHINETAGS: " + string.Join(", ", image.MachineTags));
-                    db.InsertMachineTags(image);
-                    Console.WriteLine("----------");
-                }
-            }
+                Console.WriteLine("Looking for " + image.Id);
+            };
+            ImageProcessorApp.OnFoundTags += image =>
+            {
+                Console.WriteLine("Tags found for " + image.Id);
+            };
+            ImageProcessorApp.OnDbInserted += image =>
+            {
+                Console.WriteLine("DB Insert for " + image.Id);
+            };
+            ImageProcessorApp.OnDbSleep += () =>
+            {
+                Console.WriteLine("DB is sleeping for a while");
+            };
+            imageProcessor.Process();
+
 
         }
     }

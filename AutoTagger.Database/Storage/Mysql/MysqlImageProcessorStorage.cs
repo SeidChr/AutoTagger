@@ -7,7 +7,7 @@
     using global::AutoTagger.Contract;
     using global::AutoTagger.Database.Mysql;
 
-    public class MysqlImageProcessorStorage : MysqlBaseStorage
+    public class MysqlImageProcessorStorage : MysqlBaseStorage, IImageProcessorStorage
     {
         private readonly Random random;
 
@@ -16,7 +16,7 @@
             this.random = new Random();
         }
 
-        public IEnumerable<IImage> GetImagesWithoutMáchineTags(int limit)
+        public IEnumerable<IImage> GetImagesWithoutMachineTags(int limit)
         {
             var query = (from p in this.db.Photos
                          where p.Mtags.Count == 0
