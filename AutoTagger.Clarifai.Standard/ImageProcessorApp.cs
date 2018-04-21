@@ -19,10 +19,13 @@ namespace AutoTagger.Clarifai.Standard
         public static Action<IImage> OnFoundTags;
         public static Action<IImage> OnDbInserted;
         public static Action OnDbSleep;
+        public static Action OnDbSaved;
         private static int taggerRunning = 0;
         private static bool dbIsUsed = false;
-        private static readonly int requestOfSameIDsLimit = 3;
-        private static readonly int concurrentStarting = 10;
+        private static readonly int RequestOfSameIDsLimit = 3;
+        private static readonly int ConcurrentClarifaiThreadsLimit = 6;
+        private static readonly int SaveLimit = 5;
+        private static int SaveCounter = 0;
 
         public ImageProcessorApp(IImageProcessorStorage db)
         {
@@ -47,28 +50,29 @@ namespace AutoTagger.Clarifai.Standard
         {
             while (true)
             {
-                if (taggerRunning <= concurrentStarting && !dbIsUsed)
+                if (taggerRunning < ConcurrentClarifaiThreadsLimit && !dbIsUsed)
                 {
                     dbIsUsed = true;
-                    var images = storage.GetImagesWithoutMachineTags(requestOfSameIDsLimit);
+                    var images = storage.GetImagesWithoutMachineTags(RequestOfSameIDsLimit);
+                    dbIsUsed = false;
                     foreach (var image in images)
                     {
+                        taggerRunning++;
                         var clarifaiThread = new Thread(ImageProcessorApp.GetData);
                         clarifaiThread.Start(image);
-                        taggerRunning++;
                     }
-                    dbIsUsed = false;
                 }
                 else
                 {
-                    Thread.Sleep(100);
+                    var r = new Random();
+                    Thread.Sleep(r.Next(50, 150));
                 }
             }
         }
 
         private static void StartDbInsertThread()
         {
-            var dbTread = new Thread(ImageProcessorApp.InsertData);
+            var dbTread = new Thread(ImageProcessorApp.InsertDb);
             dbTread.Start();
         }
 
@@ -76,29 +80,44 @@ namespace AutoTagger.Clarifai.Standard
         {
             IImage image = (IImage)data;
             OnLookingForTags?.Invoke(image);
-            image.MachineTags = tagger.GetTagsForImageUrl(image.LargeUrl).ToList();
-            queue.Enqueue(image);
+            var mTags = tagger.GetTagsForImageUrl(image.LargeUrl).ToList();
             taggerRunning--;
+            if (mTags.Count == 0)
+                return;
+            image.MachineTags = mTags;
+            queue.Enqueue(image);
+            SaveCounter++;
             OnFoundTags?.Invoke(image);
         }
 
-        public static void InsertData()
+        public static void InsertDb()
         {
             while (true)
             {
-                if (!dbIsUsed && queue.TryDequeue(out IImage image))
+                if (!dbIsUsed && SaveCounter >= SaveLimit)
                 {
                     dbIsUsed = true;
-                    storage.InsertMachineTags(image);
+                    while (queue.TryDequeue(out IImage image))
+                    {
+                        storage.InsertMachineTagsWithoutSaving(image);
+                        OnDbInserted?.Invoke(image);
+                    }
+                    storage.SaveChanges();
+                    OnDbSaved?.Invoke();
+                    SaveCounter = 0;
                     dbIsUsed = false;
-                    OnDbInserted?.Invoke(image);
                 }
                 else
                 {
                     OnDbSleep?.Invoke();
-                    Thread.Sleep(100);
+                    var r = new Random();
+                    Thread.Sleep(r.Next(50, 150));
                 }
             }
+        }
+
+        private static void SaveDb()
+        {
         }
     }
 }

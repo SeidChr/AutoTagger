@@ -164,6 +164,10 @@
             {
                 Console.WriteLine("DB is sleeping for a while");
             };
+            ImageProcessorApp.OnDbSaved += () =>
+            {
+                Console.WriteLine("DB SAVED");
+            };
             imageProcessor.Process();
 
 

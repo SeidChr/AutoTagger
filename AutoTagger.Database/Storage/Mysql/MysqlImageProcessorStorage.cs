@@ -36,14 +36,17 @@
             return this.db.Photos.OrderByDescending(p => p.Id).FirstOrDefault().Id;
         }
 
-        public void InsertMachineTags(IImage image)
+        public void InsertMachineTagsWithoutSaving(IImage image)
         {
             foreach (var mTagName in image.MachineTags)
             {
                 this.db.Mtags.Add(new Mtags { Name = mTagName, PhotoId = image.Id });
             }
+        }
 
-            this.Save(() => this.InsertMachineTags(image));
+        public void SaveChanges()
+        {
+            base.Save(this.SaveChanges);
         }
     }
 }
