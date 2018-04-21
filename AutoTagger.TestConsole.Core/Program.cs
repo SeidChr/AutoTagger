@@ -148,7 +148,7 @@
         {
             var db = new MysqlImageProcessorStorage();
             var imageProcessor = new ClarifaiImageTagger();
-            var limit = 10;
+            var limit = 3;
 
             IEnumerable<IImage> images;
             while((images = db.GetImagesWithoutMáchineTags(limit)).Count() != 0)

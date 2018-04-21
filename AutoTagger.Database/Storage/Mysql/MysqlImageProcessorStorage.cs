@@ -1,5 +1,6 @@
 ﻿namespace AutoTagger.Database.Storage.Mysql
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -8,12 +9,31 @@
 
     public class MysqlImageProcessorStorage : MysqlBaseStorage
     {
+        private readonly Random random;
+
+        public MysqlImageProcessorStorage()
+        {
+            this.random = new Random();
+        }
+
         public IEnumerable<IImage> GetImagesWithoutMáchineTags(int limit)
         {
-           var query = (from p in this.db.Photos
+            var query = (from p in this.db.Photos
                          where p.Mtags.Count == 0
+                         && p.Id > this.GetRandomId()
                          select p).Take(limit);
             return query.ToList().Select(x => x.ToImage());
+        }
+
+        private int GetRandomId()
+        {
+            var largestId = this.GetLargestId();
+            return this.random.Next(1, largestId);
+        }
+
+        private int GetLargestId()
+        {
+            return this.db.Photos.OrderByDescending(p => p.Id).FirstOrDefault().Id;
         }
 
         public void InsertMachineTags(IImage image)
