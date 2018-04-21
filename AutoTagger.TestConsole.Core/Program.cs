@@ -138,8 +138,8 @@
                 Console.WriteLine(
                     "{ \"shortcode\":\"" + image.Shortcode + "\", \"from\":\"" + image.User + "\", \"tags\": ["
                   + string.Join(", ", image.HumanoidTags.Select(x => "'" + x + "'")) + "], \"uploaded\":\""
-                  + image.Uploaded + "\", " + "\"likes\":\"" + image.Likes + "\", \"comments\":\"" + image.Follower
-                  + "\", \"follower\":\"" + image.Comments + "\", }");
+                  + image.Uploaded + "\", " + "\"likes\":\"" + image.Likes + "\", \"follower\":\"" + image.Follower
+                  + "\", \"comments\":\"" + image.Comments + "\", }");
             };
             crawler.DoCrawling(0);
         }
