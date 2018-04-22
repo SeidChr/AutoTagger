@@ -21,43 +21,24 @@
         public (int, List<IImage>) Parse(string url)
         {
             var data = this.GetData(url);
-            if (!HashtagHasEnoughPosts(data))
+            var amountPosts = GetAmountOfPosts(data);
+            if (amountPosts < MinPostsForHashtags)
             {
-                //yield break;
-                return (0, null);
+                return (amountPosts, null);
             }
 
-            var amountPosts = GetAmountOfPosts(data);
             var nodes  = GetTopPostsNodes(data);
             IEnumerable<IImage> images = this.GetImages(nodes);
             var imagesList = images.ToList();
 
             return (amountPosts, imagesList);
-            //foreach (IImage image in images)
-            //{
-            //    yield return image;
-            //}
         }
 
         private int GetAmountOfPosts(dynamic data)
         {
             var hashtagNodes  = GetHashtagNodes(data);
-            //var name = hashtagNodes?.name.ToString();
             var amountPosts = Convert.ToInt32(hashtagNodes?.edge_hashtag_to_media?.count.ToString());
-            //this.Data.Add(name, amountPosts);
             return amountPosts;
-        }
-
-        private static bool HashtagHasEnoughPosts(dynamic data)
-        {
-            if (data == null)
-            {
-                return false;
-            }
-
-            dynamic node = data.entry_data?.TagPage?[0]?.graphql?.hashtag?.edge_hashtag_to_media;
-            var amountOfPosts = Convert.ToInt32(node?.count.ToString());
-            return amountOfPosts >= MinPostsForHashtags;
         }
 
         private dynamic GetTopPostsNodes(dynamic data)
