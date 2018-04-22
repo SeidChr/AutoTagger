@@ -48,7 +48,7 @@
                 this.db.PhotoItagRel.RemoveRange(this.db.PhotoItagRel.Where(x => x.PhotoId == existingPhoto.Id));
                 this.db.Mtags.RemoveRange(this.db.Mtags.Where(x => x.PhotoId == existingPhoto.Id));
                 this.db.Photos.Remove(existingPhoto);
-                this.db.SaveChanges();
+                if (this.Save(() => this.RemoveIfExisting(image)));
             }
         }
 

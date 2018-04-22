@@ -20,7 +20,7 @@
             this.db.Database.OpenConnection();
         }
 
-        protected bool Save(Action reconnectFunc)
+        protected bool Save(Action func)
         {
             try
             {
@@ -32,7 +32,12 @@
                 if (e.Message.Contains("Timeout"))
                 {
                     this.Reconnect();
-                    reconnectFunc();
+                    func();
+                }
+                else
+                {
+                    Console.WriteLine(e);
+                    throw;
                 }
                 return false;
             }

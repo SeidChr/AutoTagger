@@ -44,9 +44,9 @@
             }
         }
 
-        public void SaveChanges()
+        public void DoSave()
         {
-            base.Save(this.SaveChanges);
+            base.Save(this.DoSave);
         }
     }
 }

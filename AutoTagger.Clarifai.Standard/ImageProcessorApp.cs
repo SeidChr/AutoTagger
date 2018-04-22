@@ -102,7 +102,7 @@ namespace AutoTagger.Clarifai.Standard
                         storage.InsertMachineTagsWithoutSaving(image);
                         OnDbInserted?.Invoke(image);
                     }
-                    storage.SaveChanges();
+                    storage.DoSave();
                     OnDbSaved?.Invoke();
                     SaveCounter = 0;
                     dbIsUsed = false;

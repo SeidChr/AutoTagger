@@ -8,6 +8,6 @@ namespace AutoTagger.Contract
     {
         IEnumerable<IImage> GetImagesWithoutMachineTags(int limit);
         void InsertMachineTagsWithoutSaving(IImage image);
-        void SaveChanges();
+        void DoSave();
     }
 }
