@@ -34,10 +34,7 @@
             }
 
             this.db.Photos.Add(photo);
-            if(this.Save(() => this.InsertOrUpdate(image)))
-            {
-                //image.Shortcode = photo.Id.ToString();
-            }
+            this.Save();
         }
 
         private void RemoveIfExisting(IImage image)
@@ -48,7 +45,7 @@
                 this.db.PhotoItagRel.RemoveRange(this.db.PhotoItagRel.Where(x => x.PhotoId == existingPhoto.Id));
                 this.db.Mtags.RemoveRange(this.db.Mtags.Where(x => x.PhotoId == existingPhoto.Id));
                 this.db.Photos.Remove(existingPhoto);
-                if (this.Save(() => this.RemoveIfExisting(image)));
+                this.Save();
             }
         }
 
@@ -75,16 +72,14 @@
 
                 existingITag.Posts = hTag.Posts;
                 this.db.Itags.Update(existingITag);
-                this.Save(() => this.InsertOrUpdateHumaniodTag(hTag));
+                this.Save();
             }
             else
             {
                 var itag = new Itags { Name = hTag.Name, Posts = hTag.Posts };
                 this.db.Itags.Add(itag);
-                if (this.Save(this.SaveChanges))
-                {
-                    this.allITags.Add(itag);
-                }
+                this.Save();
+                this.allITags.Add(itag);
             }
         }
 

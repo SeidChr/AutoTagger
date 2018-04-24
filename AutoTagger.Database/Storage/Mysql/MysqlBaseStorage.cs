@@ -20,32 +20,25 @@
             this.db.Database.OpenConnection();
         }
 
-        protected bool Save(Action func)
+        protected void Save()
         {
             try
             {
-                this.SaveChanges();
-                return true;
+                this.db.SaveChanges();
             }
             catch (MySqlException e)
             {
                 if (e.Message.Contains("Timeout"))
                 {
                     this.Reconnect();
-                    func();
+                    this.db.SaveChanges();
                 }
                 else
                 {
                     Console.WriteLine(e);
                     throw;
                 }
-                return false;
             }
-        }
-
-        protected void SaveChanges()
-        {
-            this.db.SaveChanges();
         }
     }
 

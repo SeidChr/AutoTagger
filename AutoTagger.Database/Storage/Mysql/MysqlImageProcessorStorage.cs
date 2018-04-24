@@ -46,7 +46,7 @@
 
         public void DoSave()
         {
-            base.Save(this.DoSave);
+            this.Save();
         }
     }
 }
