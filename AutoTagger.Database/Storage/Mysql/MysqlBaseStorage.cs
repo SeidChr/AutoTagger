@@ -24,7 +24,7 @@
         {
             try
             {
-                this.db.SaveChanges();
+                this.SaveChanges();
                 return true;
             }
             catch (MySqlException e)
@@ -41,6 +41,11 @@
                 }
                 return false;
             }
+        }
+
+        protected void SaveChanges()
+        {
+            this.db.SaveChanges();
         }
     }
 

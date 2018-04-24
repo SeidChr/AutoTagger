@@ -81,7 +81,7 @@
             {
                 var itag = new Itags { Name = hTag.Name, Posts = hTag.Posts };
                 this.db.Itags.Add(itag);
-                if (this.Save(() => this.InsertOrUpdateHumaniodTag(hTag)))
+                if (this.Save(this.SaveChanges))
                 {
                     this.allITags.Add(itag);
                 }
