@@ -18,8 +18,8 @@
             {
                 command.CommandText = query;
                 command.CommandType = CommandType.Text;
-                this.db.Database.OpenConnection();
 
+                this.db.Database.OpenConnection();
                 using (var reader = command.ExecuteReader())
                 {
                     while (reader.Read())
@@ -27,6 +27,7 @@
                         yield return reader.GetValue(0).ToString();
                     }
                 }
+                this.db.Database.CloseConnection();
             }
         }
 
