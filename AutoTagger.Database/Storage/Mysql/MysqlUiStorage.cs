@@ -1,81 +1,69 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace AutoTagger.Database.Storage.AutoTagger
+﻿namespace AutoTagger.Database.Storage.AutoTagger
 {
+    using System.Collections.Generic;
+    using System.Data;
     using System.Linq;
 
     using global::AutoTagger.Contract;
-    using global::AutoTagger.Database.Mysql;
+
+    using Microsoft.EntityFrameworkCore;
 
     public class MysqlUIStorage : MysqlBaseStorage, IAutoTaggerStorage
     {
         public IEnumerable<string> FindHumanoidTags(IEnumerable<string> machineTags)
         {
-            //var command = connection.CreateCommand();
-            //command.CommandText = BuildQuery(machineTags);
+            var query = BuildQuery(machineTags);
 
-            //var output = new List<string>();
-            //var reader = command.ExecuteReader();
-            //while (reader.Read())
-            //{
-            //    var row = "";
-            //    for (var i = 0; i < reader.FieldCount; i++)
-            //        row += reader.GetValue(i) + ", ";
-            //    output.Add(row);
-            //}
-            //return output;
-            return null;
-        }
+            using (var command = this.db.Database.GetDbConnection().CreateCommand())
+            {
+                command.CommandText = query;
+                command.CommandType = CommandType.Text;
+                this.db.Database.OpenConnection();
 
-        public void Remove(string imageId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public List<Photos> GetAllPhotos()
-        {
-            var photos = db.Photos.ToList();
-            return photos;
-        }
-
-        public void InsertOrUpdate(string imageId, IEnumerable<string> machineTags, IEnumerable<string> humanoidTags)
-        {
-            throw new NotImplementedException();
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        yield return reader.GetValue(0).ToString();
+                    }
+                }
+            }
         }
 
         private string BuildQuery(IEnumerable<string> machineTags)
         {
-            var countInsertTags = 3;
-            var countTopPhotos = 10;
-            var numberOfTagsIWantToGet = 30;
+            var countInsertTags   = 3;
+            var limitTopPhotos    = 200;
+            var countTagsToReturn = 30;
+            var whereCondition = BuildWhereCondition(machineTags);
 
+            string query = $"SELECT i.name "
+                         + $"FROM itags as i LEFT JOIN photo_itag_rel as rel ON rel.itagId = i.id LEFT JOIN "
+                         + $"( SELECT p.id, ((count(m.name)-2 * matches + {countInsertTags}) / (count(m.name) "
+                         + $"+ {countInsertTags} - matches)) *popularity as relationQuality "
+                         + $"FROM photos as p LEFT JOIN mtags as m ON m.photoId = p.id LEFT JOIN "
+                         + $"( SELECT p.id, (p.likes+p.comments)/ p.follower as popularity, count(m.name) as matches "
+                         + $"FROM photos as p LEFT JOIN mtags as m ON m.photoId = p.id WHERE {whereCondition} "
+                         + $"GROUP by p.id ) as sub1 ON p.id = sub1.id WHERE sub1.id IS NOT NULL "
+                         + $"GROUP by p.id ORDER by relationQuality DESC LIMIT {limitTopPhotos} ) as sub2 ON sub2.id = rel.photoId "
+                         + $"WHERE sub2.id IS NOT NULL GROUP by i.name ORDER by count(i.name) DESC, relationQuality DESC LIMIT {countTagsToReturn}";
+
+            return query;
+        }
+
+        private static string BuildWhereCondition(IEnumerable<string> machineTags)
+        {
             var whereCondition = "";
             foreach (var machineTag in machineTags)
             {
                 if (string.IsNullOrEmpty(machineTag))
                     continue;
-                whereCondition += $"`m`.`value` = '{machineTag}' OR ";
+                whereCondition += $"`m`.`name` = '{machineTag}' OR ";
             }
 
             char[] charsToTrim = { ' ', 'O', 'R' };
-            whereCondition = whereCondition.Trim(charsToTrim);
-
-            string query = "SELECT i.id, i.value, relationQuality, count(i.value) FROM itags as i LEFT JOIN ( SELECT p.id, "
-                + $"(count(m.value) - 2 * matches + {countInsertTags}) / (count(m.value) + {countInsertTags} - matches) * popularity as relationQuality "
-                + "FROM photos as p LEFT JOIN mtags as m ON m.photoId = p.id "
-                + "LEFT JOIN ( SELECT p.id, (p.likes+p.comments)/p.follower as popularity, count(m.value) as matches "
-                + "FROM photos as p LEFT JOIN mtags as m ON m.photoId = p.id "
-                + $"WHERE {whereCondition} "
-                + "GROUP by p.id ) as sub1 ON p.id = sub1.id WHERE sub1.id IS NOT NULL "
-                + $"GROUP by p.id ORDER by relationQuality DESC LIMIT {countTopPhotos} ) as sub2 ON sub2.id = i.photoId "
-                + "WHERE sub2.id IS NOT NULL "
-                + "GROUP by i.value ORDER by count(i.value) DESC, relationQuality DESC "
-                + $"LIMIT {numberOfTagsIWantToGet}"
-                ;
-
-            return query;
+            whereCondition     = whereCondition.Trim(charsToTrim);
+            return whereCondition;
         }
     }
 }
