@@ -32,14 +32,47 @@
     </div>
 
     <div class="col-md-6 form" style="padding: 10%;">
-        <form id="formLink" method="post" action="/image/file" style="border-radius: 25px; padding: 25px; border: 1px solid black">
+        <form id="formLink" method="post" action="/image/link" style="border-radius: 25px; padding: 25px; border: 1px solid black">
             <h2 style="text-align: center">Insert a link</h2>
             <input class="form-control" type="text" name="link" style="margin-bottom: 5px"/>
             <input class="btn btn-default" style="width: 100%" type="submit"/>
         </form>
     </div>
+	
+	<div id="result">
+	</div>
 </div>
 
+<script>
+	$(document).ready(function() {
+		
+		$('#formLink').on('submit', function(e) {
+			e.preventDefault();
+			var url = $(this).attr('action');
+			var data = $(this).serialize();
+			var success = function(data) {
+				var itags = data.instagramTags;
+				// TODO
+				var html = '';
+				$.each(itags, function(index, val) {
+					html += '<li>'+val+'</li>';
+				});
+				html = '<h1>Best Results</h1><ul>'+html+'</ul>';
+				$('#result').html(html);
+			}
+			var error = function() {
+				alert('fail');
+			}
+			var jqxhr = $.ajax({
+				type: 'POST',
+				url: url,
+				data: data,
+				success: success,
+				error: error
+			});
+		});
+	});
+</script>
 
 </body>
 
