@@ -1,14 +1,9 @@
-﻿@using System.IO
-@using Microsoft.AspNetCore.Mvc.Razor
-@{ Layout = null; }
-
-<!DOCTYPE html>
-
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <meta charset="UTF-8">
@@ -23,13 +18,13 @@
     <div class="col-md-12" style="text-align: center;">
         <h1>Find Instagram Tags by uploading a Photo</h1>
     </div>
+	<base href="http://localhost:59892/">
 </div>
 
 
 <div class="row">
-    <!-- Forms-->
     <div class="col-md-6 form" style="padding: 10%;">
-        <form class="form-horizontal" method="post" action="/image/upload" enctype="multipart/form-data" style="border-radius: 25px; padding: 20px; border: 1px solid black">
+        <form id="formFile" class="form-horizontal" method="post" action="/image/file" enctype="multipart/form-data" style="border-radius: 25px; padding: 20px; border: 1px solid black">
             <h2 style="text-align: center">Upload an image</h2>
             <input class="btn btn-file form-control-file form-control" type="file" name="file" accept="image/*">
             <input class="btn btn-default" style="width: 100%" type="submit"/>
@@ -37,15 +32,15 @@
     </div>
 
     <div class="col-md-6 form" style="padding: 10%;">
-        <form method="post" action="/image" style="border-radius: 25px; padding: 25px; border: 1px solid black">
+        <form id="formLink" method="post" action="/image/file" style="border-radius: 25px; padding: 25px; border: 1px solid black">
             <h2 style="text-align: center">Insert a link</h2>
-
             <input class="form-control" type="text" name="link" style="margin-bottom: 5px"/>
             <input class="btn btn-default" style="width: 100%" type="submit"/>
         </form>
     </div>
-
 </div>
+
+
 </body>
 
 </html>
