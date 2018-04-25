@@ -1,9 +1,11 @@
 ﻿namespace AutoTagger.Database.Context.Crawler
 {
+    using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
     using global::AutoTagger.Contract;
+    using global::AutoTagger.Crawler.Standard;
     using global::AutoTagger.Database.Context;
     using global::AutoTagger.Database.Mysql;
     using MySql.Data.MySqlClient;
@@ -24,7 +26,7 @@
                     var itag = this.allITags.SingleOrDefault(x => x.Name == iTagName);
                     if(itag == null)
                     {
-                        itag = new Itags { Name = iTagName };
+                        throw new InvalidOperationException("ITag must exists in DB");
                     }
                     var rel = new PhotoItagRel { Itag = itag, Photo = photo };
                     photo.PhotoItagRel.Add(rel);
@@ -32,23 +34,28 @@
             }
 
             this.db.Photos.Add(photo);
-            this.Save(image);
-            image.Shortcode = photo.Id.ToString();
+            if(this.Save(() => this.InsertOrUpdate(image)))
+            {
+                image.Shortcode = photo.Id.ToString();
+            }
         }
 
-        private void Save(IImage image)
+        private bool Save(Action reconnectFunc)
         {
             try
             {
                 this.db.SaveChanges();
+                return true;
             }
             catch (MySqlException e)
             {
                 if (e.Message.Contains("Timeout"))
                 {
                     this.Reconnect();
-                    this.InsertOrUpdate(image);
+                    reconnectFunc();
                 }
+
+                return false;
             }
         }
 
@@ -64,9 +71,40 @@
             }
         }
 
-        public List<Itags> GetAllITags()
+        public IEnumerable<IHumanoidTag> GetAllHumanoidTags()
         {
-            return this.allITags = this.db.Itags.ToList();
+            this.allITags = this.db.Itags.ToList();
+            var hTags = new List<HumanoidTag>();
+            foreach (var iTag in this.allITags)
+            {
+                hTags.Add(new HumanoidTag{Name = iTag.Name, Posts = iTag.Posts});
+            }
+            return hTags;
+        }
+
+        public void InsertOrUpdateHumaniodTag(IHumanoidTag hTag)
+        {
+            hTag.Name = hTag.Name.ToLower();
+
+            var existingITag = this.allITags.FirstOrDefault(x => x.Name == hTag.Name);
+            if (existingITag != null)
+            {
+                if (existingITag.Posts == hTag.Posts)
+                    return;
+
+                existingITag.Posts = hTag.Posts;
+                this.db.Itags.Update(existingITag);
+                this.Save(() => this.InsertOrUpdateHumaniodTag(hTag));
+            }
+            else
+            {
+                var itag = new Itags { Name = hTag.Name, Posts = hTag.Posts };
+                this.db.Itags.Add(itag);
+                if (this.Save(() => this.InsertOrUpdateHumaniodTag(hTag)))
+                {
+                    this.allITags.Add(itag);
+                }
+            }
         }
     }
 }

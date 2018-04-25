@@ -5,6 +5,7 @@
     using System.IO;
     using System.Linq;
     using AutoTagger.Clarifai.Standard;
+    using AutoTagger.Crawler.Standard;
     using AutoTagger.Crawler.Standard.V1;
     using AutoTagger.Database.Context.AutoTagger;
     using AutoTagger.Database.Context.Crawler;
@@ -121,20 +122,19 @@
 
         private static void StartCrawler()
         {
-            var crawler = new CrawlerV1();
             var db = new MysqlCrawlerStorage();
+            var crawler = new CrawlerApp(db, new CrawlerV1());
 
-            var images = crawler.DoCrawling(0);
-
-            foreach (var image in images)
+            crawler.OnImageSaved += image =>
             {
                 Console.WriteLine(
                     "{ \"shortcode\":\"" + image.Shortcode + "\", \"from\":\"" + image.User + "\", \"tags\": ["
-                  + string.Join(", ", image.HumanoidTags.Select(x => "'" + x + "'")) + "], \"uploaded\":\"" + image.Uploaded + "\", "
-                  + "\"likes\":\"" + image.Likes + "\", \"comments\":\"" + image.Follower + "\", \"follower\":\"" + image.Comments + "\", }");
+                  + string.Join(", ", image.HumanoidTags.Select(x => "'" + x + "'")) + "], \"uploaded\":\""
+                  + image.Uploaded + "\", " + "\"likes\":\"" + image.Likes + "\", \"comments\":\"" + image.Follower
+                  + "\", \"follower\":\"" + image.Comments + "\", }");
+            };
+            crawler.DoCrawling(0);
 
-                db.InsertOrUpdate(image);
-            }
         }
     }
 }

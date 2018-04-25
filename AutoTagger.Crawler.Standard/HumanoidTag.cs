@@ -6,8 +6,9 @@ namespace AutoTagger.Crawler.Standard
 {
     using AutoTagger.Contract;
 
-    public interface ICrawler
+    public class HumanoidTag : IHumanoidTag
     {
-        IEnumerable<string> Parse();
+        public string Name { get; set; }
+        public int Posts { get; set; }
     }
 }
