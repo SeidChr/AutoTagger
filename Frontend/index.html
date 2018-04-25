@@ -10,6 +10,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
+	<style>
+		h2 {
+			text-align: center;
+		}
+		#results ul {
+			list-style: none;
+		}
+	</style>
 </head>
 
 <body>
@@ -23,23 +31,29 @@
 
 
 <div class="row">
-    <div class="col-md-6 form" style="padding: 10%;">
+    <div class="col-md-4">
         <form id="formFile" class="form-horizontal" method="post" action="/image/file" enctype="multipart/form-data" style="border-radius: 25px; padding: 20px; border: 1px solid black">
-            <h2 style="text-align: center">Upload an image</h2>
+            <h2>Upload an image</h2>
             <input class="btn btn-file form-control-file form-control" type="file" name="file" accept="image/*">
             <input class="btn btn-default" style="width: 100%" type="submit"/>
         </form>
     </div>
 
-    <div class="col-md-6 form" style="padding: 10%;">
+    <div class="col-md-4">
         <form id="formLink" method="post" action="/image/link" style="border-radius: 25px; padding: 25px; border: 1px solid black">
-            <h2 style="text-align: center">Insert a link</h2>
+            <h2>Insert a link</h2>
             <input class="form-control" type="text" name="link" style="margin-bottom: 5px"/>
             <input class="btn btn-default" style="width: 100%" type="submit"/>
         </form>
     </div>
 	
-	<div id="result">
+	<div id="resultBox" class="col-md-4">
+        <div style="border-radius: 25px; padding: 25px; border: 1px solid black">
+			<h2>Results</h2>
+			<div id="results">
+				...
+			</div>
+		</div>
 	</div>
 </div>
 
@@ -55,10 +69,10 @@
 				// TODO
 				var html = '';
 				$.each(itags, function(index, val) {
-					html += '<li>'+val+'</li>';
+					html += '<li>#'+val+'</li>';
 				});
-				html = '<h1>Best Results</h1><ul>'+html+'</ul>';
-				$('#result').html(html);
+				html = '<ul>'+html+'</ul>';
+				$('#results').html(html);
 			}
 			var error = function() {
 				alert('fail');
