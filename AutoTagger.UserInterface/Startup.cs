@@ -45,6 +45,10 @@
                     c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
                 });
 
+            app.UseCors(
+                options => options.WithOrigins("http://localhost").AllowAnyMethod()
+            );
+
             app.UseMvc();
         }
 
@@ -52,6 +56,7 @@
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+            services.AddCors();
 
             services.AddTransient<IAutoTaggerStorage, MysqlUIStorage>();
             services.AddTransient<ITaggingProvider, ClarifaiImageTagger>();
