@@ -3,7 +3,10 @@ using System.Collections.Generic;
 
 namespace AutoTagger.Database.Mysql
 {
+    using System.Linq;
+
     using AutoTagger.Contract;
+    using AutoTagger.Crawler.Standard;
 
     public class Photos
     {
@@ -65,6 +68,26 @@ namespace AutoTagger.Database.Mysql
                     yield return photoItagRel.Itag;
                 }
             }
+        }
+
+        public IImage ToImage()
+        {
+            var image = new Image
+            {
+                Id = this.Id,
+                LargeUrl  = this.LargeUrl,
+                ThumbUrl  = this.ThumbUrl,
+                Shortcode = this.Shortcode,
+                Likes     = this.Likes,
+                Comments  = this.Comments,
+                User      = this.User,
+                Follower  = this.Follower,
+                Following = this.Following,
+                Posts     = this.Posts,
+                MachineTags = this.Mtags.Select(tag => tag.Name),
+                HumanoidTags = this.Itags.Select(tag => tag.Name)
+            };
+            return image;
         }
     }
 }

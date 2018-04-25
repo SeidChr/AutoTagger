@@ -2,12 +2,9 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-
-    using AutoTagger.Contract;
     using AutoTagger.Crawler.Standard;
-    using AutoTagger.Database.Context.AutoTagger;
-    using AutoTagger.Database.Context.Crawler;
+    using AutoTagger.Database.Storage.AutoTagger;
+    using AutoTagger.Database.Storage.Crawler;
     using Xunit;
 
     public class MysqlTests
@@ -62,17 +59,14 @@
         public void WhenGettingAllPhotos()
         {
             // Arrange
-            var mysql = new MysqlAutoTaggerStorage();
+            var mysql = new MysqlUIStorage();
 
             // Act
-            var photos = mysql.GetAllPhotos();
+            var machineTags = new List<string> { "beach", "water", "surfboard", "sun", "drink" };
+            var result = mysql.FindHumanoidTags(machineTags);
 
             // Assert
-            foreach (var photo in photos)
-            {
-                Console.WriteLine(photo.Id);
-            }
-            Assert.NotEmpty(photos);
+            Assert.NotEmpty(result);
         }
     }
 }

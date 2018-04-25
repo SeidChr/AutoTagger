@@ -12,7 +12,7 @@
     using AutoTagger.Crawler.Standard;
     using AutoTagger.Crawler.Standard.V1;
     using AutoTagger.Crawler.Standard.V1.Crawler;
-    using AutoTagger.Database.Context.Crawler;
+    using AutoTagger.Database.Storage.Crawler;
 
     using Xunit;
     using Xunit.Abstractions;

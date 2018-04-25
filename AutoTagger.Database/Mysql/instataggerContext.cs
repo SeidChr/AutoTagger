@@ -6,6 +6,7 @@ namespace AutoTagger.Database.Mysql
 {
     public partial class InstataggerContext : DbContext
     {
+        public virtual DbSet<Debug> Debug { get; set; }
         public virtual DbSet<Itags> Itags { get; set; }
         public virtual DbSet<Mtags> Mtags { get; set; }
         public virtual DbSet<PhotoItagRel> PhotoItagRel { get; set; }
@@ -22,6 +23,39 @@ namespace AutoTagger.Database.Mysql
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Debug>(entity =>
+            {
+                entity.ToTable("debug");
+
+                entity.HasIndex(e => e.Id)
+                    .HasName("id");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("id")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.Created)
+                    .HasColumnName("created")
+                    .HasColumnType("timestamp")
+                    .HasDefaultValueSql("'CURRENT_TIMESTAMP'")
+                    .ValueGeneratedOnAddOrUpdate();
+
+                entity.Property(e => e.Query)
+                    .IsRequired()
+                    .HasColumnName("query")
+                    .HasColumnType("text");
+
+                entity.Property(e => e.Result)
+                    .IsRequired()
+                    .HasColumnName("result")
+                    .HasColumnType("text");
+
+                entity.Property(e => e.Source)
+                    .IsRequired()
+                    .HasColumnName("source")
+                    .HasColumnType("text");
+            });
+
             modelBuilder.Entity<Itags>(entity =>
             {
                 entity.HasKey(e => new { e.Id, e.Name });
