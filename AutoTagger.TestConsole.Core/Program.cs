@@ -5,10 +5,12 @@
     using System.IO;
     using System.Linq;
     using AutoTagger.Clarifai.Standard;
+    using AutoTagger.Contract;
     using AutoTagger.Crawler.Standard;
     using AutoTagger.Crawler.Standard.V1;
-    using AutoTagger.Database.Context.AutoTagger;
-    using AutoTagger.Database.Context.Crawler;
+    using AutoTagger.Database.Storage.AutoTagger;
+    using AutoTagger.Database.Storage.Crawler;
+    using AutoTagger.Database.Storage.Mysql;
 
     internal class Program
     {
@@ -92,11 +94,13 @@
                               "2: Database Read\n" +
                               "3: Clarifai Tagger\n" +
                               "4: Import Testdata from File\n" +
-                              "5: Start Crawler"
+                              "5: Start Crawler\n" +
+                              "6: Start ImageProcessor"
                               );
             while(true)
             {
                 var key = Console.ReadKey();
+                Console.WriteLine("");
                 switch (key.KeyChar)
                 {
                     case '1':
@@ -114,6 +118,10 @@
                     case '5':
                         StartCrawler();
                         break;
+
+                    case '6':
+                        StartImageProcessor();
+                        break;
                 }
                 Console.WriteLine("------------");
             }
@@ -130,10 +138,38 @@
                 Console.WriteLine(
                     "{ \"shortcode\":\"" + image.Shortcode + "\", \"from\":\"" + image.User + "\", \"tags\": ["
                   + string.Join(", ", image.HumanoidTags.Select(x => "'" + x + "'")) + "], \"uploaded\":\""
-                  + image.Uploaded + "\", " + "\"likes\":\"" + image.Likes + "\", \"comments\":\"" + image.Follower
-                  + "\", \"follower\":\"" + image.Comments + "\", }");
+                  + image.Uploaded + "\", " + "\"likes\":\"" + image.Likes + "\", \"follower\":\"" + image.Follower
+                  + "\", \"comments\":\"" + image.Comments + "\", }");
             };
             crawler.DoCrawling(0);
+        }
+
+        private static void StartImageProcessor()
+        {
+            var db = new MysqlImageProcessorStorage();
+            var imageProcessor = new ImageProcessorApp(db);
+            ImageProcessorApp.OnLookingForTags += image =>
+            {
+                Console.WriteLine("Looking for " + image.Id);
+            };
+            ImageProcessorApp.OnFoundTags += image =>
+            {
+                Console.WriteLine("Tags found for " + image.Id);
+            };
+            ImageProcessorApp.OnDbInserted += image =>
+            {
+                Console.WriteLine("DB Insert for " + image.Id);
+            };
+            ImageProcessorApp.OnDbSleep += () =>
+            {
+                Console.WriteLine("DB is sleeping for a while");
+            };
+            ImageProcessorApp.OnDbSaved += () =>
+            {
+                Console.WriteLine("DB SAVED");
+            };
+            imageProcessor.Process();
+
 
         }
     }

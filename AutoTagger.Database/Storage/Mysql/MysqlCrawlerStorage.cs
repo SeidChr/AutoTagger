@@ -1,4 +1,4 @@
-﻿namespace AutoTagger.Database.Context.Crawler
+﻿namespace AutoTagger.Database.Storage.Crawler
 {
     using System;
     using System.Collections;
@@ -6,11 +6,11 @@
     using System.Linq;
     using global::AutoTagger.Contract;
     using global::AutoTagger.Crawler.Standard;
-    using global::AutoTagger.Database.Context;
+    using global::AutoTagger.Database.Storage;
     using global::AutoTagger.Database.Mysql;
     using MySql.Data.MySqlClient;
 
-    public class MysqlCrawlerStorage : MysqlStorage, ICrawlerStorage
+    public class MysqlCrawlerStorage : MysqlBaseStorage, ICrawlerStorage
     {
         private List<Itags> allITags;
 
@@ -34,29 +34,7 @@
             }
 
             this.db.Photos.Add(photo);
-            if(this.Save(() => this.InsertOrUpdate(image)))
-            {
-                image.Shortcode = photo.Id.ToString();
-            }
-        }
-
-        private bool Save(Action reconnectFunc)
-        {
-            try
-            {
-                this.db.SaveChanges();
-                return true;
-            }
-            catch (MySqlException e)
-            {
-                if (e.Message.Contains("Timeout"))
-                {
-                    this.Reconnect();
-                    reconnectFunc();
-                }
-
-                return false;
-            }
+            this.Save();
         }
 
         private void RemoveIfExisting(IImage image)
@@ -67,7 +45,7 @@
                 this.db.PhotoItagRel.RemoveRange(this.db.PhotoItagRel.Where(x => x.PhotoId == existingPhoto.Id));
                 this.db.Mtags.RemoveRange(this.db.Mtags.Where(x => x.PhotoId == existingPhoto.Id));
                 this.db.Photos.Remove(existingPhoto);
-                this.db.SaveChanges();
+                this.Save();
             }
         }
 
@@ -94,17 +72,16 @@
 
                 existingITag.Posts = hTag.Posts;
                 this.db.Itags.Update(existingITag);
-                this.Save(() => this.InsertOrUpdateHumaniodTag(hTag));
+                this.Save();
             }
             else
             {
                 var itag = new Itags { Name = hTag.Name, Posts = hTag.Posts };
                 this.db.Itags.Add(itag);
-                if (this.Save(() => this.InsertOrUpdateHumaniodTag(hTag)))
-                {
-                    this.allITags.Add(itag);
-                }
+                this.Save();
+                this.allITags.Add(itag);
             }
         }
+
     }
 }

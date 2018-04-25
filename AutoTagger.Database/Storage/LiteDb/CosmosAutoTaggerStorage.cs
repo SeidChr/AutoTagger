@@ -1,4 +1,4 @@
-﻿namespace AutoTagger.Database.Context.AutoTagger
+﻿namespace AutoTagger.Database.Storage.AutoTagger
 {
     using System.Collections.Generic;
     using System.Linq;
