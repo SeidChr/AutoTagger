@@ -26,8 +26,15 @@
         [ProducesResponseType(typeof(void), 200)]
         public IActionResult Post(ScanLinkModel model)
         {
-            //var machineTags = this.taggingProvider.GetTagsForImageUrl(model.Link).ToList();
-            var machineTags = new List<string> { "beach", "sun", "water" };
+            var link = model.Link;
+
+            if (string.IsNullOrEmpty(link))
+            {
+                return this.BadRequest("No Link set");
+            }
+
+            var machineTags = this.taggingProvider.GetTagsForImageUrl(link).ToList();
+            //var machineTags = new List<string> { "beach", "sun", "water" };
 
             if (!machineTags.Any())
             {
@@ -38,7 +45,7 @@
 
             var content = new Dictionary<string, object>
             {
-                { "link", model.Link },
+                { "link", link },
                 { "machineTags", machineTags },
                 { "instagramTags", instagramTags }
             };

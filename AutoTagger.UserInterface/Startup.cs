@@ -53,7 +53,7 @@
         {
             services.AddMvc();
 
-            services.AddTransient<IAutoTaggerStorage, CosmosAutoTaggerStorage>();
+            services.AddTransient<IAutoTaggerStorage, MysqlUIStorage>();
             services.AddTransient<ITaggingProvider, ClarifaiImageTagger>();
 
             services.AddSwaggerGen(
