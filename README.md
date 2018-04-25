@@ -2,7 +2,7 @@
 Find the best Instagram Hashtags for a specific Photo - Proof of Concept started developing at Cloud Solution Hackathon Hamburg 24.03. + 25.03.2018
 
 ## Architecture
-![](https://github.com/Vittel/AutoTagger/raw/master/doc/architecture.png)
+![](https://github.com/Vittel/AutoTagger/raw/master/doc/architecture2.png)
 
 ## Crawler
 see [doc/crawler.md](https://github.com/Vittel/AutoTagger/blob/master/doc/crawler.md)
