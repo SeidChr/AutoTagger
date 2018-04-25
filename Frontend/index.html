@@ -11,44 +11,38 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
 	<style>
-		h2 {
-			text-align: center;
-		}
 		#results ul {
 			list-style: none;
 		}
+		.hidden {
+			display: none;
+		}
 	</style>
+	<base href="http://localhost/">
 </head>
 
 <body>
 <div class="row">
-    <!-- Headline-->
     <div class="col-md-12" style="text-align: center;">
-        <h1>Find Instagram Tags by uploading a Photo</h1>
+        <h1>Find the best Instagram Hashtags for your photo</h1>
     </div>
-	<base href="http://localhost:59892/">
 </div>
 
 
 <div class="row">
-    <div class="col-md-4">
-        <form id="formFile" class="form-horizontal" method="post" action="/image/file" enctype="multipart/form-data" style="border-radius: 25px; padding: 20px; border: 1px solid black">
-            <h2>Upload an image</h2>
-            <input class="btn btn-file form-control-file form-control" type="file" name="file" accept="image/*">
-            <input class="btn btn-default" style="width: 100%" type="submit"/>
-        </form>
-    </div>
-
-    <div class="col-md-4">
-        <form id="formLink" method="post" action="/image/link" style="border-radius: 25px; padding: 25px; border: 1px solid black">
-            <h2>Insert a link</h2>
-            <input class="form-control" type="text" name="link" style="margin-bottom: 5px"/>
+    <div id="main" class="col-md-6" style="margin: 30px auto;">
+        <form id="formFile" class="form-horizontal" method="post" action="#" enctype="multipart/form-data" style="border-radius: 25px; padding: 20px; border: 1px solid black">
+            <h2>Upload a photo</h2>
+            <input class="btn btn-file form-control-file form-control" type="file" name="file" id="file" accept="image/*">
+			<p>Or insert a link:</p>
+            <input class="form-control" type="text" name="link" style="margin-bottom: 5px" placeholder="http://..." />
             <input class="btn btn-default" style="width: 100%" type="submit"/>
         </form>
     </div>
 	
-	<div id="resultBox" class="col-md-4">
+	<div id="resultBox" class="col-md-4 hidden">
         <div style="border-radius: 25px; padding: 25px; border: 1px solid black">
+			<a href="/">< Back<a/>
 			<h2>Results</h2>
 			<div id="results">
 				...
@@ -59,31 +53,57 @@
 
 <script>
 	$(document).ready(function() {
-		
-		$('#formLink').on('submit', function(e) {
-			e.preventDefault();
-			var url = $(this).attr('action');
-			var data = $(this).serialize();
-			var success = function(data) {
-				var itags = data.instagramTags;
-				// TODO
-				var html = '';
-				$.each(itags, function(index, val) {
-					html += '<li>#'+val+'</li>';
-				});
-				html = '<ul>'+html+'</ul>';
-				$('#results').html(html);
-			}
-			var error = function() {
-				alert('fail');
-			}
-			var jqxhr = $.ajax({
-				type: 'POST',
-				url: url,
-				data: data,
-				success: success,
-				error: error
+	
+		var success = function(data) {
+			var itags = data.instagramTags;
+			var html = '';
+			$.each(itags, function(index, val) {
+				html += '<li>#'+val+'</li>';
 			});
+			html = '<ul>'+html+'</ul>';
+			$('#results').html(html);
+			$('#main').addClass('hidden');
+			$('#resultBox').removeClass('hidden');
+		}
+		var error = function(err) {
+			alert('Error: ' + err.statusText);
+		}
+		
+		$('#formFile').on('submit', function(e) {
+			e.preventDefault();
+			
+			var hasFile = $('#file').val() != '';
+			
+			if(hasFile) {
+				var url = 'http://localhost:59892/image/file';
+				var data = new FormData();
+				var file = $('#file')[0].files[0];
+				data.append("file", file, file.name);
+				
+				var jqxhr = $.ajax({
+					type: 'POST',
+					url: url,
+					cache: false,
+					contentType: false,
+					enctype: 'multipart/form-data',
+					processData: false,
+					data: data,
+					success: success,
+					error: error
+				});
+			} else {
+				var url = 'http://localhost:59892/image/link';
+				data = $(this).serialize();
+				
+				var jqxhr = $.ajax({
+					type: 'POST',
+					url: url,
+					data: data,
+					success: success,
+					error: error
+				});
+			}
+			
 		});
 	});
 </script>
