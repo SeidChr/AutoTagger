@@ -62,7 +62,7 @@ namespace AutoTagger.Clarifai.Standard
                     currentDbUsage = DbUsage.None;
                     foreach (var image in images)
                     {
-                        taggerRunning++;
+                        Interlocked.Increment(ref taggerRunning);
                         var clarifaiThread = new Thread(ImageProcessorApp.GetData);
                         clarifaiThread.Start(image);
                     }
@@ -96,12 +96,12 @@ namespace AutoTagger.Clarifai.Standard
             IImage image = (IImage)data;
             OnLookingForTags?.Invoke(image);
             var mTags = tagger.GetTagsForImageUrl(image.LargeUrl).ToList();
-            taggerRunning--;
+            Interlocked.Decrement(ref taggerRunning);
             if (mTags.Count == 0)
                 return;
             image.MachineTags = mTags;
             queue.Enqueue(image);
-            SaveCounter++;
+            Interlocked.Increment(ref SaveCounter);
             OnFoundTags?.Invoke(image);
         }
 
