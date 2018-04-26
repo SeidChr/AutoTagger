@@ -10,7 +10,7 @@
 
     public class ClarifaiImageTagger : ITaggingProvider
     {
-        private const string ClarifaiApiKey = "c8747218d8bc496a8de7e761d8f593e6";
+        private const string ClarifaiApiKey = "e9b75d460ae7497b9070dc60232adae0";
 
         private readonly ClarifaiClient client;
 
