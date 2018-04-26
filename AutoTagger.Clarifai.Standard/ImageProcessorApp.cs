@@ -21,11 +21,17 @@ namespace AutoTagger.Clarifai.Standard
         public static Action OnDbSleep;
         public static Action OnDbSaved;
         private static int taggerRunning = 0;
-        private static bool dbIsUsed = false;
         private static readonly int RequestOfSameIDsLimit = 3;
         private static readonly int ConcurrentClarifaiThreadsLimit = 6;
         private static readonly int SaveLimit = 5;
         private static int SaveCounter = 0;
+        enum DbUsage
+        {
+            None,
+            GetEntries,
+            SaveThisFuckingShit,
+        }
+        private static DbUsage currentDbUsage;
 
         public ImageProcessorApp(IImageProcessorStorage db)
         {
@@ -50,11 +56,10 @@ namespace AutoTagger.Clarifai.Standard
         {
             while (true)
             {
-                if (taggerRunning < ConcurrentClarifaiThreadsLimit && !dbIsUsed)
+                if (taggerRunning < ConcurrentClarifaiThreadsLimit && SetDbUsing(DbUsage.GetEntries))
                 {
-                    dbIsUsed = true;
                     var images = storage.GetImagesWithoutMachineTags(RequestOfSameIDsLimit);
-                    dbIsUsed = false;
+                    currentDbUsage = DbUsage.None;
                     foreach (var image in images)
                     {
                         taggerRunning++;
@@ -68,6 +73,16 @@ namespace AutoTagger.Clarifai.Standard
                     Thread.Sleep(r.Next(50, 150));
                 }
             }
+        }
+
+        private static bool SetDbUsing(DbUsage newStatus)
+        {
+            if (currentDbUsage == DbUsage.None || currentDbUsage == newStatus)
+            {
+                currentDbUsage = newStatus;
+                return true;
+            }
+            return false;
         }
 
         private static void StartDbInsertThread()
@@ -94,9 +109,8 @@ namespace AutoTagger.Clarifai.Standard
         {
             while (true)
             {
-                if (!dbIsUsed && SaveCounter >= SaveLimit)
+                if (SaveCounter >= SaveLimit && SetDbUsing(DbUsage.SaveThisFuckingShit))
                 {
-                    dbIsUsed = true;
                     while (queue.TryDequeue(out IImage image))
                     {
                         storage.InsertMachineTagsWithoutSaving(image);
@@ -105,7 +119,7 @@ namespace AutoTagger.Clarifai.Standard
                     storage.DoSave();
                     OnDbSaved?.Invoke();
                     SaveCounter = 0;
-                    dbIsUsed = false;
+                    currentDbUsage = DbUsage.None;
                 }
                 else
                 {
@@ -114,10 +128,6 @@ namespace AutoTagger.Clarifai.Standard
                     Thread.Sleep(r.Next(50, 150));
                 }
             }
-        }
-
-        private static void SaveDb()
-        {
         }
     }
 }

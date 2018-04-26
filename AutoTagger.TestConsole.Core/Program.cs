@@ -150,7 +150,7 @@
             var imageProcessor = new ImageProcessorApp(db);
             ImageProcessorApp.OnLookingForTags += image =>
             {
-                Console.WriteLine("Looking for " + image.Id);
+                Console.WriteLine("Clarifai Crawling for " + image.Id);
             };
             ImageProcessorApp.OnFoundTags += image =>
             {
