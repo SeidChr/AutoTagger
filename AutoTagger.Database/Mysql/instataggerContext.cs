@@ -40,14 +40,9 @@ namespace AutoTagger.Database.Mysql
                     .HasDefaultValueSql("'CURRENT_TIMESTAMP'")
                     .ValueGeneratedOnAddOrUpdate();
 
-                entity.Property(e => e.Query)
+                entity.Property(e => e.Data)
                     .IsRequired()
-                    .HasColumnName("query")
-                    .HasColumnType("text");
-
-                entity.Property(e => e.Result)
-                    .IsRequired()
-                    .HasColumnName("result")
+                    .HasColumnName("data")
                     .HasColumnType("text");
 
                 entity.Property(e => e.Source)

@@ -5,6 +5,7 @@
     using System.Linq;
 
     using global::AutoTagger.Contract;
+    using global::AutoTagger.Database.Mysql;
 
     using Microsoft.EntityFrameworkCore;
 
@@ -66,6 +67,13 @@
             char[] charsToTrim = { ' ', 'O', 'R' };
             whereCondition     = whereCondition.Trim(charsToTrim);
             return whereCondition;
+        }
+
+        public void Log(string source, string data)
+        {
+            var debug = new Debug { Source = source, Data = data};
+            this.db.Debug.Add(debug);
+            this.db.SaveChanges();
         }
     }
 }

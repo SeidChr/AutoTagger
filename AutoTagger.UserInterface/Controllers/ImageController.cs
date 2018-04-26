@@ -8,17 +8,20 @@
     using AutoTagger.UserInterface.Models;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.CodeAnalysis.Emit;
+
+    using Newtonsoft.Json;
 
     [Route("[controller]")]
     public class ImageController : Controller
     {
-        private readonly IAutoTaggerStorage repository;
+        private readonly IAutoTaggerStorage storage;
 
         private readonly ITaggingProvider taggingProvider;
 
-        public ImageController(IAutoTaggerStorage repository, ITaggingProvider taggingProvider)
+        public ImageController(IAutoTaggerStorage storage, ITaggingProvider taggingProvider)
         {
-            this.repository      = repository;
+            this.storage      = storage;
             this.taggingProvider = taggingProvider;
         }
 
@@ -34,23 +37,20 @@
             }
 
             var machineTags = this.taggingProvider.GetTagsForImageUrl(link).ToList();
-            //var machineTags = new List<string> { "beach", "sun", "water" };
 
             if (!machineTags.Any())
             {
                 return this.BadRequest("No MachineTags found :'(");
             }
 
-            var instagramTags = this.repository.FindHumanoidTags(machineTags);
+            var content = this.FindTags(machineTags);
+            content.Add("link", link);
+            var json = this.Json(content);
 
-            var content = new Dictionary<string, object>
-            {
-                { "link", link },
-                { "machineTags", machineTags },
-                { "instagramTags", instagramTags }
-            };
+            var debugStr = JsonConvert.SerializeObject(content);
+            this.storage.Log("web_link", debugStr);
 
-            return this.Json(content);
+            return json;
         }
 
         [HttpPost("File")]
@@ -78,16 +78,28 @@
                     return this.BadRequest("No MachineTags found :'(");
                 }
 
-                var instagramTags = this.repository.FindHumanoidTags(machineTags);
+                var content = this.FindTags(machineTags);
+                var json = this.Json(content);
 
-                var content = new Dictionary<string, object>
-                {
-                    { "machineTags", machineTags },
-                    { "instagramTags", instagramTags }
-                };
+                var debug = content;
+                var debugStr = JsonConvert.SerializeObject(debug);
+                this.storage.Log("web_image", debugStr);
 
-                return this.Json(content);
+                return json;
             }
+        }
+
+        private Dictionary<string, object> FindTags(List<string> machineTags)
+        {
+            var instagramTags = this.storage.FindHumanoidTags(machineTags);
+
+            var data = new Dictionary<string, object>
+            {
+                { "machineTags", machineTags },
+                { "instagramTags", instagramTags }
+            };
+
+            return data;
         }
     }
 }

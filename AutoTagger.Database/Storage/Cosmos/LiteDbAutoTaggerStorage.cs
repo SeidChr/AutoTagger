@@ -41,6 +41,11 @@ namespace AutoTagger.Database.Storage.AutoTagger
                 .Take(30);
         }
 
+        public void Log(string source, string data)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public void InsertOrUpdate(string imageId, IEnumerable<string> machineTags, IEnumerable<string> humanoidTags)
         {
             this.images.Upsert(this.Bson(imageId, machineTags, humanoidTags));

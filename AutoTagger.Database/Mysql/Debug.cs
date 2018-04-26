@@ -7,8 +7,7 @@ namespace AutoTagger.Database.Mysql
     {
         public int Id { get; set; }
         public string Source { get; set; }
-        public string Query { get; set; }
-        public string Result { get; set; }
+        public string Data { get; set; }
         public DateTimeOffset Created { get; set; }
     }
 }

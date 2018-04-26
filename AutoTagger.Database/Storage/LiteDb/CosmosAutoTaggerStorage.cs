@@ -31,6 +31,11 @@
             return result.Select(i => (string)i["id"]);
         }
 
+        public void Log(string source, string data)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public void InsertOrUpdate(string imageId, IEnumerable<string> machineTags, IEnumerable<string> humanoidTags)
         {
             this.CreateImage(imageId);
