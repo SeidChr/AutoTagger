@@ -162,7 +162,7 @@
             };
             ImageProcessorApp.OnDbSleep += () =>
             {
-                Console.WriteLine("DB is sleeping for a while");
+                //Console.WriteLine("DB is sleeping for a while");
             };
             ImageProcessorApp.OnDbSaved += () =>
             {

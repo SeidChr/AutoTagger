@@ -29,7 +29,7 @@ namespace AutoTagger.Database.Storage.AutoTagger
             this.database.DropCollection(ImagesCollectionName);
         }
 
-        public IEnumerable<string> FindHumanoidTags(IEnumerable<string> machineTags)
+        public IEnumerable<string> FindHumanoidTags(List<string> machineTags)
         {
             // find top 100 oldest persons aged between 20 and 30
             ////var results = col.Find(Query.And(Query.All("Age", Query.Descending), Query.Between("Age", 20, 30)), limit: 100);

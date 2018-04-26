@@ -20,7 +20,7 @@
             this.database.Submit($"g.V().drop()");
         }
 
-        public IEnumerable<string> FindHumanoidTags(IEnumerable<string> machineTags)
+        public IEnumerable<string> FindHumanoidTags(List<string> machineTags)
         {
             var tagString = machineTags.Select(CleanInput).Aggregate(string.Empty, (i, j) => i + "','" + j)
                 .Trim('\'', ',');

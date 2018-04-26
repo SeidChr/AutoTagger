@@ -4,6 +4,6 @@
 
     public interface IAutoTaggerStorage
     {
-        IEnumerable<string> FindHumanoidTags(IEnumerable<string> machineTags);
+        IEnumerable<string> FindHumanoidTags(List<string> machineTags);
     }
 }

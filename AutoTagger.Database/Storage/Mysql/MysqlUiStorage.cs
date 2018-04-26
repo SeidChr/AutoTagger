@@ -10,8 +10,9 @@
 
     public class MysqlUIStorage : MysqlBaseStorage, IAutoTaggerStorage
     {
-        public IEnumerable<string> FindHumanoidTags(IEnumerable<string> machineTags)
+        public IEnumerable<string> FindHumanoidTags(List<string> machineTags)
         {
+            machineTags.RemoveAll(x => x.StartsWith("no "));
             var query = BuildQuery(machineTags);
 
             using (var command = this.db.Database.GetDbConnection().CreateCommand())
