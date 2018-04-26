@@ -26,4 +26,5 @@ Siehe Swagger Doku (UserInterface starten: ```/swagger```)
 ## Contributors:
 ![Christian Seidlitz](https://avatars1.githubusercontent.com/u/1927076?s=50) [Christian Seidlitz](https://github.com/Vittel)<br />
 ![](http://via.placeholder.com/50x50) [Paul Stempel](https://github.com/tempel3)<br />
+![](http://via.placeholder.com/50x50) [Florian Lierenfeld](https://github.com/soulseak)<br />
 ![Dario D. Müller](https://avatars1.githubusercontent.com/u/2358139?s=50) [Dario D. Müller](https://github.com/DarioDomiDE)
