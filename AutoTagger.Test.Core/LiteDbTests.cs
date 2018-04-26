@@ -1,5 +1,6 @@
 namespace AutoTagger.Test.Core
 {
+    using System.Collections.Generic;
     using System.Linq;
     using AutoTagger.Database.Storage.AutoTagger;
     using LiteDB;
@@ -50,7 +51,7 @@ namespace AutoTagger.Test.Core
             db.InsertOrUpdate("iD", new[] { "mX", "mY", "mZ" }, new[] { "hX", "hY" });
             db.InsertOrUpdate("iE", new[] { "mA", "mG", "mU" }, new[] { "hA", "hF" });
 
-            var tags = db.FindHumanoidTags(new[] { "mA", "mB", "mC" }).ToList();
+            var tags = db.FindHumanoidTags(new List<string> { "mA", "mB", "mC" }).ToList();
 
             Assert.Contains("hC", tags);
             Assert.DoesNotContain("hX", tags);
