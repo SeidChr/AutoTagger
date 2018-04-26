@@ -28,6 +28,8 @@ LEFT JOIN
         LEFT JOIN mtags as m ON m.photoId =  p.id
         WHERE m.`name` = 'group' OR m.`name` = 'festival' OR m.`name` = 'people'
         GROUP by p.id
+		ORDER by matches DESC
+		LIMIT 200
     ) as sub1 ON p.id = sub1.id 
     WHERE sub1.id IS NOT NULL
     GROUP by p.id
