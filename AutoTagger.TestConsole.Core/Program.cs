@@ -48,7 +48,7 @@
         private static void DatabaseReadTest()
         {
             var repository = new CosmosAutoTaggerStorage();
-            var instagramTags = repository.FindHumanoidTags(new[] { "boot", "fisch", "egal" });
+            var instagramTags = repository.FindHumanoidTags(new List<string> { "boot", "fisch", "egal" });
 
             Console.WriteLine("You should use the following instagram tags:");
             foreach (var tag in instagramTags)
