@@ -11,6 +11,9 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
 	<style>
+		body {
+			overflow-x: hidden;
+		}
 		#results ul {
 			list-style: none;
 		}
@@ -30,13 +33,14 @@
 
 
 <div class="row">
-    <div id="main" class="col-md-6" style="margin: 30px auto;">
+    <div id="main" class="col-md-6" style="margin: 30px auto; padding: 0;">
         <form id="formFile" class="form-horizontal" method="post" action="#" enctype="multipart/form-data" style="border-radius: 25px; padding: 20px; border: 1px solid black">
             <h2>Upload a photo</h2>
             <input class="btn btn-file form-control-file form-control" type="file" name="file" id="file" accept="image/*">
 			<p>Or insert a link:</p>
             <input class="form-control" type="text" name="link" style="margin-bottom: 5px" placeholder="http://..." />
-            <input class="btn btn-default" style="width: 100%" type="submit"/>
+            <input id="submitBtn" class="btn btn-default" style="width: 100%" type="submit"/>
+			<p id="loadingIndicator" class="hidden">Loading...</p>
         </form>
     </div>
 	
@@ -67,6 +71,9 @@
 		}
 		var error = function(err) {
 			alert('Error: ' + err.statusText);
+			
+			$('#submitBtn').removeClass('hidden');
+			$('#loadingIndicator').addClass('hidden');
 		}
 		
 		$('#formFile').on('submit', function(e) {
@@ -103,6 +110,9 @@
 					error: error
 				});
 			}
+			
+			$('#submitBtn').addClass('hidden');
+			$('#loadingIndicator').removeClass('hidden');
 			
 		});
 	});
