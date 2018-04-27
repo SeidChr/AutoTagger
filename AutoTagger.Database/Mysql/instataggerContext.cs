@@ -1,6 +1,5 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace AutoTagger.Database.Mysql
 {
@@ -16,7 +15,7 @@ namespace AutoTagger.Database.Mysql
         {
             if (!optionsBuilder.IsConfigured)
             {
-                var pw = "";
+                var pw = Environment.GetEnvironmentVariable("instatagger_mysqlpw");
                 optionsBuilder.UseMySql($"Server=78.46.178.185;User Id=InstaTagger;Password={pw};Database=instatagger");
             }
         }
