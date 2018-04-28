@@ -3,22 +3,46 @@
 
 <head>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-3.2.1.min.js" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+	
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>InstaTagger</title>
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes"/>
+	
 	<style>
 		body {
 			overflow-x: hidden;
+		}
+		h1 {
+			margin: 50px 0 0 0;
+			font-size: 1.8em;
+		}
+		h2 {
+			font-size: 1.5em;
+		}
+		#main,
+		#resultBox {
+			margin: 30px auto;
+			padding: 0;
+			max-width: 80%;
 		}
 		#results ul {
 			list-style: none;
 		}
 		.hidden {
 			display: none;
+		}
+		input[type=file] {
+			padding: 0;
+		}
+		p {
+			margin-bottom: 0.3rem;
+		}
+		textarea {
+			width: 100%;
+			height: 400px;
 		}
 	</style>
 	<base href="http://instatagger.do-epic-sh.it">
@@ -27,18 +51,20 @@
 <body>
 <div class="row">
     <div class="col-md-12" style="text-align: center;">
-        <h1>Find the best Instagram Hashtags for your photo</h1>
+        <h1>Find the best Instagram Hashtags for your photos</h1>
     </div>
 </div>
 
 
 <div class="row">
-    <div id="main" class="col-md-6" style="margin: 30px auto; padding: 0;">
+    <div id="main" class="col-md-6">
         <form id="formFile" class="form-horizontal" method="post" action="#" enctype="multipart/form-data" style="border-radius: 25px; padding: 20px; border: 1px solid black">
             <h2>Upload a photo</h2>
             <input class="btn btn-file form-control-file form-control" type="file" name="file" id="file" accept="image/*">
-			<p>Or insert a link:</p>
+			<hr />
+			<p>Or insert a link</p>
             <input class="form-control" type="text" name="link" style="margin-bottom: 5px" placeholder="http://..." />
+			<hr />
             <input id="submitBtn" class="btn btn-default" style="width: 100%" type="submit"/>
 			<p id="loadingIndicator" class="hidden">Loading...</p>
         </form>
@@ -47,25 +73,31 @@
 	<div id="resultBox" class="col-md-4 hidden">
         <div style="border-radius: 25px; padding: 25px; border: 1px solid black">
 			<a href="/">< Back<a/>
-			<h2>Results</h2>
-			<div id="results">
-				...
+			<h2>Top 30 Hashtags</h2>
+			<div>
+				<form>
+					<textarea id="results">
+					</textarea>
+				</form>
 			</div>
 		</div>
 	</div>
 </div>
 
+<script src="https://code.jquery.com/jquery-3.2.1.min.js" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 <script>
 	$(document).ready(function() {
 	
 		var success = function(data) {
 			var itags = data.instagramTags;
-			var html = '';
+			var content = '';
 			$.each(itags, function(index, val) {
-				html += '<li>#'+val+'</li>';
+				content += '#' + val + ' ';
 			});
-			html = '<ul>'+html+'</ul>';
-			$('#results').html(html);
+			//content = '<ul>'+html+'</ul>';
+			$('#results').text(content);
 			$('#main').addClass('hidden');
 			$('#resultBox').removeClass('hidden');
 		}
