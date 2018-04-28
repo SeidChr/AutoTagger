@@ -34,7 +34,6 @@
             existingPhoto.Posts = photo.Posts;
             this.Save();
             return true;
-
         }
 
         private void Insert(IImage image, Photos photo)

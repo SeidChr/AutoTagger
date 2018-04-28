@@ -21,8 +21,8 @@ namespace AutoTagger.Clarifai.Standard
         public static Action OnDbSleep;
         public static Action OnDbSaved;
         private static int taggerRunning = 0;
-        private static readonly int RequestOfSameIDsLimit = 3;
-        private static readonly int ConcurrentClarifaiThreadsLimit = 9;
+        private static readonly int RequestOfSameIDsLimit = 5;
+        private static readonly int ConcurrentClarifaiThreadsLimit = 15;
         private static readonly int SaveLimit = 5;
         private static int SaveCounter = 0;
         enum DbUsage
