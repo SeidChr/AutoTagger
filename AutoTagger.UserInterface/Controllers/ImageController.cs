@@ -9,7 +9,6 @@
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.CodeAnalysis.Emit;
-
     using Newtonsoft.Json;
 
     [Route("[controller]")]
@@ -91,15 +90,23 @@
 
         private Dictionary<string, object> FindTags(List<string> machineTags)
         {
-            var instagramTags = this.storage.FindHumanoidTags(machineTags);
+            var (query, instagramTags) = this.storage.FindHumanoidTags(machineTags);
+            var ip = this.GetIPAddress();
 
             var data = new Dictionary<string, object>
             {
                 { "machineTags", machineTags },
-                { "instagramTags", instagramTags }
+                { "instagramTags", instagramTags },
+                { "query", query },
+                { "ip", ip }
             };
 
             return data;
+        }
+
+        private string GetIPAddress()
+        {
+            return this.Request.HttpContext.Connection?.RemoteIpAddress?.ToString();
         }
     }
 }

@@ -63,10 +63,11 @@
 
             // Act
             var machineTags = new List<string> { "beach", "water", "surfboard", "sun", "drink" };
-            var result = mysql.FindHumanoidTags(machineTags);
+            var (debug, htags) = mysql.FindHumanoidTags(machineTags);
 
             // Assert
-            Assert.NotEmpty(result);
+            Assert.NotEmpty(debug);
+            Assert.NotEmpty(htags);
         }
     }
 }

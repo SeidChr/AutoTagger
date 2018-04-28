@@ -51,7 +51,7 @@ namespace AutoTagger.Test.Core
             db.InsertOrUpdate("iD", new[] { "mX", "mY", "mZ" }, new[] { "hX", "hY" });
             db.InsertOrUpdate("iE", new[] { "mA", "mG", "mU" }, new[] { "hA", "hF" });
 
-            var tags = db.FindHumanoidTags(new List<string> { "mA", "mB", "mC" }).ToList();
+            var (debug, tags) = db.FindHumanoidTags(new List<string> { "mA", "mB", "mC" });
 
             Assert.Contains("hC", tags);
             Assert.DoesNotContain("hX", tags);
