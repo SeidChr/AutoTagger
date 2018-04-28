@@ -45,4 +45,5 @@ LIMIT 30
 notice: 
 - die ```3``` die da drinsteht ist die gesamte Anzahl der MTags, die man im WHERE des innersten SELECT abfragt. diese Zahl würde später als c# variable da reingebaut werden
 - die ```LIMIT 200``` kann variable einstellt werden. Es ist die Anzahl der Bilder, deren ITags untersucht nach Relevanz werden sollen
+- die ```LIMIT 30``` am Ende sind die Anzahl der tags, die man zurückbekommen möchte
 - die auskommentierten Sachen können einkommentiert werden zum debuggen
