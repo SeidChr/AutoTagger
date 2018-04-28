@@ -5,10 +5,10 @@ Find the best Instagram Hashtags for a specific Photo - Proof of Concept started
 ![](https://github.com/Vittel/AutoTagger/raw/master/doc/architecture2.png)
 
 ## How it works
-  * [crawler](https://github.com/Vittel/AutoTagger/blob/master/doc/quality_improvement_2_crawler)
-  * [database](https://github.com/Vittel/AutoTagger/blob/master/doc/quality_improvement_1_better_database)
+  * [crawler](https://github.com/Vittel/AutoTagger/blob/master/doc/quality_improvement_2_crawler.md)
+  * [database](https://github.com/Vittel/AutoTagger/blob/master/doc/quality_improvement_1_better_database.md)
   * [query for relational db](https://github.com/Vittel/AutoTagger/blob/master/doc/relational-query.md)
-  * [hashtags exclusion](https://github.com/Vittel/AutoTagger/blob/master/doc/quality_improvement_3_meat_vs_vegan)
+  * [hashtags exclusion](https://github.com/Vittel/AutoTagger/blob/master/doc/quality_improvement_3_meat_vs_vegan.md)
 
 
 ## Setup
