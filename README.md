@@ -14,13 +14,9 @@ see
 
 Tested with CosmosDB von Azure (Graph), LiteDB (NoSQL) und MySQL DB (relational)
 
-## UserInterface
-  * [Azure Hosting](http://autotaggerui.azurewebsites.net/index)
-
-Rest API
-Siehe Swagger Doku (UserInterface starten: ```/swagger```)
-
 # Links
+  * [Frontend](http://instatagger.do-epic-sh.it/)
+  * [API](http://instataggerui.azurewebsites.net/swagger)
   * [Slack](https://dnughh.slack.com/messages/C9VD9KUTV/team/U7EU90J4S/)
 
 ## Contributors:
