@@ -48,14 +48,6 @@ namespace AutoTagger.Database.Mysql
                 Uploaded  = image.Uploaded
             };
 
-            if (image.MachineTags != null)
-            {
-                foreach (var mtagName in image.MachineTags)
-                {
-                    photo.Mtags.Add(new Mtags { Name = mtagName });
-                }
-            }
-
             return photo;
         }
 

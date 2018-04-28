@@ -8,8 +8,8 @@
     public class CrawlerApp
     {
         private readonly ICrawlerStorage db;
-        private List<IHumanoidTag> allHTags;
-        private ICrawler crawler;
+        private readonly List<IHumanoidTag> allHTags;
+        private readonly ICrawler crawler;
 
         public CrawlerApp(ICrawlerStorage db, ICrawler crawler)
         {

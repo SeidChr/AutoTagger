@@ -1,14 +1,12 @@
-﻿namespace AutoTagger.Database.Storage.Crawler
+﻿namespace AutoTagger.Database.Storage.Mysql
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
     using global::AutoTagger.Contract;
     using global::AutoTagger.Crawler.Standard;
     using global::AutoTagger.Database.Storage;
     using global::AutoTagger.Database.Mysql;
-    using MySql.Data.MySqlClient;
 
     public class MysqlCrawlerStorage : MysqlBaseStorage, ICrawlerStorage
     {
@@ -16,37 +14,48 @@
 
         public void InsertOrUpdate(IImage image)
         {
-            this.RemoveIfExisting(image);
-
             var photo = Photos.FromImage(image);
-            if (image.HumanoidTags != null)
+
+            if (this.TryUpdate(photo))
+                return;
+
+            this.Insert(image, photo);
+        }
+
+        private bool TryUpdate(Photos photo)
+        {
+            var existingPhoto = this.db.Photos.FirstOrDefault(x => x.Shortcode == photo.Shortcode);
+            if (existingPhoto == null)
+                return false;
+
+            existingPhoto.Likes = photo.Likes;
+            existingPhoto.Comments = photo.Comments;
+            existingPhoto.Following = photo.Following;
+            existingPhoto.Posts = photo.Posts;
+            this.Save();
+            return true;
+
+        }
+
+        private void Insert(IImage image, Photos photo)
+        {
+            if (image.HumanoidTags == null)
+                return;
+
+            foreach (var iTagName in image.HumanoidTags)
             {
-                foreach (var iTagName in image.HumanoidTags)
+                var itag = this.allITags.SingleOrDefault(x => x.Name == iTagName);
+                if (itag == null)
                 {
-                    var itag = this.allITags.SingleOrDefault(x => x.Name == iTagName);
-                    if(itag == null)
-                    {
-                        throw new InvalidOperationException("ITag must exists in DB");
-                    }
-                    var rel = new PhotoItagRel { Itag = itag, Photo = photo };
-                    photo.PhotoItagRel.Add(rel);
+                    throw new InvalidOperationException("ITag must exists in DB");
                 }
+
+                var rel = new PhotoItagRel { Itag = itag, Photo = photo };
+                photo.PhotoItagRel.Add(rel);
             }
 
             this.db.Photos.Add(photo);
             this.Save();
-        }
-
-        private void RemoveIfExisting(IImage image)
-        {
-            var existingPhoto = this.db.Photos.FirstOrDefault(x => x.Shortcode == image.Shortcode);
-            if (existingPhoto != null)
-            {
-                this.db.PhotoItagRel.RemoveRange(this.db.PhotoItagRel.Where(x => x.PhotoId == existingPhoto.Id));
-                this.db.Mtags.RemoveRange(this.db.Mtags.Where(x => x.PhotoId == existingPhoto.Id));
-                this.db.Photos.Remove(existingPhoto);
-                this.Save();
-            }
         }
 
         public IEnumerable<IHumanoidTag> GetAllHumanoidTags()
