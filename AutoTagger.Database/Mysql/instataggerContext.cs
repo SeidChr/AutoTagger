@@ -15,8 +15,11 @@ namespace AutoTagger.Database.Mysql
         {
             if (!optionsBuilder.IsConfigured)
             {
-                var pw = Environment.GetEnvironmentVariable("instatagger_mysqlpw");
-                optionsBuilder.UseMySql($"Server=78.46.178.185;User Id=InstaTagger;Password={pw};Database=instatagger");
+                var ip = Environment.GetEnvironmentVariable("instatagger_mysql_ip");
+                var user = Environment.GetEnvironmentVariable("instatagger_mysql_user");
+                var pw = Environment.GetEnvironmentVariable("instatagger_mysql_pw");
+                var db = Environment.GetEnvironmentVariable("instatagger_mysql_db");
+                optionsBuilder.UseMySql($"Server={ip};User Id={user};Password={pw};Database={db}");
             }
         }
 

@@ -14,7 +14,16 @@ see
 
 Tested with CosmosDB von Azure (Graph), LiteDB (NoSQL) und MySQL DB (relational)
 
-# Links
+### Setup
+
+Set following Environment Variables
+- instatagger_mysql_ip
+- instatagger_mysql_user
+- instatagger_mysql_pw
+- instatagger_mysql_db
+- instatagger_clarifai_key
+
+## Links
   * [Frontend](http://instatagger.do-epic-sh.it/)
   * [API](http://instataggerui.azurewebsites.net/swagger)
   * [Slack](https://dnughh.slack.com/messages/C9VD9KUTV/team/U7EU90J4S/)
