@@ -1,5 +1,6 @@
 ﻿namespace AutoTagger.Clarifai.Standard
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -10,13 +11,12 @@
 
     public class ClarifaiImageTagger : ITaggingProvider
     {
-        private const string ClarifaiApiKey = "e9b75d460ae7497b9070dc60232adae0";
-
         private readonly ClarifaiClient client;
 
         public ClarifaiImageTagger()
         {
-            this.client = new ClarifaiClient(ClarifaiApiKey);
+            var clarifaiApiKey = Environment.GetEnvironmentVariable("instatagger_clarifai_key");
+            this.client = new ClarifaiClient(clarifaiApiKey);
         }
 
         public IEnumerable<string> GetTagsForImageBytes(byte[] imageBytes)
