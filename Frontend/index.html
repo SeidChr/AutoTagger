@@ -21,7 +21,7 @@
 			display: none;
 		}
 	</style>
-	<base href="http://localhost/">
+	<base href="http://instatagger.do-epic-sh.it">
 </head>
 
 <body>
@@ -81,8 +81,10 @@
 			
 			var hasFile = $('#file').val() != '';
 			
+			var host = 'http://instataggerui.azurewebsites.net/';
+			
 			if(hasFile) {
-				var url = 'http://localhost:59892/image/file';
+				var url = host+'image/file';
 				var data = new FormData();
 				var file = $('#file')[0].files[0];
 				data.append("file", file, file.name);
@@ -99,7 +101,7 @@
 					error: error
 				});
 			} else {
-				var url = 'http://localhost:59892/image/link';
+				var url = host+'image/link';
 				data = $(this).serialize();
 				
 				var jqxhr = $.ajax({
