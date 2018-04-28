@@ -4,17 +4,19 @@ Find the best Instagram Hashtags for a specific Photo - Proof of Concept started
 ## Architecture
 ![](https://github.com/Vittel/AutoTagger/raw/master/doc/architecture2.png)
 
-## Crawler
-see [doc/crawler.md](https://github.com/Vittel/AutoTagger/blob/master/doc/crawler.md)
+## How it words
+### Crawler
+  * [crawler](https://github.com/Vittel/AutoTagger/blob/master/doc/quality_improvement _2_crawler)
 
-## Database
-see
-  * [doc/better-database.md](https://github.com/Vittel/AutoTagger/blob/master/doc/better-database.md)
-  * [doc/relational-query.md](https://github.com/Vittel/AutoTagger/blob/master/doc/relational-query.md)
+### Database
+  * [database](https://github.com/Vittel/AutoTagger/blob/master/doc/quality_improvement _1_better_database)
+  * [relational query](https://github.com/Vittel/AutoTagger/blob/master/doc/relational-query.md)
+  
+### Evaluation
+  * [hashtags exclusion](https://github.com/Vittel/AutoTagger/blob/master/doc/quality_improvement _3_meat_vs_vegan)
 
-Tested with CosmosDB von Azure (Graph), LiteDB (NoSQL) und MySQL DB (relational)
 
-### Setup
+## Setup
 
 Set following Environment Variables
 - instatagger_mysql_ip
