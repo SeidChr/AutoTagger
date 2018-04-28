@@ -20,7 +20,7 @@
             this.database.Submit($"g.V().drop()");
         }
 
-        public IEnumerable<string> FindHumanoidTags(List<string> machineTags)
+        public (string debug, IEnumerable<string> htags) FindHumanoidTags(List<string> machineTags)
         {
             var tagString = machineTags.Select(CleanInput).Aggregate(string.Empty, (i, j) => i + "','" + j)
                 .Trim('\'', ',');
@@ -28,7 +28,7 @@
             var result = this.database.Submit(
                 $"g.V().hasLabel('image').order().by(out('tagged').has('id',within('{tagString}')).count().as('count'), decr).limit(10).out('itagged').dedup().limit(10)");
 
-            return result.Select(i => (string)i["id"]);
+            return ("", result.Select(i => (string)i["id"]));
         }
 
         public void Log(string source, string data)

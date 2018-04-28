@@ -11,8 +11,9 @@
 
     public class MysqlUIStorage : MysqlBaseStorage, IAutoTaggerStorage
     {
-        public IEnumerable<string> FindHumanoidTags(List<string> machineTags)
+        public (string debug, IEnumerable<string> htags) FindHumanoidTags(List<string> machineTags)
         {
+            var htags = new List<string>();
             machineTags.RemoveAll(x => x.StartsWith("no "));
             var query = BuildQuery(machineTags);
 
@@ -26,11 +27,13 @@
                 {
                     while (reader.Read())
                     {
-                        yield return reader.GetValue(0).ToString();
+                        var htag = reader.GetValue(0).ToString();
+                        htags.Add(htag);
                     }
                 }
                 this.db.Database.CloseConnection();
             }
+            return (query, htags);
         }
 
         private string BuildQuery(IEnumerable<string> machineTags)

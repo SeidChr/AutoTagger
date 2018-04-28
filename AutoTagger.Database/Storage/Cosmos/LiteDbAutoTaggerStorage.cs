@@ -29,16 +29,17 @@ namespace AutoTagger.Database.Storage.AutoTagger
             this.database.DropCollection(ImagesCollectionName);
         }
 
-        public IEnumerable<string> FindHumanoidTags(List<string> machineTags)
+        public (string debug, IEnumerable<string> htags) FindHumanoidTags(List<string> machineTags)
         {
             // find top 100 oldest persons aged between 20 and 30
             ////var results = col.Find(Query.And(Query.All("Age", Query.Descending), Query.Between("Age", 20, 30)), limit: 100);
             // .Find(Query.And(AnyIn(machineTags, "mashineTags"), Query.All("quality", Query.Descending)))
-            return this.images
+            var htags = this.images
                 .Find(this.AnyIn(MachineTagsFieldName, machineTags))
                 .SelectMany(b => b[HumanoidTagsFieldName].AsArray.Select(ht => ht.AsString))
                 .Distinct()
                 .Take(30);
+            return ("", htags);
         }
 
         public void Log(string source, string data)
