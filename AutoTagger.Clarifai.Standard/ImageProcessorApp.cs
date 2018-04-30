@@ -36,7 +36,8 @@ namespace AutoTagger.Clarifai.Standard
         public ImageProcessorApp(IImageProcessorStorage db)
         {
             storage = db;
-            tagger = new ClarifaiImageTagger();
+            //tagger = new ClarifaiImageTagger();
+            tagger = new GCPVision();
             queue = new ConcurrentQueue<IImage>();
         }
 

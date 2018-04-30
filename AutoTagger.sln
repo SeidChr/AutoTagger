@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoTagger.Clarifai.Standar
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoTagger.TestConsole.Core", "AutoTagger.TestConsole.Core\AutoTagger.TestConsole.Core.csproj", "{2143633E-4EB3-4A24-AB13-41990006F5DE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoTagger.TaggingProvider", "AutoTagger.TaggingProvider\AutoTagger.TaggingProvider.csproj", "{A6E2ED0F-39DD-4399-B1C9-82CD9B4A6635}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoTagger.UserInterface", "AutoTagger.UserInterface\AutoTagger.UserInterface.csproj", "{FE997A72-9301-4031-A16C-D23F03F5EE19}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoTagger.Crawler.Standard", "AutoTagger.Crawler.Standard\AutoTagger.Crawler.Standard.csproj", "{0DA86F10-EC95-433D-B634-722BECF35C39}"
@@ -37,10 +35,6 @@ Global
 		{2143633E-4EB3-4A24-AB13-41990006F5DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2143633E-4EB3-4A24-AB13-41990006F5DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2143633E-4EB3-4A24-AB13-41990006F5DE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A6E2ED0F-39DD-4399-B1C9-82CD9B4A6635}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A6E2ED0F-39DD-4399-B1C9-82CD9B4A6635}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A6E2ED0F-39DD-4399-B1C9-82CD9B4A6635}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A6E2ED0F-39DD-4399-B1C9-82CD9B4A6635}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FE997A72-9301-4031-A16C-D23F03F5EE19}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FE997A72-9301-4031-A16C-D23F03F5EE19}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FE997A72-9301-4031-A16C-D23F03F5EE19}.Release|Any CPU.ActiveCfg = Release|Any CPU
