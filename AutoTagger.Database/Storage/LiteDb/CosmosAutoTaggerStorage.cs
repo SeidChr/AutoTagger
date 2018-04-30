@@ -20,9 +20,10 @@
             this.database.Submit($"g.V().drop()");
         }
 
-        public (string debug, IEnumerable<string> htags) FindHumanoidTags(List<string> machineTags)
+        public (string debug, IEnumerable<string> htags) FindHumanoidTags(List<IMTag> machineTags)
         {
-            var tagString = machineTags.Select(CleanInput).Aggregate(string.Empty, (i, j) => i + "','" + j)
+            var mtags = machineTags.Select(x => x.Name);
+            var tagString = mtags.Select(CleanInput).Aggregate(string.Empty, (i, j) => i + "','" + j)
                 .Trim('\'', ',');
 
             var result = this.database.Submit(

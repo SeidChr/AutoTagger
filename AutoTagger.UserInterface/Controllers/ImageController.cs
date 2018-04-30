@@ -88,7 +88,7 @@
             }
         }
 
-        private Dictionary<string, object> FindTags(List<string> machineTags)
+        private Dictionary<string, object> FindTags(List<IMTag> machineTags)
         {
             var (query, instagramTags) = this.storage.FindHumanoidTags(machineTags);
             var ip = this.GetIPAddress();

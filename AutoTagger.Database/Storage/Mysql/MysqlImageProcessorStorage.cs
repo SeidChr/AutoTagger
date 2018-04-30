@@ -38,9 +38,15 @@
 
         public void InsertMachineTagsWithoutSaving(IImage image)
         {
-            foreach (var mTagName in image.MachineTags)
+            foreach (var mTag in image.MachineTags)
             {
-                this.db.Mtags.Add(new Mtags { Name = mTagName, PhotoId = image.Id });
+                this.db.Mtags.Add(new Mtags {
+                    Name = mTag.Name,
+                    Score = mTag.Score,
+                    Source = mTag.Source,
+                    PhotoId = image.Id
+
+                });
             }
         }
 

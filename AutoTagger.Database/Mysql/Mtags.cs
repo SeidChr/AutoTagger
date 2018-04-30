@@ -8,6 +8,8 @@ namespace AutoTagger.Database.Mysql
         public int Id { get; set; }
         public int PhotoId { get; set; }
         public string Name { get; set; }
+        public float Score { get; set; }
+        public string Source { get; set; }
 
         public Photos Photo { get; set; }
     }

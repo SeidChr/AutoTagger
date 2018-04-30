@@ -5,6 +5,8 @@ using System.Text;
 namespace AutoTagger.Test.Core
 {
     using AutoTagger.Clarifai.Standard;
+    using AutoTagger.Crawler.Standard;
+    using AutoTagger.Database.Storage.Mysql;
 
     using Xunit;
 
@@ -15,11 +17,12 @@ namespace AutoTagger.Test.Core
         {
             var tagger = new GCPVision();
             var uri = "https://www.bilderdepot24.de/item/images/1149747/1000x1000/1149747_1.jpg";
-            var result = tagger.GetTagsForImageUrl(uri);
-            foreach (var res in result)
-            {
-                Console.WriteLine(res);
-            }
+            var mtags = tagger.GetTagsForImageUrl(uri);
+            
+            var db = new MysqlImageProcessorStorage();
+            var image = new Image { MachineTags = mtags, Id = 1 };
+            db.InsertMachineTagsWithoutSaving(image);
+            db.DoSave();
         }
     }
 }

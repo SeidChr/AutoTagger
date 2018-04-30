@@ -5,7 +5,7 @@
 
     public interface IImage
     {
-        IEnumerable<string> MachineTags { get; set; }
+        IEnumerable<IMTag> MachineTags { get; set; }
         IEnumerable<string> HumanoidTags { get; set; }
         int Id { get; set; }
         string Shortcode { get; set; }

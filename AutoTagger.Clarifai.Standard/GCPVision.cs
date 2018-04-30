@@ -9,8 +9,11 @@ namespace AutoTagger.Clarifai.Standard
     using System.Threading.Tasks;
 
     using AutoTagger.Contract;
+    using AutoTagger.Crawler.Standard;
 
     using Google.Cloud.Vision.V1;
+
+    using Image = Google.Cloud.Vision.V1.Image;
 
     public class GCPVision : ITaggingProvider
     {
@@ -21,26 +24,40 @@ namespace AutoTagger.Clarifai.Standard
             client = ImageAnnotatorClient.Create();
         }
 
-        public IEnumerable<string> GetTagsForImageBytes(byte[] imageBytes)
+        public IEnumerable<IMTag> GetTagsForImageBytes(byte[] imageBytes)
         {
             //var image = Image.FromFile("wakeupcat.jpg");
             throw new NotImplementedException();
         }
 
-        public IEnumerable<string> GetTagsForImageUrl(string imageUrl)
+        public IEnumerable<IMTag> GetTagsForImageUrl(string imageUrl)
         {
             var image = Image.FromUri(imageUrl);
 
             var labels = client.DetectLabels(image);
             var webInfos = client.DetectWebInformation(image);
-
-            foreach (var annotation in labels)
+            
+            foreach (var x in labels)
             {
-                if (annotation.Description == null)
+                if (x.Description == null)
                     continue;
+                var mtag = new MTag { Name = x.Description,
+                    Score = x.Score,
+                    Source = "GCPVision_Label" };
+                yield return mtag;
+            }
 
-                Console.WriteLine(annotation.Description);
-                yield return annotation.Description;
+            foreach (var x in webInfos.WebEntities)
+            {
+                if (x.Description == null)
+                    continue;
+                var mtag = new MTag
+                {
+                    Name   = x.Description,
+                    Score  = x.Score,
+                    Source = "GCPVision_Web"
+                };
+                yield return mtag;
             }
         }
     }

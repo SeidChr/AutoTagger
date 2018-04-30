@@ -111,6 +111,15 @@ namespace AutoTagger.Database.Mysql
                     .HasColumnName("photoId")
                     .HasColumnType("int(11)");
 
+                entity.Property(e => e.Score)
+                    .HasColumnName("score")
+                    .HasColumnType("float(11)");
+
+                entity.Property(e => e.Source)
+                    .IsRequired()
+                    .HasColumnName("source")
+                    .HasMaxLength(30);
+
                 entity.HasOne(d => d.Photo)
                     .WithMany(p => p.Mtags)
                     .HasPrincipalKey(p => p.Id)

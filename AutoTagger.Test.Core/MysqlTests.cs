@@ -2,6 +2,8 @@
 {
     using System;
     using System.Collections.Generic;
+
+    using AutoTagger.Contract;
     using AutoTagger.Crawler.Standard;
     using AutoTagger.Database.Storage.AutoTagger;
     using AutoTagger.Database.Storage.Mysql;
@@ -22,7 +24,7 @@
                 Following = 150,
                 Posts = 42,
                 HumanoidTags = new List<string> { "catlove", "instabeach", "hamburg" },
-                MachineTags = new List<string> { "cat", "beach", "city" },
+                //MachineTags = new List<string> { "cat", "beach", "city" },
                 LargeUrl = "content.com/pic/ab12xy67laaaarge",
                 ThumbUrl = "content.com/pic/ab12xthump",
                 Shortcode = "ab12xy67",
@@ -38,6 +40,7 @@
             // Assert
             Assert.NotEmpty(image.Shortcode);
         }
+
         [Fact]
         public void MysqlInsertITag()
         {
@@ -62,12 +65,33 @@
             var mysql = new MysqlUIStorage();
 
             // Act
-            var machineTags = new List<string> { "beach", "water", "surfboard", "sun", "drink" };
+            var machineTags = new List<IMTag> { new MTag {Name = "beach" }, new MTag {Name = "water" } };
             var (debug, htags) = mysql.FindHumanoidTags(machineTags);
 
             // Assert
             Assert.NotEmpty(debug);
             Assert.NotEmpty(htags);
+        }
+
+        [Fact]
+        public void MysqlInsertMTag()
+        {
+            // Arrange
+            var db = new MysqlImageProcessorStorage();
+            var image = new Image();
+            var mtags = new List<IMTag>
+            {
+                new MTag { Name = "test", Score = 1.337f, Source = "Testcase_Test-Hamburg4ever" }
+            };
+            image.MachineTags = mtags;
+            image.Id = 1;
+
+            // Act
+            db.InsertMachineTagsWithoutSaving(image);
+            db.DoSave();
+
+            // Assert
+            Assert.True(true);
         }
     }
 }

@@ -76,7 +76,7 @@ namespace AutoTagger.Database.Mysql
                 Follower  = this.Follower,
                 Following = this.Following,
                 Posts     = this.Posts,
-                MachineTags = this.Mtags.Select(tag => tag.Name),
+                MachineTags = this.Mtags.Select(tag => new MTag{Name= tag.Name , Score=tag.Score, Source = tag.Source}),
                 HumanoidTags = this.Itags.Select(tag => tag.Name)
             };
             return image;

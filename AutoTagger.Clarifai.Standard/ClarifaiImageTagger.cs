@@ -5,6 +5,7 @@
     using System.Linq;
 
     using AutoTagger.Contract;
+    using AutoTagger.Crawler.Standard;
 
     using global::Clarifai.API;
     using global::Clarifai.DTOs.Inputs;
@@ -19,24 +20,24 @@
             this.client = new ClarifaiClient(clarifaiApiKey);
         }
 
-        public IEnumerable<string> GetTagsForImageBytes(byte[] imageBytes)
+        public IEnumerable<IMTag> GetTagsForImageBytes(byte[] imageBytes)
         {
             var clarifaiInput = new ClarifaiFileImage(imageBytes);
             return this.GetTagsForInput(clarifaiInput);
         }
 
-        public IEnumerable<string> GetTagsForImageUrl(string imageUrl)
+        public IEnumerable<IMTag> GetTagsForImageUrl(string imageUrl)
         {
             var clarifaiInput = new ClarifaiURLImage(imageUrl);
             return this.GetTagsForInput(clarifaiInput);
         }
 
-        private IEnumerable<string> GetTagsForInput(IClarifaiInput clarifaiInput)
+        private IEnumerable<IMTag> GetTagsForInput(IClarifaiInput clarifaiInput)
         {
             var result = this.client.PublicModels.GeneralModel.Predict(clarifaiInput).ExecuteAsync().Result;
             return !result.IsSuccessful
-                ? Enumerable.Empty<string>()
-                : result.Get().Data.Select(x => x.Name);
+                ? Enumerable.Empty<IMTag>()
+                : result.Get().Data.Select(x => new MTag {Name = x.Name});
         }
     }
 }

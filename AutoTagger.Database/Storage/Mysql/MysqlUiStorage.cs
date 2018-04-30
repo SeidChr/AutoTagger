@@ -11,10 +11,10 @@
 
     public class MysqlUIStorage : MysqlBaseStorage, IAutoTaggerStorage
     {
-        public (string debug, IEnumerable<string> htags) FindHumanoidTags(List<string> machineTags)
+        public (string debug, IEnumerable<string> htags) FindHumanoidTags(List<IMTag> machineTags)
         {
             var htags = new List<string>();
-            machineTags.RemoveAll(x => x.StartsWith("no "));
+            machineTags.RemoveAll(x => x.Name.StartsWith("no "));
             var query = BuildQuery(machineTags);
 
             using (var command = this.db.Database.GetDbConnection().CreateCommand())
@@ -37,7 +37,7 @@
             return (query, htags);
         }
 
-        private string BuildQuery(IEnumerable<string> machineTags)
+        private string BuildQuery(IEnumerable<IMTag> machineTags)
         {
             var limitTopPhotos    = 100;
             var countTagsToReturn = 20;
@@ -54,14 +54,14 @@
             return query;
         }
 
-        private static string BuildWhereCondition(IEnumerable<string> machineTags)
+        private static string BuildWhereCondition(IEnumerable<IMTag> machineTags)
         {
             var whereCondition = "";
             foreach (var machineTag in machineTags)
             {
-                if (string.IsNullOrEmpty(machineTag))
+                if (string.IsNullOrEmpty(machineTag.Name))
                     continue;
-                whereCondition += $"`m`.`name` = '{machineTag}' OR ";
+                whereCondition += $"`m`.`name` = '{machineTag.Name}' OR ";
             }
 
             char[] charsToTrim = { ' ', 'O', 'R' };
