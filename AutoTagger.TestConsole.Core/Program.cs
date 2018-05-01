@@ -1,13 +1,9 @@
 ﻿namespace AutoTagger.TestConsole.Core
 {
     using System;
-    using System.Collections.Generic;
-    using System.IO;
     using System.Linq;
-    using AutoTagger.Clarifai.Standard;
     using AutoTagger.Crawler.Standard;
     using AutoTagger.Crawler.Standard.V1;
-    using AutoTagger.Database.Storage.AutoTagger;
     using AutoTagger.Database.Storage.Mysql;
     using AutoTagger.ImageProcessor.Standard;
 

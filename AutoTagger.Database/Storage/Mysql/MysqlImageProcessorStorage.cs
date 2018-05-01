@@ -25,6 +25,15 @@
             return query.ToList().Select(x => x.ToImage());
         }
 
+        public IEnumerable<IImage> GetImagesWithoutMachineTags(int idLargerThan, int limit)
+        {
+            var query = (from p in this.db.Photos
+                         where p.Mtags.Count == 0
+                            && p.Id > idLargerThan
+                         select p).Take(limit);
+            return query.ToList().Select(x => x.ToImage());
+        }
+
         private int GetRandomId()
         {
             var largestId = this.GetLargestId();
