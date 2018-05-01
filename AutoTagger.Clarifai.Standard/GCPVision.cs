@@ -42,8 +42,18 @@
                 labels   = this.client.DetectLabels(image);
                 webInfos = this.client.DetectWebInformation(image);
             }
-            catch
+            catch(Exception e)
             {
+                if (e.Message.Contains("The URL does not appear to be accessible by us.")
+                    || e.Message.Contains("We can not access the URL currently.")
+                )
+                {
+                    yield break;
+                }
+                else
+                {
+                    //Console.WriteLine(e);
+                }
             }
 
             if(labels == null || webInfos == null)

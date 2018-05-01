@@ -28,7 +28,7 @@ namespace AutoTagger.ImageProcessor.Standard
         private static readonly int FillQueueLimit = 5;
         private static readonly int ConcurrentClarifaiThreadsLimit = 15;
         private static readonly int DbSelectImagesAmount = 100;
-        private static readonly int SaveLimit = 5;
+        private static readonly int SaveLimit = 10;
 
         enum DbUsage
         {
