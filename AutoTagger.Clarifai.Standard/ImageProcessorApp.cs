@@ -89,6 +89,10 @@ namespace AutoTagger.ImageProcessor.Standard
                         var taggerThread = new Thread(DoTaggerRequest);
                         taggerThread.Start(image);
                     }
+                    else
+                    {
+                        break;
+                    }
                 }
                 Thread.Sleep(random.Next(50, 150));
             }

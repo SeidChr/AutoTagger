@@ -1,5 +1,6 @@
 ﻿namespace AutoTagger.ImageProcessor.Standard
 {
+    using System;
     using System.Collections.Generic;
     using AutoTagger.Contract;
     using AutoTagger.Crawler.Standard;
@@ -33,9 +34,20 @@
         public IEnumerable<IMTag> GetTagsForImageUrl(string imageUrl)
         {
             var image = Image.FromUri(imageUrl);
+            IReadOnlyList<EntityAnnotation> labels = null;
+            WebDetection webInfos = null;
 
-            var labels   = this.client.DetectLabels(image);
-            var webInfos = this.client.DetectWebInformation(image);
+            try
+            {
+                labels   = this.client.DetectLabels(image);
+                webInfos = this.client.DetectWebInformation(image);
+            }
+            catch
+            {
+            }
+
+            if(labels == null || webInfos == null)
+                yield break;
 
             foreach (var mTag in ToMTags(labels, webInfos))
             {
@@ -47,7 +59,7 @@
         {
             foreach (var x in labels)
             {
-                if (x.Description == null)
+                if (String.IsNullOrEmpty(x.Description))
                     continue;
                 var mtag = new MTag { Name = x.Description, Score = x.Score, Source = keyLabel };
                 yield return mtag;
@@ -55,7 +67,7 @@
 
             foreach (var x in webInfos.WebEntities)
             {
-                if (x.Description == null)
+                if (String.IsNullOrEmpty(x.Description))
                     continue;
                 var mtag = new MTag { Name = x.Description, Score = x.Score, Source = keyWeb };
                 yield return mtag;
