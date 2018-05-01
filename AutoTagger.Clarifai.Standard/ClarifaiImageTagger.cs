@@ -1,4 +1,4 @@
-﻿namespace AutoTagger.Clarifai.Standard
+﻿namespace AutoTagger.ImageProcessor.Standard
 {
     using System;
     using System.Collections.Generic;
@@ -20,9 +20,9 @@
             this.client = new ClarifaiClient(clarifaiApiKey);
         }
 
-        public IEnumerable<IMTag> GetTagsForImageBytes(byte[] imageBytes)
+        public IEnumerable<IMTag> GetTagsForImageBytes(byte[] bytes)
         {
-            var clarifaiInput = new ClarifaiFileImage(imageBytes);
+            var clarifaiInput = new ClarifaiFileImage(bytes);
             return this.GetTagsForInput(clarifaiInput);
         }
 

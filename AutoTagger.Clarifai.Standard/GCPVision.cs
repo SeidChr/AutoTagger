@@ -1,49 +1,55 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace AutoTagger.Clarifai.Standard
+﻿namespace AutoTagger.ImageProcessor.Standard
 {
-    using System.Net.Http;
-    using System.Threading;
-    using System.Threading.Tasks;
-
+    using System.Collections.Generic;
     using AutoTagger.Contract;
     using AutoTagger.Crawler.Standard;
-
     using Google.Cloud.Vision.V1;
-
     using Image = Google.Cloud.Vision.V1.Image;
 
     public class GCPVision : ITaggingProvider
     {
+        private const string keyLabel = "GCPVision_Label";
+        private const string keyWeb = "GCPVision_Web";
         private readonly ImageAnnotatorClient client;
 
         public GCPVision()
         {
-            client = ImageAnnotatorClient.Create();
+            this.client = ImageAnnotatorClient.Create();
         }
 
-        public IEnumerable<IMTag> GetTagsForImageBytes(byte[] imageBytes)
+        public IEnumerable<IMTag> GetTagsForImageBytes(byte[] bytes)
         {
-            //var image = Image.FromFile("wakeupcat.jpg");
-            throw new NotImplementedException();
+            var image = Image.FromBytes(bytes);
+
+            var labels   = this.client.DetectLabels(image);
+            var webInfos = this.client.DetectWebInformation(image);
+
+            foreach (var mTag in ToMTags(labels, webInfos))
+            {
+                yield return mTag;
+            }
         }
 
         public IEnumerable<IMTag> GetTagsForImageUrl(string imageUrl)
         {
             var image = Image.FromUri(imageUrl);
 
-            var labels = client.DetectLabels(image);
-            var webInfos = client.DetectWebInformation(image);
-            
+            var labels   = this.client.DetectLabels(image);
+            var webInfos = this.client.DetectWebInformation(image);
+
+            foreach (var mTag in ToMTags(labels, webInfos))
+            {
+                yield return mTag;
+            }
+        }
+
+        private static IEnumerable<IMTag> ToMTags(IReadOnlyList<EntityAnnotation> labels, WebDetection webInfos)
+        {
             foreach (var x in labels)
             {
                 if (x.Description == null)
                     continue;
-                var mtag = new MTag { Name = x.Description,
-                    Score = x.Score,
-                    Source = "GCPVision_Label" };
+                var mtag = new MTag { Name = x.Description, Score = x.Score, Source = keyLabel };
                 yield return mtag;
             }
 
@@ -51,12 +57,7 @@ namespace AutoTagger.Clarifai.Standard
             {
                 if (x.Description == null)
                     continue;
-                var mtag = new MTag
-                {
-                    Name   = x.Description,
-                    Score  = x.Score,
-                    Source = "GCPVision_Web"
-                };
+                var mtag = new MTag { Name = x.Description, Score = x.Score, Source = keyWeb };
                 yield return mtag;
             }
         }

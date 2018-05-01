@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.27130.2027
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoTagger.Contract", "AutoTagger.Contract\AutoTagger.Contract.csproj", "{30CB818B-0CE3-4ED7-81E8-1D3747748AD8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoTagger.Clarifai.Standard", "AutoTagger.Clarifai.Standard\AutoTagger.Clarifai.Standard.csproj", "{B4A4A168-DB3C-4172-A2C9-3F8ECC36DDCE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoTagger.ImageProcessor.Standard", "AutoTagger.Clarifai.Standard\AutoTagger.ImageProcessor.Standard.csproj", "{B4A4A168-DB3C-4172-A2C9-3F8ECC36DDCE}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoTagger.TestConsole.Core", "AutoTagger.TestConsole.Core\AutoTagger.TestConsole.Core.csproj", "{2143633E-4EB3-4A24-AB13-41990006F5DE}"
 EndProject

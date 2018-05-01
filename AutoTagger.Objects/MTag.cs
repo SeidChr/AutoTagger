@@ -1,4 +1,4 @@
-﻿namespace AutoTagger.Crawler.Standard
+﻿namespace AutoTagger.Objects
 {
     using AutoTagger.Contract;
 

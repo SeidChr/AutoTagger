@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AutoTagger.Clarifai.Standard
+namespace AutoTagger.ImageProcessor.Standard
 {
     using System.Collections.Concurrent;
     using System.Linq;
@@ -33,11 +33,10 @@ namespace AutoTagger.Clarifai.Standard
         }
         private static DbUsage currentDbUsage;
 
-        public ImageProcessorApp(IImageProcessorStorage db)
+        public ImageProcessorApp(IImageProcessorStorage db, ITaggingProvider taggingProvider)
         {
             storage = db;
-            //tagger = new ClarifaiImageTagger();
-            tagger = new GCPVision();
+            tagger = taggingProvider;
             queue = new ConcurrentQueue<IImage>();
         }
 
@@ -94,7 +93,7 @@ namespace AutoTagger.Clarifai.Standard
 
         public static void GetData(object data)
         {
-            IImage image = (IImage)data;
+            var image = (IImage)data;
             OnLookingForTags?.Invoke(image);
             var mTags = tagger.GetTagsForImageUrl(image.LargeUrl).ToList();
             Interlocked.Decrement(ref taggerRunning);

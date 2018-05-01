@@ -1,4 +1,4 @@
-﻿namespace AutoTagger.Crawler.Standard
+﻿namespace AutoTagger.Objects
 {
     using System;
     using System.Collections.Generic;

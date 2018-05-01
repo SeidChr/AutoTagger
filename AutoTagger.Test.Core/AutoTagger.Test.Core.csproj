@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AutoTagger.Clarifai.Standard\AutoTagger.Clarifai.Standard.csproj" />
+    <ProjectReference Include="..\AutoTagger.Clarifai.Standard\AutoTagger.ImageProcessor.Standard.csproj" />
     <ProjectReference Include="..\AutoTagger.Crawler.Standard\AutoTagger.Crawler.Standard.csproj" />
     <ProjectReference Include="..\AutoTagger.Database\AutoTagger.Database.csproj" />
   </ItemGroup>

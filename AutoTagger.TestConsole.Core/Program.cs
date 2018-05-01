@@ -9,6 +9,7 @@
     using AutoTagger.Crawler.Standard.V1;
     using AutoTagger.Database.Storage.AutoTagger;
     using AutoTagger.Database.Storage.Mysql;
+    using AutoTagger.ImageProcessor.Standard;
 
     internal class Program
     {
@@ -148,7 +149,9 @@
         private static void StartImageProcessor()
         {
             var db = new MysqlImageProcessorStorage();
-            var imageProcessor = new ImageProcessorApp(db);
+            var tagger = new GCPVision();
+
+            var imageProcessor = new ImageProcessorApp(db, tagger);
             ImageProcessorApp.OnLookingForTags += image =>
             {
                 Console.WriteLine("Clarifai Crawling for " + image.Id);
