@@ -23,13 +23,12 @@ namespace AutoTagger.ImageProcessor.Standard
         public static Action OnDbSaved;
         private static int taggerRunning = 0;
         private static int saveCounter = 0;
+        private static readonly Random random = new Random();
 
         private static readonly int FillQueueLimit = 5;
         private static readonly int ConcurrentClarifaiThreadsLimit = 15;
         private static readonly int DbSelectImagesAmount = 100;
         private static readonly int SaveLimit = 5;
-
-        private static Random random = new Random();
 
         enum DbUsage
         {
@@ -55,10 +54,8 @@ namespace AutoTagger.ImageProcessor.Standard
 
         private static void StartTagger()
         {
-            var fillQueue = new Thread(ImageProcessorApp.FillQueueThread);
-            fillQueue.Start();
-            var taggerThread = new Thread(ImageProcessorApp.StartTaggerThreads);
-            taggerThread.Start();
+            new Thread(ImageProcessorApp.FillQueueThread).Start();
+            new Thread(ImageProcessorApp.StartTaggerThreads).Start();
         }
 
         private static void FillQueueThread()
@@ -66,9 +63,8 @@ namespace AutoTagger.ImageProcessor.Standard
             var lastId = 0;
             while (true)
             {
-                if (queue.Count < FillQueueLimit)
+                if (queue.Count <= FillQueueLimit && SetDbUsing(DbUsage.GetEntries))
                 {
-                    SetDbUsing(DbUsage.GetEntries);
                     var images = storage.GetImagesWithoutMachineTags(lastId, DbSelectImagesAmount);
                     foreach (var image in images)
                     {
@@ -85,11 +81,10 @@ namespace AutoTagger.ImageProcessor.Standard
         {
             while (true)
             {
-                for (int i = taggerRunning; i < ConcurrentClarifaiThreadsLimit;)
+                for (var i = taggerRunning; i < ConcurrentClarifaiThreadsLimit;i++)
                 {
                     if(queue.TryDequeue(out IImage image))
                     {
-                        taggerRunning++;
                         Interlocked.Increment(ref taggerRunning);
                         var taggerThread = new Thread(DoTaggerRequest);
                         taggerThread.Start(image);
