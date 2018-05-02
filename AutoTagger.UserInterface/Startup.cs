@@ -1,8 +1,8 @@
 ﻿namespace AutoTagger.UserInterface
 {
-    using AutoTagger.Clarifai.Standard;
     using AutoTagger.Contract;
     using AutoTagger.Database.Storage.AutoTagger;
+    using AutoTagger.ImageProcessor.Standard;
     using AutoTagger.UserInterface.Controllers.FIlter;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
@@ -66,7 +66,7 @@
             services.AddCors();
 
             services.AddTransient<IAutoTaggerStorage, MysqlUIStorage>();
-            services.AddTransient<ITaggingProvider, ClarifaiImageTagger>();
+            services.AddTransient<ITaggingProvider, GCPVision>();
 
             services.AddSwaggerGen(
                 c =>
