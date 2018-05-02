@@ -25,10 +25,10 @@ namespace AutoTagger.ImageProcessor.Standard
         private static int saveCounter = 0;
         private static readonly Random random = new Random();
 
-        private static readonly int FillQueueLimit = 5;
-        private static readonly int ConcurrentClarifaiThreadsLimit = 15;
+        private static readonly int FillQueueLimit = 2;
+        private static readonly int ConcurrentClarifaiThreadsLimit = 5;
         private static readonly int DbSelectImagesAmount = 100;
-        private static readonly int SaveLimit = 10;
+        private static readonly int SaveLimit = 3;
 
         enum DbUsage
         {

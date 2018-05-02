@@ -52,7 +52,7 @@
                 }
                 else
                 {
-                    //Console.WriteLine(e);
+                    Console.WriteLine(e);
                 }
             }
 
