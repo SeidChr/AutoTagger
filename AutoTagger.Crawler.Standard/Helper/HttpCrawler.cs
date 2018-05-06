@@ -59,7 +59,7 @@ namespace AutoTagger.Crawler.Standard
         protected static dynamic GetScriptNodeData(HtmlNode document)
         {
             var scriptNode = document?.SelectNodes("//script")
-                .FirstOrDefault(n => n.InnerText.Contains("window._sharedData = "));
+                ?.FirstOrDefault(n => n.InnerText.Contains("window._sharedData = "));
 
             if (scriptNode == null)
             {
