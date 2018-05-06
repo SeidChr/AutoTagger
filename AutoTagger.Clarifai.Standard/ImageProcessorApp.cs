@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace AutoTagger.ImageProcessor.Standard
 {
@@ -21,9 +19,9 @@ namespace AutoTagger.ImageProcessor.Standard
         public static Action<IImage> OnDbInserted;
         public static Action OnDbSleep;
         public static Action OnDbSaved;
-        private static int taggerRunning = 0;
-        private static int saveCounter = 0;
-        private static readonly Random random = new Random();
+        private static int taggerRunning;
+        private static int saveCounter;
+        private static readonly Random Random = new Random();
 
         private static readonly int FillQueueLimit = 2;
         private static readonly int ConcurrentClarifaiThreadsLimit = 5;
@@ -73,7 +71,7 @@ namespace AutoTagger.ImageProcessor.Standard
                     }
                     currentDbUsage = DbUsage.None;
                 }
-                Thread.Sleep(random.Next(50, 150));
+                Thread.Sleep(Random.Next(50, 150));
             }
         }
 
@@ -94,7 +92,7 @@ namespace AutoTagger.ImageProcessor.Standard
                         break;
                     }
                 }
-                Thread.Sleep(random.Next(50, 150));
+                Thread.Sleep(Random.Next(50, 150));
             }
         }
 
