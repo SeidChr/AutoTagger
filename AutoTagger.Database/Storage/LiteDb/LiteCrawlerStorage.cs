@@ -1,7 +1,8 @@
-﻿namespace AutoTagger.Database.Storage.Crawler
+﻿namespace AutoTagger.Database.Storage.LiteDb
 {
     using System.Collections.Generic;
     using System.Linq;
+
     using global::AutoTagger.Contract;
     using global::AutoTagger.Crawler.Standard;
 
@@ -66,7 +67,7 @@
             throw new System.NotImplementedException();
         }
 
-        public void InsertOrUpdateHumaniodTag(IHumanoidTag hTag)
+        public void InsertOrUpdateHumaniodTag(IHumanoidTag humanoidTag)
         {
             throw new System.NotImplementedException();
         }

@@ -1,23 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace AutoTagger.Crawler.Standard.V1
+﻿namespace AutoTagger.Crawler.Standard.V1.Queue
 {
+    using System;
     using System.Collections.Concurrent;
+    using System.Collections.Generic;
     using System.Linq;
-    using AutoTagger.Contract;
-    using static System.String;
 
-    class ShortcodeQueue<T> : ConcurrentQueue<T>
+    using AutoTagger.Contract;
+
+    internal class ShortcodeQueue<T> : ConcurrentQueue<T>
     {
         private readonly HashSet<T> processed;
-        private int limit;
+
         private readonly UserQueue<string> userQueue;
+
+        private int limit;
 
         public ShortcodeQueue()
         {
             this.processed = new HashSet<T>();
-            this.limit = -1;
+            this.limit     = -1;
             this.userQueue = new UserQueue<string>();
         }
 
@@ -29,28 +30,30 @@ namespace AutoTagger.Crawler.Standard.V1
             }
         }
 
-        public IEnumerable<IImage> Process(Func<T, string> imagePageCrawling,
-                                           Func<string, IEnumerable<IImage>> userPageCrawling
-            )
+        public IEnumerable<IImage> Process(
+            Func<T, string> imagePageCrawling,
+            Func<string, IEnumerable<IImage>> userPageCrawling)
         {
-            while (this.TryDequeue(out T currentShortcode))
+            while (this.TryDequeue(out var currentShortcode))
             {
                 if (this.IsProcessed(currentShortcode))
                 {
                     continue;
                 }
+
                 if (this.IsLimitReached())
                 {
                     yield return null;
                 }
 
                 var userName = imagePageCrawling(currentShortcode);
-                if (IsNullOrEmpty(userName))
+                if (string.IsNullOrEmpty(userName))
                 {
                     continue;
                 }
-                userQueue.Enqueue(userName);
-                var images = userQueue.Process(userPageCrawling);
+
+                this.userQueue.Enqueue(userName);
+                var images = this.userQueue.Process(userPageCrawling);
 
                 foreach (var image in images)
                 {
@@ -59,11 +62,23 @@ namespace AutoTagger.Crawler.Standard.V1
                         yield return null;
                     }
 
-                    var shortcode = (T)Convert.ChangeType(image.Shortcode, typeof(T));
+                    var shortcode = (T) Convert.ChangeType(image.Shortcode, typeof(T));
                     this.AddProcessed(shortcode);
                     yield return image;
                 }
             }
+        }
+
+        public void SetLimit(int limit)
+        {
+            this.limit = limit > 0
+                ? limit
+                : -1;
+        }
+
+        private void AddProcessed(T value)
+        {
+            this.processed.Add(value);
         }
 
         private new void Enqueue(T shortCode)
@@ -72,42 +87,33 @@ namespace AutoTagger.Crawler.Standard.V1
             {
                 return;
             }
+
             if (this.IsProcessed(shortCode))
             {
                 return;
             }
+
             if (this.Contains(shortCode))
             {
                 return;
             }
+
             base.Enqueue(shortCode);
+        }
+
+        private bool IsLimitReached()
+        {
+            if (this.limit == -1)
+            {
+                return false;
+            }
+
+            return this.processed.Count >= this.limit;
         }
 
         private bool IsProcessed(T value)
         {
             return this.processed.Contains(value);
         }
-
-        private void AddProcessed(T value)
-        {
-            this.processed.Add(value);
-        }
-
-        public void SetLimit(int limit)
-        {
-            this.limit = limit > 0 ? limit : -1;
-        }
-
-        private bool IsLimitReached()
-        {
-            if (limit == -1)
-                return false;
-            return this.processed.Count >= this.limit;
-        }
-
-    }
-
-    internal class CrawlerLimitException : Exception
-    {
     }
 }

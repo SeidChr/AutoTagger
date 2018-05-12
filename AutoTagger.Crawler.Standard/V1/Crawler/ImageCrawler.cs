@@ -1,30 +1,37 @@
-﻿namespace AutoTagger.Crawler.Standard.V1
+﻿namespace AutoTagger.Crawler.Standard.V1.Crawler
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text.RegularExpressions;
-    using AutoTagger.Contract;
 
-    abstract class ImageCrawler : HttpCrawler
+    using AutoTagger.Contract;
+    using AutoTagger.Crawler.Standard.Helper;
+
+    internal abstract class ImageCrawler : HttpCrawler
     {
-        protected static int MaxHashtagLength = 30;
-        protected static int MinHashtagLength = 5;
-        private static readonly Regex FindHashTagsRegex = new Regex(@"#\w+", RegexOptions.Compiled);
+        protected const int MaxHashtagLength = 30;
+
+        protected const int MinHashtagLength = 5;
+
         protected int MinCommentsCount = 0;
+
         protected int MinHashTagCount = 0;
+
         protected int MinLikes = 0;
+
+        private static readonly Regex FindHashTagsRegex = new Regex(@"#\w+", RegexOptions.Compiled);
 
         public static DateTime GetDateTime(double unixTimeStamp)
         {
-            var dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-            return dtDateTime.AddSeconds(unixTimeStamp).ToLocalTime();
+            var dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+            return dateTime.AddSeconds(unixTimeStamp).ToLocalTime();
         }
 
         protected dynamic GetData(string url)
         {
             var document = this.FetchDocument(url);
-            return GetScriptNodeData(document);
+            return this.GetScriptNodeData(document);
         }
 
         protected IEnumerable<IImage> GetImages(dynamic nodes)
@@ -47,9 +54,9 @@
                     continue;
                 }
 
-                string text  = edges[0]?.node?.text;
-                text         = text?.Replace("\\n", "\n");
-                text         = System.Web.HttpUtility.HtmlDecode(text);
+                string text = edges[0]?.node?.text;
+                text = text?.Replace("\\n", "\n");
+                text = System.Web.HttpUtility.HtmlDecode(text);
                 var hashTags = ParseHashTags(text).ToList();
 
                 var innerNode     = node.node;
@@ -57,14 +64,15 @@
                 var hashTagsCount = hashTags.Count;
                 var commentsCount = innerNode?.edge_media_to_comment?.count;
 
-                if (hashTagsCount < this.MinHashTagCount || likes < this.MinLikes
-                 || commentsCount < this.MinCommentsCount)
+                if (hashTagsCount < MinHashTagCount 
+                 || likes < MinLikes
+                 || commentsCount < MinCommentsCount)
                 {
                     continue;
                 }
 
                 var takenDate = GetDateTime(Convert.ToDouble(innerNode?.taken_at_timestamp.ToString()));
-                var image     = new Image
+                var image = new Image
                 {
                     Likes        = likes,
                     Comments     = commentsCount,
@@ -74,24 +82,25 @@
                     ThumbUrl     = innerNode?.thumbnail_src,
                     Uploaded     = takenDate
                 };
+
                 yield return image;
             }
         }
 
         private static bool HashtagIsAllowed(string value)
         {
-            return !string.IsNullOrWhiteSpace(value)
-                && value.Length >= MinHashtagLength
-                && value.Length < MaxHashtagLength
-                && !IsDigitsOnly(value);
+            return !string.IsNullOrWhiteSpace(value) && value.Length >= MinHashtagLength
+                && value.Length < MaxHashtagLength && !IsDigitsOnly(value);
         }
 
-        static bool IsDigitsOnly(string str)
+        private static bool IsDigitsOnly(string str)
         {
             foreach (var c in str)
             {
                 if (c < '0' || c > '9')
+                {
                     return false;
+                }
             }
 
             return true;

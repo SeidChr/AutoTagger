@@ -7,6 +7,7 @@
     using AutoTagger.Contract;
     using AutoTagger.Crawler.Standard.V1;
     using AutoTagger.Crawler.Standard.V1.Crawler;
+    using AutoTagger.Crawler.Standard.V1.Queue;
 
     public class CrawlerV1 : ICrawler
     {

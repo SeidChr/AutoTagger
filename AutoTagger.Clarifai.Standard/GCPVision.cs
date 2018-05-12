@@ -7,13 +7,13 @@
     using Google.Cloud.Vision.V1;
     using Image = Google.Cloud.Vision.V1.Image;
 
-    public class GCPVision : ITaggingProvider
+    public class GcpVision : ITaggingProvider
     {
-        private const string keyLabel = "GCPVision_Label";
-        private const string keyWeb = "GCPVision_Web";
+        private const string KeyLabel = "GCPVision_Label";
+        private const string KeyWeb = "GCPVision_Web";
         private readonly ImageAnnotatorClient client;
 
-        public GCPVision()
+        public GcpVision()
         {
             this.client = ImageAnnotatorClient.Create();
         }
@@ -25,9 +25,9 @@
             var labels   = this.client.DetectLabels(image);
             var webInfos = this.client.DetectWebInformation(image);
 
-            foreach (var mTag in ToMTags(labels, webInfos))
+            foreach (var machineTag in ToMTags(labels, webInfos))
             {
-                yield return mTag;
+                yield return machineTag;
             }
         }
 
@@ -42,26 +42,25 @@
                 labels   = this.client.DetectLabels(image);
                 webInfos = this.client.DetectWebInformation(image);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 if (e.Message.Contains("The URL does not appear to be accessible by us.")
-                    || e.Message.Contains("We can not access the URL currently.")
-                )
+                    || e.Message.Contains("We can not access the URL currently."))
                 {
                     yield break;
                 }
-                else
-                {
-                    Console.WriteLine(e);
-                }
+
+                Console.WriteLine(e);
             }
 
-            if(labels == null || webInfos == null)
-                yield break;
-
-            foreach (var mTag in ToMTags(labels, webInfos))
+            if (labels == null || webInfos == null)
             {
-                yield return mTag;
+                yield break;
+            }
+
+            foreach (var machineTag in ToMTags(labels, webInfos))
+            {
+                yield return machineTag;
             }
         }
 
@@ -69,17 +68,23 @@
         {
             foreach (var x in labels)
             {
-                if (String.IsNullOrEmpty(x.Description))
+                if (string.IsNullOrEmpty(x.Description))
+                {
                     continue;
-                var mtag = new MTag { Name = x.Description, Score = x.Score, Source = keyLabel };
+                }
+
+                var mtag = new MTag { Name = x.Description, Score = x.Score, Source = KeyLabel };
                 yield return mtag;
             }
 
             foreach (var x in webInfos.WebEntities)
             {
-                if (String.IsNullOrEmpty(x.Description))
+                if (string.IsNullOrEmpty(x.Description))
+                {
                     continue;
-                var mtag = new MTag { Name = x.Description, Score = x.Score, Source = keyWeb };
+                }
+
+                var mtag = new MTag { Name = x.Description, Score = x.Score, Source = KeyWeb };
                 yield return mtag;
             }
         }

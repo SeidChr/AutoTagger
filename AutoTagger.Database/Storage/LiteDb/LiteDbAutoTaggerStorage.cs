@@ -1,9 +1,10 @@
-﻿
-namespace AutoTagger.Database.Storage.AutoTagger
+﻿namespace AutoTagger.Database.Storage.LiteDb
 {
     using System.Collections.Generic;
     using System.Linq;
+
     using global::AutoTagger.Contract;
+
     using LiteDB;
 
     public class LiteDbAutoTaggerStorage : IAutoTaggerStorage
@@ -32,6 +33,7 @@ namespace AutoTagger.Database.Storage.AutoTagger
         public (string debug, IEnumerable<string> htags) FindHumanoidTags(List<IMTag> machineTags)
         {
             var mtags = machineTags.Select(x => x.Name);
+
             // find top 100 oldest persons aged between 20 and 30
             ////var results = col.Find(Query.And(Query.All("Age", Query.Descending), Query.Between("Age", 20, 30)), limit: 100);
             // .Find(Query.And(AnyIn(machineTags, "mashineTags"), Query.All("quality", Query.Descending)))
@@ -40,7 +42,7 @@ namespace AutoTagger.Database.Storage.AutoTagger
                 .SelectMany(b => b[HumanoidTagsFieldName].AsArray.Select(ht => ht.AsString))
                 .Distinct()
                 .Take(30);
-            return ("", htags);
+            return (string.Empty, htags);
         }
 
         public void Log(string source, string data)

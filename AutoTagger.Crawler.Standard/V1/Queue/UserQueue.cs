@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace AutoTagger.Crawler.Standard.V1
+﻿namespace AutoTagger.Crawler.Standard.V1.Queue
 {
+    using System;
     using System.Collections.Concurrent;
+    using System.Collections.Generic;
     using System.Linq;
 
     using AutoTagger.Contract;
 
-    class UserQueue<T> : ConcurrentQueue<T>
+    internal class UserQueue<T> : ConcurrentQueue<T>
     {
         private readonly HashSet<T> processed;
 
@@ -18,12 +16,31 @@ namespace AutoTagger.Crawler.Standard.V1
             this.processed = new HashSet<T>();
         }
 
-        public IEnumerable<IImage> Process(
-            Func<string, IEnumerable<IImage>> userPageCrawling)
+        public new void Enqueue(T shortCode)
         {
-            while (this.TryDequeue(out T userNameAsT))
+            if (shortCode == null)
             {
-                if (IsProcessed(userNameAsT))
+                return;
+            }
+
+            if (this.IsProcessed(shortCode))
+            {
+                return;
+            }
+
+            if (this.Contains(shortCode))
+            {
+                return;
+            }
+
+            base.Enqueue(shortCode);
+        }
+
+        public IEnumerable<IImage> Process(Func<string, IEnumerable<IImage>> userPageCrawling)
+        {
+            while (this.TryDequeue(out var userNameAsT))
+            {
+                if (this.IsProcessed(userNameAsT))
                 {
                     continue;
                 }
@@ -39,31 +56,14 @@ namespace AutoTagger.Crawler.Standard.V1
             }
         }
 
-        public new void Enqueue(T shortCode)
+        private void AddProcessed(T value)
         {
-            if (shortCode == null)
-            {
-                return;
-            }
-            if (this.IsProcessed(shortCode))
-            {
-                return;
-            }
-            if (this.Contains(shortCode))
-            {
-                return;
-            }
-            base.Enqueue(shortCode);
+            this.processed.Add(value);
         }
 
         private bool IsProcessed(T value)
         {
             return this.processed.Contains(value);
-        }
-
-        private void AddProcessed(T value)
-        {
-            this.processed.Add(value);
         }
     }
 }

@@ -15,7 +15,7 @@
         {
             var htags = new List<string>();
             //machineTags.RemoveAll(x => x.Name.StartsWith("no "));
-            var query = BuildQuery(machineTags);
+            var query = this.BuildQuery(machineTags);
 
             using (var command = this.db.Database.GetDbConnection().CreateCommand())
             {

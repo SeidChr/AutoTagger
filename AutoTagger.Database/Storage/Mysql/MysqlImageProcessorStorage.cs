@@ -16,52 +16,53 @@
             this.random = new Random();
         }
 
+        public void DoSave()
+        {
+            this.Save();
+        }
+
         public IEnumerable<IImage> GetImagesWithoutMachineTags(int limit)
         {
-            var query = (from p in this.db.Photos
-                         where p.Mtags.Count == 0
-                         && p.Id > this.GetRandomId()
-                         select p).Take(limit);
-            return query.ToList().Select(x => x.ToImage());
+            return this.db
+                .Photos
+                .Where(p => p.Mtags.Count == 0 && p.Id > this.GetRandomId())
+                .Select(p => p.ToImage())
+                .Take(limit);
         }
 
         public IEnumerable<IImage> GetImagesWithoutMachineTags(int idLargerThan, int limit)
         {
-            var query = (from p in this.db.Photos
-                         where p.Mtags.Count == 0
-                            && p.Id > idLargerThan
-                         select p).Take(limit);
-            return query.ToList().Select(x => x.ToImage());
+            return this.db
+                .Photos
+                .Where(p => p.Mtags.Count == 0 && p.Id > idLargerThan)
+                .Select(p => p.ToImage())
+                .Take(limit);
+        }
+
+        public void InsertMachineTagsWithoutSaving(IImage image)
+        {
+            foreach (var machineTag in image.MachineTags)
+            {
+                this.db.Mtags.Add(
+                    new Mtags
+                    {
+                        Name    = machineTag.Name,
+                        Score   = machineTag.Score,
+                        Source  = machineTag.Source,
+                        PhotoId = image.Id
+                    });
+            }
+        }
+
+        private int GetLargestId()
+        {
+            return this.db.Photos.OrderByDescending(p => p.Id).FirstOrDefault()?.Id ?? -1;
         }
 
         private int GetRandomId()
         {
             var largestId = this.GetLargestId();
             return this.random.Next(1, largestId);
-        }
-
-        private int GetLargestId()
-        {
-            return this.db.Photos.OrderByDescending(p => p.Id).FirstOrDefault().Id;
-        }
-
-        public void InsertMachineTagsWithoutSaving(IImage image)
-        {
-            foreach (var mTag in image.MachineTags)
-            {
-                this.db.Mtags.Add(new Mtags {
-                    Name = mTag.Name,
-                    Score = mTag.Score,
-                    Source = mTag.Source,
-                    PhotoId = image.Id
-
-                });
-            }
-        }
-
-        public void DoSave()
-        {
-            this.Save();
         }
     }
 }

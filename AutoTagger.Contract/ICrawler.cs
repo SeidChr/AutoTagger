@@ -5,7 +5,8 @@
 
     public interface ICrawler
     {
-        IEnumerable<IImage> DoCrawling(int limit, params string[] customTags);
         event Action<IHumanoidTag> OnHashtagFound;
+
+        IEnumerable<IImage> DoCrawling(int limit, params string[] customTags);
     }
 }

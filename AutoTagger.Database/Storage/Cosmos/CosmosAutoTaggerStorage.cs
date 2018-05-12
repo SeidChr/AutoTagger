@@ -1,8 +1,9 @@
-﻿namespace AutoTagger.Database.Storage.AutoTagger
+﻿namespace AutoTagger.Database.Storage.Cosmos
 {
     using System.Collections.Generic;
     using System.Linq;
     using System.Text.RegularExpressions;
+
     using global::AutoTagger.Contract;
     using global::AutoTagger.Database.Helper;
 
@@ -29,7 +30,7 @@
             var result = this.database.Submit(
                 $"g.V().hasLabel('image').order().by(out('tagged').has('id',within('{tagString}')).count().as('count'), decr).limit(10).out('itagged').dedup().limit(10)");
 
-            return ("", result.Select(i => (string)i["id"]));
+            return (string.Empty, result.Select(i => (string)i["id"]));
         }
 
         public void Log(string source, string data)

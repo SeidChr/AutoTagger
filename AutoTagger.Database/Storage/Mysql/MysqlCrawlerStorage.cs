@@ -68,23 +68,23 @@
             return hTags;
         }
 
-        public void InsertOrUpdateHumaniodTag(IHumanoidTag hTag)
+        public void InsertOrUpdateHumaniodTag(IHumanoidTag humanoidTag)
         {
-            hTag.Name = hTag.Name.ToLower();
+            humanoidTag.Name = humanoidTag.Name.ToLower();
 
-            var existingITag = this.allITags.FirstOrDefault(x => x.Name == hTag.Name);
+            var existingITag = this.allITags.FirstOrDefault(x => x.Name == humanoidTag.Name);
             if (existingITag != null)
             {
-                if (existingITag.Posts == hTag.Posts)
+                if (existingITag.Posts == humanoidTag.Posts)
                     return;
 
-                existingITag.Posts = hTag.Posts;
+                existingITag.Posts = humanoidTag.Posts;
                 this.db.Itags.Update(existingITag);
                 this.Save();
             }
             else
             {
-                var itag = new Itags { Name = hTag.Name, Posts = hTag.Posts };
+                var itag = new Itags { Name = humanoidTag.Name, Posts = humanoidTag.Posts };
                 this.db.Itags.Add(itag);
                 this.Save();
                 this.allITags.Add(itag);

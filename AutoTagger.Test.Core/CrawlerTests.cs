@@ -2,11 +2,15 @@
 {
     using System.Collections.Concurrent;
     using System.Linq;
+
     using AutoTagger.Contract;
     using AutoTagger.Crawler.Standard;
     using AutoTagger.Crawler.Standard.V1;
     using AutoTagger.Crawler.Standard.V1.Crawler;
+    using AutoTagger.Crawler.Standard.V2;
+    using AutoTagger.Database.Storage.LiteDb;
     using AutoTagger.Database.Storage.Mysql;
+
     using Xunit;
     using Xunit.Abstractions;
 
@@ -16,20 +20,21 @@
 
         public CrawlerTests(ITestOutputHelper testConsole)
         {
-            this.testConsole = testConsole;
-            //this.db = new LiteCrawlerStorage("test.ldb");
-            this.db = new MysqlCrawlerStorage();
+            this.TestConsole = testConsole;
+
+            this.db = new LiteCrawlerStorage("test.ldb");
+            ////this.db = new MysqlCrawlerStorage();
         }
 
-        private ITestOutputHelper testConsole { get; }
+        private ITestOutputHelper TestConsole { get; }
 
         [Fact]
         public void CrawlerTest()
         {
             var crawler = new CrawlerApp(this.db, new CrawlerV1());
 
-            //crawler.DoCrawling(1, "gratidão");
-            //crawler.DoCrawling(1);
+            // crawler.DoCrawling(1, "gratidão");
+            // crawler.DoCrawling(1);
             crawler.DoCrawling(0);
         }
 
@@ -41,7 +46,7 @@
 
             foreach (var hashtag in hashtags)
             {
-                this.testConsole.WriteLine(hashtag);
+                this.TestConsole.WriteLine(hashtag);
             }
 
             Assert.True(hashtags.Count > 2, "not enough random hashtags");
@@ -57,7 +62,7 @@
             queue.Enqueue("hamburg");
             speedCrawler.FoundImage += i =>
             {
-                this.testConsole.WriteLine(i.ToString());
+                this.TestConsole.WriteLine(i.ToString());
                 foreach (var humanoidTag in i.HumanoidTags)
                 {
                     if (!queue.Contains(humanoidTag))
@@ -71,12 +76,12 @@
             {
                 limit--;
 
-                this.testConsole.WriteLine("Queue Size: " + queue.Count);
-                this.testConsole.WriteLine("Parsing HashTag: #" + hashtag);
+                this.TestConsole.WriteLine("Queue Size: " + queue.Count);
+                this.TestConsole.WriteLine("Parsing HashTag: #" + hashtag);
                 speedCrawler.ParseHashTagPage(hashtag);
             }
 
-            this.testConsole.WriteLine("Remained Queue: " + string.Join(", ", queue));
+            this.TestConsole.WriteLine("Remained Queue: " + string.Join(", ", queue));
         }
     }
 }

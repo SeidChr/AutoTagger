@@ -56,7 +56,7 @@
         private static void StartImageProcessor()
         {
             var db = new MysqlImageProcessorStorage();
-            var tagger = new GCPVision();
+            var tagger = new GcpVision();
 
             var imageProcessor = new ImageProcessorApp(db, tagger);
             ImageProcessorApp.OnLookingForTags += image =>
