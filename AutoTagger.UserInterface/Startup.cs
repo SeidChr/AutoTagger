@@ -1,9 +1,10 @@
 ﻿namespace AutoTagger.UserInterface
 {
     using AutoTagger.Contract;
-    using AutoTagger.Database.Storage.AutoTagger;
     using AutoTagger.ImageProcessor.Standard;
+    using AutoTagger.Storage.EntityFramework.Core;
     using AutoTagger.UserInterface.Controllers.FIlter;
+
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.HttpOverrides;
@@ -46,14 +47,13 @@
                     c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
                 });
 
-            app.UseCors(
-                options => options.WithOrigins("http://localhost").AllowAnyMethod());
+            app.UseCors(options => options.WithOrigins("http://localhost").AllowAnyMethod());
 
-            app.UseForwardedHeaders(new ForwardedHeadersOptions
-            {
-                ForwardedHeaders = ForwardedHeaders.XForwardedFor |
-                                   ForwardedHeaders.XForwardedProto
-            });
+            app.UseForwardedHeaders(
+                new ForwardedHeadersOptions
+                {
+                    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+                });
 
             app.UseMvc();
         }
@@ -64,7 +64,7 @@
             services.AddMvc();
             services.AddCors();
 
-            services.AddTransient<IAutoTaggerStorage, MysqlUIStorage>();
+            services.AddTransient<IAutoTaggerStorage, EntityFrameworkUiStorage>();
             services.AddTransient<ITaggingProvider, GcpVision>();
 
             services.AddSwaggerGen(

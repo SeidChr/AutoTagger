@@ -8,8 +8,7 @@
     using AutoTagger.Crawler.Standard.V1;
     using AutoTagger.Crawler.Standard.V1.Crawler;
     using AutoTagger.Crawler.Standard.V2;
-    using AutoTagger.Database.Storage.LiteDb;
-    using AutoTagger.Database.Storage.Mysql;
+    using AutoTagger.Storage.Core.LiteDb;
 
     using Xunit;
     using Xunit.Abstractions;

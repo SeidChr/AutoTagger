@@ -19,7 +19,7 @@
 
         int Likes { get; set; }
 
-        IEnumerable<IMTag> MachineTags { get; set; }
+        IEnumerable<IMachineTag> MachineTags { get; set; }
 
         int Posts { get; set; }
 

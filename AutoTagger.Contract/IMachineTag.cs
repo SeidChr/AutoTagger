@@ -1,6 +1,6 @@
 ﻿namespace AutoTagger.Contract
 {
-    public interface IMTag
+    public interface IMachineTag
     {
         string Name { get; set; }
 

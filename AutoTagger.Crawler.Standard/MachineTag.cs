@@ -1,8 +1,8 @@
-﻿namespace AutoTagger.Objects
+﻿namespace AutoTagger.Crawler.Standard
 {
     using AutoTagger.Contract;
 
-    public class MTag : IMTag
+    public class MachineTag : IMachineTag
     {
         public string Name { get; set; }
 

@@ -1,11 +1,10 @@
-﻿namespace AutoTagger.Database.Storage.Cosmos
+﻿namespace AutoTagger.Storage.Core.Cosmos
 {
     using System.Collections.Generic;
     using System.Linq;
     using System.Text.RegularExpressions;
 
-    using global::AutoTagger.Contract;
-    using global::AutoTagger.Database.Helper;
+    using AutoTagger.Contract;
 
     public class CosmosAutoTaggerStorage : IAutoTaggerStorage
     {
@@ -21,7 +20,7 @@
             this.database.Submit($"g.V().drop()");
         }
 
-        public (string debug, IEnumerable<string> htags) FindHumanoidTags(List<IMTag> machineTags)
+        public (string debug, IEnumerable<string> htags) FindHumanoidTags(List<IMachineTag> machineTags)
         {
             var mtags = machineTags.Select(x => x.Name);
             var tagString = mtags.Select(CleanInput).Aggregate(string.Empty, (i, j) => i + "','" + j)

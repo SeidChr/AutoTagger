@@ -1,18 +1,17 @@
-﻿namespace AutoTagger.Database.Mysql
+﻿namespace AutoTagger.Storage.EntityFramework.Core
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
 
     using AutoTagger.Contract;
-    using AutoTagger.Crawler.Standard;
 
-    public class Photos
+    public class EntityFrameworkPhotos
     {
-        public Photos()
+        public EntityFrameworkPhotos()
         {
-            this.Mtags        = new HashSet<Mtags>();
-            this.PhotoItagRel = new HashSet<PhotoItagRel>();
+            this.MachineTags = new HashSet<EntityFrameworkMachineTags>();
+            this.PhotoItagRel = new HashSet<EntityFrameworkPhotoItagRel>();
         }
 
         public int Comments { get; set; }
@@ -25,13 +24,13 @@
 
         public int Id { get; set; }
 
-        public IEnumerable<Itags> Itags
+        public IEnumerable<EntityFrameworkHumanoidTags> Itags
         {
             get
             {
                 foreach (var photoItagRel in this.PhotoItagRel)
                 {
-                    yield return photoItagRel.Itag;
+                    yield return photoItagRel.HumanoidTag;
                 }
             }
         }
@@ -40,9 +39,9 @@
 
         public int Likes { get; set; }
 
-        public ICollection<Mtags> Mtags { get; set; }
+        public ICollection<EntityFrameworkMachineTags> MachineTags { get; set; }
 
-        public ICollection<PhotoItagRel> PhotoItagRel { get; set; }
+        public ICollection<EntityFrameworkPhotoItagRel> PhotoItagRel { get; set; }
 
         public int Posts { get; set; }
 
@@ -54,9 +53,9 @@
 
         public string User { get; set; }
 
-        public static Photos FromImage(IImage image)
+        public static EntityFrameworkPhotos FromImage(IImage image)
         {
-            var photo = new Photos
+            var photo = new EntityFrameworkPhotos
             {
                 LargeUrl  = image.LargeUrl,
                 ThumbUrl  = image.ThumbUrl,
@@ -75,7 +74,7 @@
 
         public IImage ToImage()
         {
-            var image = new Image
+            var image = new EntityFrameworkImage
             {
                 Id        = this.Id,
                 LargeUrl  = this.LargeUrl,
@@ -88,7 +87,7 @@
                 Following = this.Following,
                 Posts     = this.Posts,
                 MachineTags =
-                    this.Mtags.Select(tag => new MTag { Name = tag.Name, Score = tag.Score, Source = tag.Source }),
+                    this.MachineTags.Select(tag => new EntityFrameworkMachineTag { Name = tag.Name, Score = tag.Score, Source = tag.Source }),
                 HumanoidTags = this.Itags.Select(tag => tag.Name)
             };
             return image;

@@ -1,9 +1,9 @@
-﻿namespace AutoTagger.Database.Storage.LiteDb
+﻿namespace AutoTagger.Storage.Core.LiteDb
 {
     using System.Collections.Generic;
     using System.Linq;
 
-    using global::AutoTagger.Contract;
+    using AutoTagger.Contract;
 
     using LiteDB;
 
@@ -13,7 +13,7 @@
 
         private const string ImagesCollectionName = "images";
 
-        private const string MachineTagsFieldName = "mashineTags";
+        private const string MachineTagsFieldName = "machineTags";
 
         private readonly LiteDatabase database;
 
@@ -30,13 +30,13 @@
             this.database.DropCollection(ImagesCollectionName);
         }
 
-        public (string debug, IEnumerable<string> htags) FindHumanoidTags(List<IMTag> machineTags)
+        public (string debug, IEnumerable<string> htags) FindHumanoidTags(List<IMachineTag> machineTags)
         {
             var mtags = machineTags.Select(x => x.Name);
 
             // find top 100 oldest persons aged between 20 and 30
             ////var results = col.Find(Query.And(Query.All("Age", Query.Descending), Query.Between("Age", 20, 30)), limit: 100);
-            // .Find(Query.And(AnyIn(machineTags, "mashineTags"), Query.All("quality", Query.Descending)))
+            // .Find(Query.And(AnyIn(machineTags, "machineTags"), Query.All("quality", Query.Descending)))
             var htags = this.images
                 .Find(this.AnyIn(MachineTagsFieldName, mtags))
                 .SelectMany(b => b[HumanoidTagsFieldName].AsArray.Select(ht => ht.AsString))

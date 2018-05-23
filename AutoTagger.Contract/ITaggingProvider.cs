@@ -4,8 +4,8 @@
 
     public interface ITaggingProvider
     {
-        IEnumerable<IMTag> GetTagsForImageBytes(byte[] bytes);
+        IEnumerable<IMachineTag> GetTagsForImageBytes(byte[] bytes);
 
-        IEnumerable<IMTag> GetTagsForImageUrl(string imageUrl);
+        IEnumerable<IMachineTag> GetTagsForImageUrl(string imageUrl);
     }
 }

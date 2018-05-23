@@ -5,8 +5,7 @@ namespace AutoTagger.Test.Core
 
     using AutoTagger.Contract;
     using AutoTagger.Crawler.Standard;
-    using AutoTagger.Database.Storage.AutoTagger;
-    using AutoTagger.Database.Storage.LiteDb;
+    using AutoTagger.Storage.Core.LiteDb;
 
     using LiteDB;
     using Xunit;
@@ -56,7 +55,13 @@ namespace AutoTagger.Test.Core
             db.InsertOrUpdate("iD", new[] { "mX", "mY", "mZ" }, new[] { "hX", "hY" });
             db.InsertOrUpdate("iE", new[] { "mA", "mG", "mU" }, new[] { "hA", "hF" });
 
-            var (debug, tags) = db.FindHumanoidTags(new List<IMTag> { new MTag{Name="mA" }, new MTag { Name = "mB" }, new MTag { Name = "mC" } });
+            var(debug, tags) = db.FindHumanoidTags(
+                new List<IMachineTag>
+                {
+                    new MachineTag { Name = "mA" },
+                    new MachineTag { Name = "mB" },
+                    new MachineTag { Name = "mC" }
+                });
 
             Assert.Contains("hC", tags);
             Assert.DoesNotContain("hX", tags);

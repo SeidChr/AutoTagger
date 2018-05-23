@@ -18,7 +18,7 @@
             this.client = ImageAnnotatorClient.Create();
         }
 
-        public IEnumerable<IMTag> GetTagsForImageBytes(byte[] bytes)
+        public IEnumerable<IMachineTag> GetTagsForImageBytes(byte[] bytes)
         {
             var image = Image.FromBytes(bytes);
 
@@ -31,7 +31,7 @@
             }
         }
 
-        public IEnumerable<IMTag> GetTagsForImageUrl(string imageUrl)
+        public IEnumerable<IMachineTag> GetTagsForImageUrl(string imageUrl)
         {
             var image = Image.FromUri(imageUrl);
             IReadOnlyList<EntityAnnotation> labels = null;
@@ -64,7 +64,7 @@
             }
         }
 
-        private static IEnumerable<IMTag> ToMTags(IReadOnlyList<EntityAnnotation> labels, WebDetection webInfos)
+        private static IEnumerable<IMachineTag> ToMTags(IReadOnlyList<EntityAnnotation> labels, WebDetection webInfos)
         {
             foreach (var x in labels)
             {
@@ -73,7 +73,7 @@
                     continue;
                 }
 
-                var mtag = new MTag { Name = x.Description, Score = x.Score, Source = KeyLabel };
+                var mtag = new MachineTag { Name = x.Description, Score = x.Score, Source = KeyLabel };
                 yield return mtag;
             }
 
@@ -84,7 +84,7 @@
                     continue;
                 }
 
-                var mtag = new MTag { Name = x.Description, Score = x.Score, Source = KeyWeb };
+                var mtag = new MachineTag { Name = x.Description, Score = x.Score, Source = KeyWeb };
                 yield return mtag;
             }
         }

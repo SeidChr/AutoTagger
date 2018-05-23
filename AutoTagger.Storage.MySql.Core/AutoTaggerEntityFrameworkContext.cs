@@ -1,30 +1,29 @@
-﻿namespace AutoTagger.Database.Mysql
+﻿namespace AutoTagger.Storage.EntityFramework.Core
 {
-    using System;
-
     using Microsoft.EntityFrameworkCore;
 
-    public class InstataggerContext : DbContext
+    public class AutoTaggerEntityFrameworkContext : DbContext
     {
         public virtual DbSet<Debug> Debug { get; set; }
 
-        public virtual DbSet<Itags> Itags { get; set; }
+        public virtual DbSet<EntityFrameworkHumanoidTags> HumanoidTags { get; set; }
 
-        public virtual DbSet<Mtags> Mtags { get; set; }
+        public virtual DbSet<EntityFrameworkMachineTags> MachineTags { get; set; }
 
-        public virtual DbSet<PhotoItagRel> PhotoItagRel { get; set; }
+        public virtual DbSet<EntityFrameworkPhotoItagRel> PhotoItagRel { get; set; }
 
-        public virtual DbSet<Photos> Photos { get; set; }
+        public virtual DbSet<EntityFrameworkPhotos> Photos { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-                var ip   = Environment.GetEnvironmentVariable("instatagger_mysql_ip");
-                var user = Environment.GetEnvironmentVariable("instatagger_mysql_user");
-                var pw   = Environment.GetEnvironmentVariable("instatagger_mysql_pw");
-                var db   = Environment.GetEnvironmentVariable("instatagger_mysql_db");
-                optionsBuilder.UseMySql($"Server={ip};User Id={user};Password={pw};Database={db}");
+                // this doesnt belong here!
+                ////var ip   = Environment.GetEnvironmentVariable("instatagger_mysql_ip");
+                ////var user = Environment.GetEnvironmentVariable("instatagger_mysql_user");
+                ////var pw   = Environment.GetEnvironmentVariable("instatagger_mysql_pw");
+                ////var db   = Environment.GetEnvironmentVariable("instatagger_mysql_db");
+                ////optionsBuilder.UseMySql($"Server={ip};User Id={user};Password={pw};Database={db}");
             }
         }
 
@@ -47,7 +46,7 @@
                     entity.Property(e => e.Source).IsRequired().HasColumnName("source").HasColumnType("text");
                 });
 
-            modelBuilder.Entity<Itags>(
+            modelBuilder.Entity<EntityFrameworkHumanoidTags>(
                 entity =>
                 {
                     entity.HasKey(e => new { e.Id, e.Name });
@@ -68,7 +67,7 @@
                         .HasDefaultValueSql("'CURRENT_TIMESTAMP'").ValueGeneratedOnAddOrUpdate();
                 });
 
-            modelBuilder.Entity<Mtags>(
+            modelBuilder.Entity<EntityFrameworkMachineTags>(
                 entity =>
                 {
                     entity.ToTable("mtags");
@@ -87,12 +86,12 @@
 
                     entity.Property(e => e.Source).IsRequired().HasColumnName("source").HasMaxLength(30);
 
-                    entity.HasOne(d => d.Photo).WithMany(p => p.Mtags).HasPrincipalKey(p => p.Id)
+                    entity.HasOne(d => d.EntityFrameworkPhoto).WithMany(p => p.MachineTags).HasPrincipalKey(p => p.Id)
                         .HasForeignKey(d => d.PhotoId).OnDelete(DeleteBehavior.ClientSetNull)
                         .HasConstraintName("mtags_ibfk_1");
                 });
 
-            modelBuilder.Entity<PhotoItagRel>(
+            modelBuilder.Entity<EntityFrameworkPhotoItagRel>(
                 entity =>
                 {
                     entity.ToTable("photo_itag_rel");
@@ -107,16 +106,16 @@
 
                     entity.Property(e => e.PhotoId).HasColumnName("photoId").HasColumnType("int(11)");
 
-                    entity.HasOne(d => d.Itag).WithMany(p => p.PhotoItagRel).HasPrincipalKey(p => p.Id)
+                    entity.HasOne(d => d.HumanoidTag).WithMany(p => p.PhotoItagRel).HasPrincipalKey(p => p.Id)
                         .HasForeignKey(d => d.ItagId).OnDelete(DeleteBehavior.ClientSetNull)
                         .HasConstraintName("photo_itag_rel_ibfk_2");
 
-                    entity.HasOne(d => d.Photo).WithMany(p => p.PhotoItagRel).HasPrincipalKey(p => p.Id)
+                    entity.HasOne(d => d.EntityFrameworkPhoto).WithMany(p => p.PhotoItagRel).HasPrincipalKey(p => p.Id)
                         .HasForeignKey(d => d.PhotoId).OnDelete(DeleteBehavior.ClientSetNull)
                         .HasConstraintName("photo_itag_rel_ibfk_1");
                 });
 
-            modelBuilder.Entity<Photos>(
+            modelBuilder.Entity<EntityFrameworkPhotos>(
                 entity =>
                 {
                     entity.HasKey(e => new { e.Id, e.Shortcode });

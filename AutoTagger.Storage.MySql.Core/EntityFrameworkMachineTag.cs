@@ -1,8 +1,8 @@
-﻿namespace AutoTagger.Crawler.Standard
+﻿namespace AutoTagger.Storage.EntityFramework.Core
 {
     using AutoTagger.Contract;
 
-    public class MTag : IMTag
+    public class EntityFrameworkMachineTag : IMachineTag
     {
         public string Name { get; set; }
 

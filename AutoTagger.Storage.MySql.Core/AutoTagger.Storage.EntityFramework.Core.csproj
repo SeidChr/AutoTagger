@@ -6,9 +6,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AutoTagger.Clarifai.Standard\AutoTagger.ImageProcessor.Standard.csproj" />
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="2.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AutoTagger.Contract\AutoTagger.Contract.csproj" />
     <ProjectReference Include="..\AutoTagger.Crawler.Standard\AutoTagger.Crawler.Standard.csproj" />
-    <ProjectReference Include="..\AutoTagger.Storage.MySql.Core\AutoTagger.Storage.EntityFramework.Core.csproj" />
   </ItemGroup>
 
 </Project>

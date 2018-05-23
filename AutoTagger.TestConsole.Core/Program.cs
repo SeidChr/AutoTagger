@@ -4,22 +4,19 @@
     using System.Linq;
     using AutoTagger.Crawler.Standard;
     using AutoTagger.Crawler.Standard.V1;
-    using AutoTagger.Database.Storage.Mysql;
     using AutoTagger.ImageProcessor.Standard;
+    using AutoTagger.Storage.EntityFramework.Core;
 
     internal class Program
     {
 
         private static void Main(string[] args)
         {
-            Console.WriteLine("" + 
-                             "1: Start Crawler\n" +
-                             "2: Start ImageProcessor"
-                             );
-            while(true)
+            Console.WriteLine("1: Start Crawler\n" + "2: Start ImageProcessor");
+            while (true)
             {
                 var key = Console.ReadKey();
-                Console.WriteLine("");
+                Console.WriteLine(string.Empty);
                 switch (key.KeyChar)
                 {
                     case '1':
@@ -39,7 +36,7 @@
 
         private static void StartCrawler()
         {
-            var db = new MysqlCrawlerStorage();
+            var db = new EntityFrameworkCrawlerStorage();
             var crawler = new CrawlerApp(db, new CrawlerV1());
 
             crawler.OnImageSaved += image =>
@@ -55,7 +52,7 @@
 
         private static void StartImageProcessor()
         {
-            var db = new MysqlImageProcessorStorage();
+            var db = new EntityFrameworkImageProcessorStorage();
             var tagger = new GcpVision();
 
             var imageProcessor = new ImageProcessorApp(db, tagger);

@@ -1,10 +1,10 @@
-﻿namespace AutoTagger.Database.Storage.LiteDb
+﻿namespace AutoTagger.Storage.Core.LiteDb
 {
     using System.Collections.Generic;
     using System.Linq;
 
-    using global::AutoTagger.Contract;
-    using global::AutoTagger.Crawler.Standard;
+    using AutoTagger.Contract;
+    using AutoTagger.Crawler.Standard;
 
     using LiteDB;
 

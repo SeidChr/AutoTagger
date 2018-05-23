@@ -5,17 +5,17 @@
 
     using AutoTagger.Contract;
     using AutoTagger.Crawler.Standard;
-    using AutoTagger.Database.Storage.AutoTagger;
-    using AutoTagger.Database.Storage.Mysql;
+    using AutoTagger.Storage.EntityFramework.Core;
+
     using Xunit;
 
-    public class MysqlTests
+    public class EntityFrameworkTests
     {
         [Fact]
         public void MysqlInsertPhoto()
         {
             // Arrange
-            var crawlerDb = new MysqlCrawlerStorage();
+            var crawlerDb = new EntityFrameworkCrawlerStorage();
             crawlerDb.GetAllHumanoidTags();
             var image = new Image
             {
@@ -24,7 +24,7 @@
                 Following = 150,
                 Posts = 42,
                 HumanoidTags = new List<string> { "catlove", "instabeach", "hamburg" },
-                //MachineTags = new List<string> { "cat", "beach", "city" },
+                ////MachineTags = new List<string> { "cat", "beach", "city" },
                 LargeUrl = "content.com/pic/ab12xy67laaaarge",
                 ThumbUrl = "content.com/pic/ab12xthump",
                 Shortcode = "ab12xy67",
@@ -34,7 +34,6 @@
             };
 
             // Act
-
             crawlerDb.InsertOrUpdate(image);
 
             // Assert
@@ -45,11 +44,11 @@
         public void MysqlInsertITag()
         {
             // Arrange
-            var crawlerDb = new MysqlCrawlerStorage();
+            var crawlerDb = new EntityFrameworkCrawlerStorage();
             crawlerDb.GetAllHumanoidTags();
             var name = "Altona";
             var posts = 14;
-            var humanoidTag = new HumanoidTag {Name = name, Posts = posts};
+            var humanoidTag = new HumanoidTag { Name = name, Posts = posts };
 
             // Act
             crawlerDb.InsertOrUpdateHumaniodTag(humanoidTag);
@@ -62,11 +61,11 @@
         public void WhenGettingAllPhotos()
         {
             // Arrange
-            var mysql = new MysqlUIStorage();
+            var mysql = new EntityFrameworkUiStorage();
 
             // Act
-            var machineTags = new List<IMTag> { new MTag {Name = "beach" }, new MTag {Name = "water" } };
-            var (debug, htags) = mysql.FindHumanoidTags(machineTags);
+            var machineTags = new List<IMachineTag> { new MachineTag {Name = "beach" }, new MachineTag {Name = "water" } };
+            var(debug, htags) = mysql.FindHumanoidTags(machineTags);
 
             // Assert
             Assert.NotEmpty(debug);
@@ -77,11 +76,11 @@
         public void MysqlInsertMTag()
         {
             // Arrange
-            var db = new MysqlImageProcessorStorage();
+            var db = new EntityFrameworkImageProcessorStorage();
             var image = new Image();
-            var mtags = new List<IMTag>
+            var mtags = new List<IMachineTag>
             {
-                new MTag { Name = "test", Score = 1.337f, Source = "Testcase_Test-Hamburg4ever" }
+                new MachineTag { Name = "test", Score = 1.337f, Source = "Testcase_Test-Hamburg4ever" }
             };
             image.MachineTags = mtags;
             image.Id = 1;

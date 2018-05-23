@@ -1,4 +1,4 @@
-﻿namespace AutoTagger.Database.Helper
+﻿namespace AutoTagger.Storage.Core.Cosmos
 {
     using System;
     using System.Collections.Generic;

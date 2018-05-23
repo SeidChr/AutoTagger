@@ -1,4 +1,4 @@
-﻿namespace AutoTagger.Database.Mysql
+﻿namespace AutoTagger.Storage.EntityFramework.Core
 {
     using System;
 

@@ -1,17 +1,16 @@
-﻿namespace AutoTagger.Database.Storage.Mysql
+﻿namespace AutoTagger.Storage.EntityFramework.Core
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
 
-    using global::AutoTagger.Contract;
-    using global::AutoTagger.Database.Mysql;
+    using AutoTagger.Contract;
 
-    public class MysqlImageProcessorStorage : MysqlBaseStorage, IImageProcessorStorage
+    public class EntityFrameworkImageProcessorStorage : EntityFrameworkBaseStorage, IImageProcessorStorage
     {
         private readonly Random random;
 
-        public MysqlImageProcessorStorage()
+        public EntityFrameworkImageProcessorStorage()
         {
             this.random = new Random();
         }
@@ -23,18 +22,18 @@
 
         public IEnumerable<IImage> GetImagesWithoutMachineTags(int limit)
         {
-            return this.db
+            return this.Db
                 .Photos
-                .Where(p => p.Mtags.Count == 0 && p.Id > this.GetRandomId())
+                .Where(p => p.MachineTags.Count == 0 && p.Id > this.GetRandomId())
                 .Select(p => p.ToImage())
-                .Take(limit);
+                .Take(limit).ToList();
         }
 
         public IEnumerable<IImage> GetImagesWithoutMachineTags(int idLargerThan, int limit)
         {
-            return this.db
+            return this.Db
                 .Photos
-                .Where(p => p.Mtags.Count == 0 && p.Id > idLargerThan)
+                .Where(p => p.MachineTags.Count == 0 && p.Id > idLargerThan)
                 .Select(p => p.ToImage())
                 .Take(limit);
         }
@@ -43,8 +42,8 @@
         {
             foreach (var machineTag in image.MachineTags)
             {
-                this.db.Mtags.Add(
-                    new Mtags
+                this.Db.MachineTags.Add(
+                    new EntityFrameworkMachineTags
                     {
                         Name    = machineTag.Name,
                         Score   = machineTag.Score,
@@ -56,7 +55,7 @@
 
         private int GetLargestId()
         {
-            return this.db.Photos.OrderByDescending(p => p.Id).FirstOrDefault()?.Id ?? -1;
+            return this.Db.Photos.OrderByDescending(p => p.Id).FirstOrDefault()?.Id ?? -1;
         }
 
         private int GetRandomId()

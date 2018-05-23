@@ -1,4 +1,4 @@
-﻿namespace AutoTagger.Objects
+﻿namespace AutoTagger.Storage.EntityFramework.Core
 {
     using System;
     using System.Collections.Generic;
@@ -7,7 +7,7 @@
 
     using Newtonsoft.Json;
 
-    public class Image : IImage
+    public class EntityFrameworkImage : IImage
     {
         public int Comments { get; set; }
 
@@ -23,7 +23,7 @@
 
         public int Likes { get; set; }
 
-        public IEnumerable<IMTag> MachineTags { get; set; }
+        public IEnumerable<IMachineTag> MachineTags { get; set; }
 
         public int Posts { get; set; }
 

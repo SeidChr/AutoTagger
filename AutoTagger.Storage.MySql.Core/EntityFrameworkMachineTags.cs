@@ -1,12 +1,12 @@
-﻿namespace AutoTagger.Database.Mysql
+﻿namespace AutoTagger.Storage.EntityFramework.Core
 {
-    public class Mtags
+    public class EntityFrameworkMachineTags
     {
         public int Id { get; set; }
 
         public string Name { get; set; }
 
-        public Photos Photo { get; set; }
+        public EntityFrameworkPhotos EntityFrameworkPhoto { get; set; }
 
         public int PhotoId { get; set; }
 
